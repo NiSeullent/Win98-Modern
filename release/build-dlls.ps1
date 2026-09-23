@@ -49,6 +49,18 @@ Copy-Item -LiteralPath (Join-Path $buildDir 'clipboard/M98USER.DLL') `
 # contract probes. The builder validates the exact DLL later packaged below.
 & (Join-Path $projectRoot 'tools/build-gdi-alpha.ps1')
 if ($LASTEXITCODE -ne 0) { throw 'M98GDI.DLL build or focused checks failed' }
+# The non-PNG build supplies the genuine COMCTL32 ordinal import probe. Only
+# the separate PNG-capable provider below is selected for the release ZIP.
+& (Join-Path $projectRoot 'tools/build-comctl-ordinals.ps1')
+if ($LASTEXITCODE -ne 0) { throw 'COMCTL32 ordinal fixtures failed' }
+& (Join-Path $projectRoot 'tools/build-comctl-png.ps1')
+if ($LASTEXITCODE -ne 0) { throw 'PNG-capable COMCTL32 provider failed' }
+& python (Join-Path $projectRoot 'tests/check_comctl_ordinal_pe98.py') `
+  (Join-Path $buildDir 'comctl-png/M98CTLP.DLL') `
+  (Join-Path $buildDir 'comctl-png/comctl_png_host.exe') `
+  (Join-Path $buildDir 'comctl-png/comctl_png_depth_host.exe') `
+  (Join-Path $buildDir 'comctl-ord/comctl_ordinal_import_probe.exe')
+if ($LASTEXITCODE -ne 0) { throw 'Shipping COMCTL32 provider/probe PE gate failed' }
 # Put the exact shipping wrapper beside each integration probe. The executable
 # directory precedes the working directory in the loader search order, so a
 # leftover local DLL must not silently substitute for the artifact being tested.
@@ -215,5 +227,6 @@ Write-Host (Join-Path $buildDir 'dwmapi.dll')
 Write-Host (Join-Path $buildDir 'bcrypt.dll')
 Write-Host (Join-Path $buildDir 'm98adv.dll')
 Write-Host (Join-Path $buildDir 'gdi-alpha/M98GDI.DLL')
+Write-Host (Join-Path $buildDir 'comctl-png/M98CTLP.DLL')
 Write-Host $uxDll
 Write-Host $switch

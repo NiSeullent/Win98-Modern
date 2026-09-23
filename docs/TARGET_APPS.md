@@ -24,7 +24,46 @@ All five archives were downloaded into ignored `benchmarks/media/`; the Chromium
 
 For each binary, record direct and delay-load imports, dependent DLLs, loader failure, and a reproducible guest test. Import coverage is a triage metric, not the 100% full-API goal and not evidence that the application runs. Each required app needs a separate guest launch and meaningful functionality result before completion is claimed.
 
-## Notepad++ 8.9.8 guest probe
+## Latest 0.1.8 COMCTL32 candidate: Notepad++ 8.9.8
+
+This checkpoint is newer than the provider19 and USER32 loader results below.
+The PNG-capable `M98CTLP.DLL` was installed as the versioned KernelEx provider
+`M98CTL3.DLL` (SHA-256
+`aafd97b71ff63c9f9cedffa4705713243d5708f22ff6ffaf04c732261ca0e3f8`);
+after a hardware-accelerated cold boot, a genuine static
+`COMCTL32` ordinal 345/381 import probe returned exit 0. Separate direct
+guest probes passed generated PNG icon groups at requested sizes 16, 32, 40
+and 48, the pinned app's PNG-backed icon group 501 at 16 pixels, and the
+same-size 16-bpp source choice on a four-bit display.
+The exact binary and direct/static evidence are documented in
+`docs/COMCTL_ORDINAL_PORT.md` and `docs/RELEASE_0_1_8_CHECKPOINT.md`.
+
+With this candidate, the pinned x86 Notepad++ 8.9.8 executable moved past its
+previous `WM_CREATE` access violation and icon 501 warning. A bounded
+`APP_PROBE.EXE` guest run saw the editor window by 3.974 seconds and a
+visible editor still present at 12.004 seconds. The tool then posted
+`WM_CLOSE` and ultimately terminated the process. A close operation
+displayed a Windows 98 invalid-page-fault dialog. This is a startup
+milestone, **not** a clean shutdown or complete application pass.
+
+With the same `M98CTL3.DLL`, an existing 13-byte text file was opened, edited,
+and saved with `Ctrl+S`. The guest remote tester read back 34 bytes with
+SHA-256 `a1853e54f7e131411c6f0787e80d8f7157f3e60ce85438ddfc427c5b82bf1c2c`;
+the exact ASCII text was `Saved under M98CTL3\r\nBaseline v3\r\n`.
+This is one verified existing-file save, not general Save As or clean exit.
+
+Save As for a **new** document did not show a dialog or write a verified new
+file. A read-only guest diagnostic found the Vista `CLSID_FileSaveDialog` registry entries
+absent and `CoCreateInstance` for its `IFileDialog` interface returned
+`0x80040154` (`REGDB_E_CLASSNOTREG`), while a Shell Link COM control passed.
+The pinned Notepad++ source calls that interface on the new-document save
+path; see `docs/NPP_SAVE_DIALOG_TRIAGE.md`. The successful existing-file save
+does not exercise that new-document dialog path. No full Notepad++ success is
+claimed. The other four required apps have not gained a new functional pass
+from this COMCTL32 work; their last guest results remain the historical
+provider19 checkpoint below.
+
+## Historical Notepad++ 8.9.8 guest probes
 
 The previous KERNEL32-only checkpoint cold-booted the installed Win98 SE guest with
 `M98WRP19.DLL` (89 KERNEL32 table names), SHA-256
@@ -51,12 +90,12 @@ change notifications and restoration of the empty clipboard. Exact receipt:
 `build/guest/suite-clipboard-user1.json`; contract and limits:
 `docs/CLIPBOARD_CONTRACT_TESTS.md`.
 
-Notepad++ still does not start. Its next loader dialog now names
+At that historical checkpoint, Notepad++ did not start. Its next loader dialog named
 `GDI32.DLL!GdiAlphaBlend`; APP_PROBE returned exit 2 / Win32 error 31.
 `benchmarks/npp-clipboard-user1.json` records the screenshot and tested
-provider hashes. This advances the loader dependency but proves no editing
+provider hashes. This advanced the loader dependency but proved no editing
 function. The other required application results below remain from the earlier
-provider19 checkpoint; no app gained a functionality pass.
+provider19 checkpoint; no app gained a functionality pass then.
 
 Earlier provider16 stopped at `InitializeSListHead`. A preceding warm restart
 of a combined change produced one VxD exception preserved in a separate
@@ -67,16 +106,16 @@ and another normal guest shutdown. This is not an API test pass or failure.
 
 The first x86 portable build attempt in the Windows 98 SE + KernelEx guest stopped at a missing `DBGHELP.DLL` loader dialog (`vm/npp-first-run.png`). Its direct `DBGHELP.DLL` import is `ImageNtHeader`. The OEM Windows 98 `IMAGEHLP.DLL` already exports that function (see `benchmarks/win98se-ko-oem-native-exports-v1.json`), so `build/dbghelp.dll` provides the same export and calls the installed native implementation. This bridge passes a PE32 Windows 98 import gate and a 32-bit Windows host smoke test, including a malformed PE image returning `NULL`.
 
-With the bridge beside `notepad++.exe`, the next guest loader dialog reported missing `DWMAPI.DLL` (`vm/npp-shim-result.png`). An app-local DLL exports the two directly imported DWM functions and reports disabled composition. After initial shims the guest showed a generic invalid-format error (`vm/npp-new-alert-upper.png`); changing the executable's PE version fields in an **ignored local test copy** did not help (`vm/npp-pe410-error-revealed.png`). A clean retry with app-local BCRYPT exposed the specific issue: `DWMAPI.DLL` had no base relocation directory, so Win98 could not load it after another shim occupied the preferred base (`vm/npp-after-bcrypt.png`). The DWM build now forces a real base relocation; its PE gate, host smoke, and Win98 guest direct smoke pass (`vm/dwm-reloc-guest-smoke.png`).
+In the earlier loader sequence, with the bridge beside `notepad++.exe`, the next guest loader dialog reported missing `DWMAPI.DLL` (`vm/npp-shim-result.png`). An app-local DLL exports the two directly imported DWM functions and reports disabled composition. After initial shims the guest showed a generic invalid-format error (`vm/npp-new-alert-upper.png`); changing the executable's PE version fields in an **ignored local test copy** did not help (`vm/npp-pe410-error-revealed.png`). A clean retry with app-local BCRYPT exposed the specific issue: `DWMAPI.DLL` had no base relocation directory, so Win98 could not load it after another shim occupied the preferred base (`vm/npp-after-bcrypt.png`). The DWM build now forces a real base relocation; its PE gate, host smoke, and Win98 guest direct smoke pass (`vm/dwm-reloc-guest-smoke.png`).
 
-The seven direct BCRYPT imports are provided by an app-local SHA-256/MD5/HMAC subset. Its PE gate, host known-answer tests, and Win98 guest direct smoke pass (`vm/bcrypt-guest-smoke.png`). MD5/SHA256 and HMAC pseudo-handle paths also passed a direct guest smoke (`vm/pseudo-guest-smoke.png`). With DBGHELP, relocatable DWMAPI, and BCRYPT present, Notepad++ next stopped at the absent `SHCreateItemFromParsingName` export in native `SHELL32.DLL` (`vm/npp-after-dwm-reloc.png`). A new KernelEx Shell API library now supplies `SHCreateItemFromParsingName`, `SHParseDisplayName`, and the focused file-system case of `SHOpenFolderAndSelectItems`; direct and static-import guest probes passed, and Explorer selected the test file (`vm/select-shell3-guest.png`). The following Notepad++ loader error is `UXTHEME.DLL!DrawThemeTextEx` (`vm/npp-after-uxtheme.png`). A no-theme bridge passed direct guest testing, but KernelEx's KnownDLL redirection bypasses an app-local `UXTHEME.DLL`, so the app has **not** started. None of the publisher binaries or test ISOs is distributed by this project.
+The seven direct BCRYPT imports are provided by an app-local SHA-256/MD5/HMAC subset. Its PE gate, host known-answer tests, and Win98 guest direct smoke pass (`vm/bcrypt-guest-smoke.png`). MD5/SHA256 and HMAC pseudo-handle paths also passed a direct guest smoke (`vm/pseudo-guest-smoke.png`). With DBGHELP, relocatable DWMAPI, and BCRYPT present, Notepad++ next stopped at the absent `SHCreateItemFromParsingName` export in native `SHELL32.DLL` (`vm/npp-after-dwm-reloc.png`). A new KernelEx Shell API library now supplies `SHCreateItemFromParsingName`, `SHParseDisplayName`, and the focused file-system case of `SHOpenFolderAndSelectItems`; direct and static-import guest probes passed, and Explorer selected the test file (`vm/select-shell3-guest.png`). At that historical stage, the following Notepad++ loader error was `UXTHEME.DLL!DrawThemeTextEx` (`vm/npp-after-uxtheme.png`). A no-theme bridge passed direct guest testing, but KernelEx's KnownDLL redirection bypassed an app-local `UXTHEME.DLL`, so the app had **not** started then. None of the publisher binaries or test ISOs is distributed by this project.
 
-## Provider19 five-application checkpoint
+## Historical provider19 five-application checkpoint
 
 Exact executable hashes, PE architectures and receipts are recorded in
 `benchmarks/app-guest-checkpoint-provider19.json`. App media remain ignored.
 
-| Selected application | Actual current result | Next shared prerequisite |
+| Selected application | Result at provider19 checkpoint | Next shared prerequisite then |
 | --- | --- | --- |
 | Chromium 150 x86 | Loader error 31; CHROME_ELF.DLL requires KERNEL32.AddVectoredExceptionHandler | Exception dispatch and vectored-handler family |
 | Supermium 144 R5 x86 | After selecting its version directory as cwd, loader error 31; P_NTD.DLL requires NTDLL.LdrGetProcedureAddress | NT loader/export-resolution backend and bundled wrapper dependency closure |

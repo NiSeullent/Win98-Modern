@@ -1,0 +1,4 @@
+LIBRARY COMCTL32.DLL
+EXPORTS
+    TaskDialogIndirect@16 @345 NONAME
+    LoadIconWithScaleDown@20 @381 NONAME

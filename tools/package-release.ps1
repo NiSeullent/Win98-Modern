@@ -44,6 +44,25 @@ if ((Get-FileHash -LiteralPath (Require-File 'build/M98USER.DLL') -Algorithm SHA
   (Require-File 'build/gdi-alpha/gdi_alpha_direct_contract.exe') `
   (Require-File 'build/gdi-alpha/gdi_alpha_static_contract.exe')
 if ($LASTEXITCODE -ne 0) { throw 'GDI32 provider/probe PE98 validation failed' }
+& python (Require-File 'tests/check_comctl_ordinal_pe98.py') `
+  (Require-File 'build/comctl-png/M98CTLP.DLL') `
+  (Require-File 'build/comctl-png/comctl_png_host.exe') `
+  (Require-File 'build/comctl-png/comctl_png_depth_host.exe') `
+  (Require-File 'build/comctl-ord/comctl_ordinal_import_probe.exe')
+if ($LASTEXITCODE -ne 0) { throw 'COMCTL32 PNG provider/probe PE98 validation failed' }
+if ($Version -eq '0.1.8-preview') {
+  $frozenComctl = [ordered]@{
+    'build/comctl-png/M98CTLP.DLL' = 'aafd97b71ff63c9f9cedffa4705713243d5708f22ff6ffaf04c732261ca0e3f8'
+    'build/comctl-png/comctl_png_depth_host.exe' = '07fe5673aa3b36bec8e28b2513af012b337d0aaf9c3441f7103d74458448237e'
+    'build/comctl-ord/comctl_ordinal_import_probe.exe' = 'f87aac5f24818e82b6f814c98d5f21038163c28e4b3af68808d233b9a1a1b1a4'
+  }
+  foreach ($relativePath in $frozenComctl.Keys) {
+    $actual = (Get-FileHash -LiteralPath (Require-File $relativePath) -Algorithm SHA256).Hash.ToLowerInvariant()
+    if ($actual -ne $frozenComctl[$relativePath]) {
+      throw "Frozen 0.1.8 guest artifact differs: $relativePath ($actual)"
+    }
+  }
+}
 # These static import gates use the exact isolated test artifacts compiled by
 # release/build-dlls.ps1; verify they match the packaged wrapper DLL.
 foreach ($candidate in @('build/finalpath/m98wrap.dll', 'build/stream/m98wrap.dll',
@@ -155,6 +174,46 @@ if ($includeShell) {
 $inputs = [ordered]@{
   'M98USER.DLL' = 'build/M98USER.DLL'
   'M98GDI.DLL' = 'build/gdi-alpha/M98GDI.DLL'
+  'M98CTLP.DLL' = 'build/comctl-png/M98CTLP.DLL'
+  'guest-tests/M98CTLP.DLL' = 'build/comctl-png/M98CTLP.DLL'
+  'guest-tests/comctl_png_host.exe' = 'build/comctl-png/comctl_png_host.exe'
+  'guest-tests/comctl_png_depth_host.exe' = 'build/comctl-png/comctl_png_depth_host.exe'
+  'guest-tests/comctl_ordinal_import_probe.exe' = 'build/comctl-ord/comctl_ordinal_import_probe.exe'
+  'src/m98_comctl_ordinals.c' = 'src/m98_comctl_ordinals.c'
+  'src/m98_comctl_ordinals.h' = 'src/m98_comctl_ordinals.h'
+  'src/m98_icon_png.c' = 'src/m98_icon_png.c'
+  'src/m98_icon_png.h' = 'src/m98_icon_png.h'
+  'src/m98_icon_choice.c' = 'src/m98_icon_choice.c'
+  'src/m98_icon_choice.h' = 'src/m98_icon_choice.h'
+  'src/m98ctl.c' = 'src/m98ctl.c'
+  'src/vendor/lodepng/lodepng.c' = 'src/vendor/lodepng/lodepng.c'
+  'src/vendor/lodepng/lodepng.h' = 'src/vendor/lodepng/lodepng.h'
+  'src/vendor/lodepng/LICENSE' = 'src/vendor/lodepng/LICENSE'
+  'tools/build-comctl-ordinals.ps1' = 'tools/build-comctl-ordinals.ps1'
+  'tools/build-comctl-png.ps1' = 'tools/build-comctl-png.ps1'
+  'tools/patch_core_ordinals.py' = 'tools/patch_core_ordinals.py'
+  'tools/upgrade_core_comctl_png.py' = 'tools/upgrade_core_comctl_png.py'
+  'tools/test-comctl-npp501.ps1' = 'tools/test-comctl-npp501.ps1'
+  'tools/tests/test_patch_core_ordinals.py' = 'tools/tests/test_patch_core_ordinals.py'
+  'tools/tests/test_upgrade_core_comctl_png.py' = 'tools/tests/test_upgrade_core_comctl_png.py'
+  'tests/check_comctl_ordinal_pe98.py' = 'tests/check_comctl_ordinal_pe98.py'
+  'tests/comctl_ordinal_host.c' = 'tests/comctl_ordinal_host.c'
+  'tests/comctl_ordinal_import_probe.c' = 'tests/comctl_ordinal_import_probe.c'
+  'tests/comctl_ordinal_imports.def' = 'tests/comctl_ordinal_imports.def'
+  'tests/comctl_icon_fixture.rc' = 'tests/comctl_icon_fixture.rc'
+  'tests/make_comctl_icon_fixture.py' = 'tests/make_comctl_icon_fixture.py'
+  'tests/comctl_png_fixture.rc' = 'tests/comctl_png_fixture.rc'
+  'tests/make_comctl_png_fixture.py' = 'tests/make_comctl_png_fixture.py'
+  'tests/comctl_png_host.c' = 'tests/comctl_png_host.c'
+  'tests/comctl_icon_choice_contract.c' = 'tests/comctl_icon_choice_contract.c'
+  'tests/make_comctl_depth_fixture.py' = 'tests/make_comctl_depth_fixture.py'
+  'tests/comctl_png_depth_fixture.rc' = 'tests/comctl_png_depth_fixture.rc'
+  'tests/comctl_png_depth_host.c' = 'tests/comctl_png_depth_host.c'
+  'tests/extract_group_icon.py' = 'tests/extract_group_icon.py'
+  'tests/comctl_png_npp501.rc' = 'tests/comctl_png_npp501.rc'
+  'tests/comctl_png_npp501_host.c' = 'tests/comctl_png_npp501_host.c'
+  'docs/COMCTL_ORDINAL_PORT.md' = 'docs/COMCTL_ORDINAL_PORT.md'
+  'docs/RELEASE_0_1_8_CHECKPOINT.md' = 'docs/RELEASE_0_1_8_CHECKPOINT.md'
   'src/m98_gdi_alpha.c' = 'src/m98_gdi_alpha.c'
   'src/m98_gdi_alpha.h' = 'src/m98_gdi_alpha.h'
   'src/m98gdi.c' = 'src/m98gdi.c'
@@ -432,3 +491,4 @@ Write-Host 'Guest static/integrated/fixture probes, SList fault probe and TPMARK
 Write-Host 'UXTHEME.DLL KnownDLL candidate included: True'
 Write-Host 'KSWITCH.EXE guarded mapping helper included: True'
 Write-Host 'M98GDI.DLL GDI32 alpha provider, source and focused probes included: True'
+Write-Host 'M98CTLP.DLL COMCTL32 ordinal PNG provider, source and focused probes included: True'

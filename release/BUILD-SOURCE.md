@@ -2,7 +2,7 @@
 
 This patch ZIP includes corresponding C source, export definitions, build
 scripts, PE validation scripts, and license notices for `m98wrap.dll`,
-`M98USER.DLL`, `M98GDI.DLL`, `m98shell.dll`, `m98adv.dll`, `UXTHEME.DLL`, `dbghelp.dll`, `dwmapi.dll`,
+`M98USER.DLL`, `M98GDI.DLL`, `M98CTLP.DLL`, `m98shell.dll`, `m98adv.dll`, `UXTHEME.DLL`, `dbghelp.dll`, `dwmapi.dll`,
 `bcrypt.dll`, and the guarded `KSWITCH.EXE` helper. It contains **three exact
 KernelEx UXTHEME source files**, not the KernelEx installer or full repository.
 It does not include Windows, Microsoft Unicode Layer, any target application,
@@ -70,6 +70,29 @@ that DLL nor the original Microsoft `MSIMG32.DLL`. The adapter accepts only
 the tested auxiliary PE layout and fails closed when it is absent or differs.
 `docs/GDI_ALPHA_PORT.md` describes the bounded behavior and guest evidence;
 these three entries do not establish full GDI32 compatibility.
+
+`M98CTLP.DLL` is the separate COMCTL32 ordinal 345/381 provider. The release
+builder calls `tools/build-comctl-ordinals.ps1` for the genuine ordinal-only
+import probe, then `tools/build-comctl-png.ps1` for the PNG-capable shipping
+provider and its generated-resource direct-call probes, including a
+same-size display-color-depth selection check. The provider combines
+original GPL-2.0-only bridge code with pinned, unmodified LodePNG C source;
+`src/vendor/lodepng/LICENSE` carries its permissive notice. The PE gate checks
+PE32/Win98 headers, relocations, OEM imports and provider table shape. The
+static probe imports `COMCTL32` ordinals 345 and 381; the direct probe opens
+the provider from its own directory. These are distinct checks. Windows 98
+guest results and the partial `TaskDialogIndirect` behavior are documented in
+`docs/COMCTL_ORDINAL_PORT.md` and `docs/RELEASE_0_1_8_CHECKPOINT.md`.
+
+For guest installation, rename a copy of the shipped `M98CTLP.DLL` to
+`M98CTL3.DLL` in the existing KernelEx folder, then route the six entries in
+the guest's current `CORE.INI` using the supplied patch or guarded upgrade
+tool. Preserve the existing settings and an exact backup, cold-boot, and run
+the ordinal import probe. Do not overwrite the OEM `COMCTL32.DLL`. The
+source-package build does not install or activate this route in a guest. The
+installed, directly and statically guest-tested candidate has SHA-256
+`aafd97b71ff63c9f9cedffa4705713243d5708f22ff6ffaf04c732261ca0e3f8`;
+the extracted ZIP rebuild must match it byte for byte before publication.
 
 `build-dlls.ps1` also runs the included focused builds for final-path, stream,
 locale information, application restart, process path, SRW condition
@@ -140,6 +163,9 @@ cannot silently satisfy the integration test.
 | `gdi_alpha_import_probe.exe` and `gdi_alpha_static_contract.exe` | Three real GDI32 imports through an installed `m98gdi3` route; the latter checks bounded pixels and errors |
 | `gdi_alpha_direct_contract.exe` | Directly loads the installed `C:\WINDOWS\KERNELEX\M98GDI3.DLL` and checks the same bounded contract |
 | `gdi_alpha_host.exe`, `gdi_alpha_lifetime.exe`, and `GDIFIX.DLL` | Isolated table, absent-backend, and repeated load/unload checks; keep the fixture beside these executables |
+| `comctl_ordinal_import_probe.exe` | Real `COMCTL32` ordinal 345/381 imports after the `m98ctl3` route is installed |
+| `comctl_png_host.exe` and `M98CTLP.DLL` | Direct PNG icon contract using the provider beside the probe; this does not check the installed KernelEx route |
+| `comctl_png_depth_host.exe` and `M98CTLP.DLL` | Direct same-size icon color-depth selection using the provider and a generated resource; the installed four-bit display selected the tested 16-bpp source |
 
 Use the guest-tests directory as the test working directory. Integrated probes
 also require the production `m98wrap.dll` to be installed or copied beside them.
@@ -163,10 +189,10 @@ In the source checkout, create a release ZIP after building and validating:
 
 ```powershell
 .\release\build-dlls.ps1
-.\tools\package-release.ps1 -Version 0.1.5-preview
+.\tools\package-release.ps1 -Version 0.1.8-preview
 ```
 
-Replace `0.1.5-preview` with the chosen release version. The packaging script writes
+Replace `0.1.8-preview` with the chosen release version. The packaging script writes
 the ZIP and its `.sha256` file under `build/releases/` and selects every ZIP
 member from a fixed list.
 
