@@ -2,7 +2,7 @@
 
 This patch ZIP includes corresponding C source, export definitions, build
 scripts, PE validation scripts, and license notices for `m98wrap.dll`,
-`M98USER.DLL`, `m98shell.dll`, `m98adv.dll`, `UXTHEME.DLL`, `dbghelp.dll`, `dwmapi.dll`,
+`M98USER.DLL`, `M98GDI.DLL`, `m98shell.dll`, `m98adv.dll`, `UXTHEME.DLL`, `dbghelp.dll`, `dwmapi.dll`,
 `bcrypt.dll`, and the guarded `KSWITCH.EXE` helper. It contains **three exact
 KernelEx UXTHEME source files**, not the KernelEx installer or full repository.
 It does not include Windows, Microsoft Unicode Layer, any target application,
@@ -56,6 +56,20 @@ changing the host clipboard. Data-changing tests require explicit
 That flag is never enabled by the release builder. See `docs/CLIPBOARD_PORT.md`
 and `docs/CLIPBOARD_CONTRACT_TESTS.md` for the backend and evidence limits.
 The entire 45-row clipboard catalogue remains outstanding as a family.
+
+The separate `M98GDI.DLL` has three routed GDI32 aliases:
+`GdiAlphaBlend`, `GdiGradientFill`, and `GdiTransparentBlt`. The release build
+calls `tools/build-gdi-alpha.ps1`, which builds the shipping provider, an
+independent fixture, direct and static-import pixel contracts, a three-import
+probe, and a repeated DLL load/unload probe. Its PE gate checks i386 PE32,
+Win98 loader version, relocations, original-media imports, export shape, and
+the genuine GDI32 imports in the routed probes. The package includes their
+source and explicitly allowlisted guest executables. The installed KernelEx
+auxiliary `MSIMG32.DLL` is a separate dependency: the ZIP contains neither
+that DLL nor the original Microsoft `MSIMG32.DLL`. The adapter accepts only
+the tested auxiliary PE layout and fails closed when it is absent or differs.
+`docs/GDI_ALPHA_PORT.md` describes the bounded behavior and guest evidence;
+these three entries do not establish full GDI32 compatibility.
 
 `build-dlls.ps1` also runs the included focused builds for final-path, stream,
 locale information, application restart, process path, SRW condition
@@ -123,6 +137,9 @@ cannot silently satisfy the integration test.
 | `slist_import_probe.exe` | Seven real KERNEL32 SList imports |
 | `slist_integrated_probe.exe` | Direct production-wrapper SList table test |
 | `slist_fault_smoke.exe` | Self-contained SList module with test-only deterministic race injection and concurrent free stress |
+| `gdi_alpha_import_probe.exe` and `gdi_alpha_static_contract.exe` | Three real GDI32 imports through an installed `m98gdi3` route; the latter checks bounded pixels and errors |
+| `gdi_alpha_direct_contract.exe` | Directly loads the installed `C:\WINDOWS\KERNELEX\M98GDI3.DLL` and checks the same bounded contract |
+| `gdi_alpha_host.exe`, `gdi_alpha_lifetime.exe`, and `GDIFIX.DLL` | Isolated table, absent-backend, and repeated load/unload checks; keep the fixture beside these executables |
 
 Use the guest-tests directory as the test working directory. Integrated probes
 also require the production `m98wrap.dll` to be installed or copied beside them.

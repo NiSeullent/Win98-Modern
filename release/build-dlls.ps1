@@ -45,6 +45,10 @@ if ($LASTEXITCODE -ne 0) { throw 'm98wrap.dll PE98 validation failed' }
 & (Join-Path $projectRoot 'tools/build-clipboard.ps1')
 Copy-Item -LiteralPath (Join-Path $buildDir 'clipboard/M98USER.DLL') `
   -Destination (Join-Path $buildDir 'M98USER.DLL') -Force
+# Build the separate GDI32 provider and its genuine routed-import and pixel
+# contract probes. The builder validates the exact DLL later packaged below.
+& (Join-Path $projectRoot 'tools/build-gdi-alpha.ps1')
+if ($LASTEXITCODE -ne 0) { throw 'M98GDI.DLL build or focused checks failed' }
 # Put the exact shipping wrapper beside each integration probe. The executable
 # directory precedes the working directory in the loader search order, so a
 # leftover local DLL must not silently substitute for the artifact being tested.
@@ -210,5 +214,6 @@ Write-Host (Join-Path $buildDir 'dbghelp.dll')
 Write-Host (Join-Path $buildDir 'dwmapi.dll')
 Write-Host (Join-Path $buildDir 'bcrypt.dll')
 Write-Host (Join-Path $buildDir 'm98adv.dll')
+Write-Host (Join-Path $buildDir 'gdi-alpha/M98GDI.DLL')
 Write-Host $uxDll
 Write-Host $switch

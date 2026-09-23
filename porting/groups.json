@@ -26,6 +26,7 @@
     {"id":"registry","title":"Registry types, enumeration, access and notifications","dll":"^(ADVAPI32|KERNELBASE|NTDLL)\\.DLL$","name":"(^Reg|^Rtl.*Registry)","depends_on":["unicode-nls","security-backend"],"priority":3},
     {"id":"file-io","title":"Files, paths, streams, volumes and asynchronous I/O","dll":"^(KERNEL32|KERNELBASE)\\.DLL$","name":"(File|Directory|Volume|Path|IoCompletion|DeviceIo|Overlapped|CancelIo)","depends_on":["io-backend","unicode-nls"],"priority":3},
     {"id":"clipboard","title":"Clipboard formats, ownership, listeners and viewer-chain lifecycle","dll":"^(USER32|WIN32U)\\.DLL$","name":"Clipboard","depends_on":["graphics-backend","thread-lifecycle","unicode-nls"],"priority":3},
+    {"id":"gdi-alpha-raster","title":"Alpha, color-key transparent and gradient drawing aliases with native raster backend","dll":"^(GDI32|MSIMG32)\\.DLL$","name":"^(Gdi)?(AlphaBlend|TransparentBlt|GradientFill)$","depends_on":["graphics-backend"],"priority":3},
     {"id":"ui-theme","title":"User interface and theme services","dll":"^(USER32|UXTHEME|COMCTL32|DWMAPI)\\.DLL$","depends_on":["graphics-backend","unicode-nls"],"priority":3},
     {"id":"shell","title":"Shell, paths, items, dialogs and shell COM objects","dll":"^(SHELL32|SHLWAPI|SHCORE)\\.DLL$","depends_on":["com-runtime","io-backend","graphics-backend"],"priority":4},
     {"id":"graphics-media","title":"Graphics and multimedia runtimes","dll":"^(GDI32|D3D.*|DDRAW|DXGI|OPENGL32|WINMM|DSOUND|MF.*|QUARTZ)\\.DLL$","depends_on":["graphics-backend","com-runtime"],"priority":4},

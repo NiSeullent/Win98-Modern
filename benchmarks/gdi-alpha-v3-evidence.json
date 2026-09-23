@@ -1,0 +1,66 @@
+{
+  "schema": "w98mod.gdi-alpha-v3-evidence.v1",
+  "record": {
+    "id": "guest-m98gdi3-alpha-raster-2026-09-24",
+    "family": "gdi-alpha-raster",
+    "apis": [
+      {
+        "dll": "GDI32.DLL",
+        "name": "GdiAlphaBlend"
+      },
+      {
+        "dll": "GDI32.DLL",
+        "name": "GdiTransparentBlt"
+      },
+      {
+        "dll": "GDI32.DLL",
+        "name": "GdiGradientFill"
+      }
+    ],
+    "evidence_kind": "guest_static_import_contract_subset",
+    "environment": {
+      "os": "Directly installed Korean Windows 98 SE",
+      "vm": "Win98Modern-Accel-128",
+      "acceleration": "VirtualBox NEM hardware virtualization; current boot checked by vm/run.ps1"
+    },
+    "provider": {
+      "path": "build/gdi-alpha/M98GDI.DLL",
+      "guest_path": "C:\\WINDOWS\\KernelEx\\M98GDI3.DLL",
+      "sha256": "d61826f03a21e04ba5a983ee99db8a9cfff3ce33aee7832e10086f7581bc5ac2"
+    },
+    "backend": {
+      "guest_path": "C:\\WINDOWS\\KernelEx\\MSIMG32.DLL",
+      "sha256": "e2a644c38cd814a63239b0376cb9921d824c492b8816781ae7f3e8724efabee5",
+      "role": "installed KernelEx 4.5.2 auxiliary implementation, not redistributed"
+    },
+    "core_ini_sha256": "5c53c4d431d33b5a31dc5e5eacee9ed4ec9cddb3273979cdabbb3e1c33a49616",
+    "test": {
+      "path": "build/gdi-alpha/gdi_alpha_static_contract.exe",
+      "sha256": "295bbb2e2c0ac718fc5a15cd493b036362f36e1c0db2c90c066db93f255db1f4"
+    },
+    "source_hashes": {
+      "src/m98_gdi_alpha.c": "9a82c25b016dbbb68b6350e52f3505cc68d00adec38f3aaa98f32ad3b87533ed",
+      "src/m98_gdi_alpha.h": "280d708b3781c83a4743d8d34e8471da79639b236abde6c893344341b2e58e0f",
+      "src/m98gdi.c": "20b5c816452b4eb977f287f09210291b58349319653f13a5c89a2ed3bc79957a"
+    },
+    "receipt": {
+      "command": "C:\\M98LAB\\GDIASC.EXE",
+      "cwd": "C:\\M98LAB",
+      "timeout_ms": 30000,
+      "exit_code": 0,
+      "timed_out": false,
+      "output_truncated": false,
+      "output_bytes": 2046,
+      "output_sha256": "b331b321dbb9a72c65b30ddff4427e57d5411ca3cbcb51020b3b4bb543170688",
+      "output": "mode=static-GDI32\r\ncase=alpha_opaque result=0x00000001 gle=0x4938a001 pixel0x00000000=0x00ff0000 pixel0x00000001=0x11223344\r\ncase=alpha_constant_128 result=0x00000001 gle=0x00000057 pixel0x00000000=0x0080007f pixel0x00000001=0x11223344\r\ncase=alpha_constant_0 result=0x00000001 gle=0x4938a006 pixel0x00000000=0x000000ff pixel0x00000001=0x11223344\r\ncase=alpha_per_pixel_128 result=0x00000001 gle=0x00000057 pixel0x00000000=0x8080007f pixel0x00000001=0x11223344\r\ncase=alpha_invalid_dest result=0x00000000 gle=0x00000006 pixel0x00000000=0x000000ff pixel0x00000001=0x11223344\r\ncase=alpha_negative_width result=0x00000000 gle=0x00000057 pixel0x00000000=0x000000ff pixel0x00000001=0x11223344\r\ncase=transparent_key result=0x00000001 gle=0x4938b001 pixel0x00000000=0x000000ff pixel0x00000001=0x00ff0000 pixel0x00000002=0x000000ff pixel0x00000003=0x000000ff\r\ncase=transparent_stretch result=0x00000001 gle=0x00000057 pixel0x00000000=0x000000ff pixel0x00000001=0x000000ff pixel0x00000002=0x00ff0000 pixel0x00000003=0x00ff0000\r\ncase=transparent_invalid_dest result=0x00000000 gle=0x00000006 pixel0x00000000=0x000000ff pixel0x00000001=0x000000ff pixel0x00000002=0x00ff0000 pixel0x00000003=0x00ff0000\r\ncase=gradient_horizontal result=0x00000001 gle=0x4938c001 pixel0x00000000=0x00ff0000 pixel0x00000001=0x00bf003f pixel0x00000002=0x007f007f pixel0x00000003=0x003f00bf\r\ncase=gradient_vertical result=0x00000001 gle=0x4938c002 pixel0x00000000=0x00ff0000 pixel0x00000001=0x00ff0000 pixel0x00000002=0x00ff0000 pixel0x00000003=0x00ff0000\r\ncase=gradient_triangle result=0x00000001 gle=0x4938c003 pixel0x00000000=0x00ff0000 pixel0x00000001=0x00bf3f00 pixel0x00000002=0x007f7f00 pixel0x00000003=0x003fbf00\r\ncase=gradient_bad_index result=0x00000000 gle=0x4938c004 pixel0x00000000=0x00ff0000 pixel0x00000001=0x00bf3f00 pixel0x00000002=0x007f7f00 pixel0x00000003=0x003fbf00\r\ncase=gradient_bad_mode result=0x00000000 gle=0x00000057 pixel0x00000000=0x00ff0000 pixel0x00000001=0x00bf3f00 pixel0x00000002=0x007f7f00 pixel0x00000003=0x003fbf00\r\ninternal_failures=0x00000000\r\n",
+      "guest": "m98agent/v1 protocol=1 os=4.10 build=67766446",
+      "transport": "VirtualBox COM1 local named pipe",
+      "pipe": "\\\\.\\pipe\\Win98Modern-Lab"
+    },
+    "scope": "Fourteen bounded alpha, transparent-key/stretch and gradient pixel/error cases through real GDI32 static imports with a pixel-area work budget; separate three-import probe also passed",
+    "limitations": "Only the pinned installed KernelEx auxiliary backend was tested. Alias contracts are partial: color/alpha clipping, all ROPs, overlapping source/destination, invalid-pointer exceptions, all gradient edge cases and application functions are not proven. Notepad++ still raises Exception On WM_CREATE.",
+    "documentation": "docs/GDI_ALPHA_PORT.md",
+    "full_compatibility_verified": false
+  },
+  "interpretation": "Limited static-import contract evidence only; no full GDI32 or application compatibility claim."
+}

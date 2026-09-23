@@ -1,6 +1,6 @@
 # Windows 98 SE용 설치 안내
 
-이 ZIP에는 실험용 KernelEx API 라이브러리 `m98wrap.dll`, `M98USER.DLL`, `m98shell.dll`, `m98adv.dll`, KernelEx용 결합 테마 후보 `UXTHEME.DLL`, 안전 범위를 제한한 전환 도구 `KSWITCH.EXE`, 앱 로컬용 `dbghelp.dll`, `dwmapi.dll`, `bcrypt.dll`이 들어 있습니다.
+이 ZIP에는 실험용 KernelEx API 라이브러리 `m98wrap.dll`, `M98USER.DLL`, `M98GDI.DLL`, `m98shell.dll`, `m98adv.dll`, KernelEx용 결합 테마 후보 `UXTHEME.DLL`, 안전 범위를 제한한 전환 도구 `KSWITCH.EXE`, 앱 로컬용 `dbghelp.dll`, `dwmapi.dll`, `bcrypt.dll`이 들어 있습니다.
 Windows 98 SE용 KernelEx API 확장 시험을 위한 파일이며 최신 프로그램의 실행을
 보장하지 않습니다. 설치는 Windows 98 SE **32비트 게스트**에서 수동으로 합니다.
 이 미리보기의 `m98wrap.dll`에는 KERNEL32 이름 89개가 등록돼 있습니다. 이는
@@ -122,7 +122,56 @@ Windows 98 SE용 KernelEx API 확장 시험을 위한 파일이며 최신 프로
 4. 출력에서 `USER32.AddClipboardFormatListener`, `USER32.RemoveClipboardFormatListener`, `USER32.GetUpdatedClipboardFormats`가 세 프로필에 각각 한 번씩 있는지 확인합니다. 변경한 설정을 게스트에 옮기고 정상 종료 후 콜드 부팅합니다.
 5. `guest-tests/clipboard_import_probe.exe`로 정적 연결을 검사합니다. `guest-tests/clipboard_static_suite.exe --require-api --bounded-provider`는 클립보드 내용을 바꾸지 않는 전체 계약 시험입니다. 데이터 변경 시험은 **원래 클립보드가 비어 있는 시험용 게스트에서만** `--guest-mutate`를 추가해 실행하며, 성공 시 빈 상태로 복구합니다. 지원 범위는 `docs/CLIPBOARD_PORT.md`를 참조하세요.
 
-## 7. KernelEx 테마 KnownDLL 후보 시험하기 (선택, 실험용)
+## 7. GDI32 알파·투명·그라디언트 API 연결하기 (선택, 실험용)
+
+이 공급자는 `GdiAlphaBlend`, `GdiGradientFill`, `GdiTransparentBlt` 세 이름을
+연결합니다. **설치된 KernelEx 보조 `MSIMG32.DLL`**의 특정 버전에만 의존하며,
+그 바이너리는 ZIP에 없습니다. 시험 게스트의
+`C:\WINDOWS\KernelEx\MSIMG32.DLL` SHA-256은
+`e2a644c38cd814a63239b0376cb9921d824c492b8816781ae7f3e8724efabee5`입니다.
+게스트에서 그 파일을 호스트로 복사한 뒤 `Get-FileHash -Algorithm SHA256`으로
+확인합니다. 다른 해시면 이 공급자를 연결하지 마세요. 원래 Windows 98의
+`C:\WINDOWS\SYSTEM\MSIMG32.DLL`은 시험한 픽셀 범위에서 다른 동작을 보여
+이 공급자의 백엔드로 사용하지 않습니다.
+
+1. 게스트의 설치된 `CORE.INI`를 호스트에 백업하고 SHA-256을 기록합니다.
+   기존 `M98GDI3.DLL`도 있으면 식별하고 백업합니다.
+2. ZIP의 `M98GDI.DLL`을 게스트의 `C:\WINDOWS\KernelEx\M98GDI3.DLL`로
+   복사하고 ZIP의 `SHA256SUMS.txt`에 적힌 `M98GDI.DLL` 해시와 복사본을
+   비교합니다. `M98GDI3`는 현재 직접 호출과 재부팅 후 정적 연결을 시험한 DOS 8.3 공급자 이름입니다.
+3. 새 GDI 공급자를 처음 등록한다면, **백업한 설치본**을 입력으로 다음 명령을
+   실행합니다. 기존 연결과 다른 섹션은 보존하고 세 활성 프로필에 아홉 개의
+   연결을 추가합니다. 출력은 새 파일명이어야 합니다.
+
+   ```powershell
+   python remote/patch_core_family.py CORE-BEFORE.INI CORE-GDI-READY.INI --library m98gdi3 --family gdi-alpha-raster --register-provider
+   ```
+
+   이전 버전 `m98gdi2`에 이 세 GDI 이름이 이미 연결된 게스트에서는 새 공급자를
+   중복 등록하지 말고 아래 명령으로 아홉 연결과 `contents=` 항목을 함께
+   이전합니다. 다른 공급자 이름이라면 실제 설치 이름을 `--old`에 적습니다.
+
+   ```powershell
+   python remote/patch_core_wrapper_upgrade.py CORE-BEFORE.INI CORE-GDI-READY.INI --old m98gdi2 --new m98gdi3
+   ```
+
+4. 결과의 `[DCFG1] contents=`에 `m98gdi3`가 한 번 있는지, 세 프로필에
+   `GDI32.GdiAlphaBlend`, `GDI32.GdiGradientFill`,
+   `GDI32.GdiTransparentBlt`가 각각 `m98gdi3.0`으로 연결됐는지 확인합니다.
+   검토한 파일을 설치된 `CORE.INI`에 적용한 뒤 Windows 98을 정상 종료하고
+   **완전히 껐다가 다시 켭니다**.
+5. `guest-tests/gdi_alpha_import_probe.exe`로 정적 import를 확인하고,
+   `gdi_alpha_static_contract.exe`로 제한된 픽셀·오류 계약을 검사합니다.
+   `gdi_alpha_direct_contract.exe`는 `C:\WINDOWS\KERNELEX\M98GDI3.DLL`을
+   직접 여므로 KernelEx가 다른 위치라면 그 경로를 소스에서 바꿔 재빌드해야
+   합니다. `gdi_alpha_host.exe`와 `gdi_alpha_lifetime.exe`는 같은 폴더의
+   `GDIFIX.DLL`을 쓰는 독립 시험입니다.
+
+지원하는 크기·형식 제한과 게스트 시험 범위는 `docs/GDI_ALPHA_PORT.md`를
+참조하세요. 이 세 API의 제한된 직접/정적 시험은 전체 GDI32 호환이나
+Notepad++ 편집 기능을 증명하지 않습니다.
+
+## 8. KernelEx 테마 KnownDLL 후보 시험하기 (선택, 실험용)
 
 `UXTHEME.DLL`은 원본 KernelEx 함수 이름 48개를 보존하고 여섯 함수를 더한 결합 후보입니다. KernelEx는 UXTHEME import를 자체 KnownDLL로 연결하므로, 프로그램 폴더에 같은 이름의 DLL을 복사하는 방식으로는 이 후보가 선택되지 않았습니다. 원본 파일을 덮어쓰지 않고 별도 파일명으로 시험합니다.
 
@@ -133,15 +182,15 @@ Windows 98 SE용 KernelEx API 확장 시험을 위한 파일이며 최신 프로
 
 시험 게스트에서 결합 후보가 `DrawThemeTextEx` 정적 import를 통과하고, 테마 글꼴 여섯 사례의 정적 import 시험도 통과했습니다. Notepad++ 8.9.8은 이후에도 다른 KERNEL32 import 누락으로 중단됐습니다. 이 DLL은 Windows XP/Vista 테마 서비스를 구현하지 않으며 앱 전체 구동을 보장하지 않습니다.
 
-## 8. 앱 로컬 DLL 사용하기 (선택)
+## 9. 앱 로컬 DLL 사용하기 (선택)
 
 필요한 앱에 한해 `dbghelp.dll`, `dwmapi.dll`, `bcrypt.dll`을 실행 파일과 **같은 폴더**에 복사합니다. 예를 들어 Notepad++를 시험한다면 `notepad++.exe` 옆에 둡니다. 같은 이름의 파일이 이미 있으면 먼저 백업합니다. `C:\WINDOWS\SYSTEM`이나 KernelEx 폴더에는 복사하지 마세요. `dbghelp.dll`은 Windows 98의 `IMAGEHLP.DLL`에 있는 `ImageNtHeader`를 연결하고, `dwmapi.dll`은 합성 데스크톱 기능이 없음을 오류 코드로 알려줍니다. `bcrypt.dll`은 SHA-256·MD5·HMAC 해시 기능 일부를 제공합니다.
 
 ## 되돌리기
 
 1. KnownDLL 후보를 전환했다면 `KSWITCH.EXE inspect`로 `VALUE=UXTNEW.DLL`을 확인한 뒤 `KSWITCH.EXE restore`를 실행합니다. `VALUE=UXTHEME.DLL`이 다시 표시되는지 확인하고 **정상 종료 후 콜드 부팅**합니다. 그 뒤에만 후보 `UXTNEW.DLL`을 제거합니다. 값이 예상과 다르면 기록한 스냅샷과 백업을 사용합니다.
-2. `core.ini`의 `[DCFG1]` `contents=` 줄에서 추가한 `m98wrap`, `m98shell`, `m98adv`, `m98usr1` 항목과 3~6단계에서 추가한 연결 줄만 제거합니다. 설치 뒤 다른 수정이 없었다면 백업해 둔 원본 `COREBAK.INI`를 `core.ini`로 복원해도 됩니다.
-3. KernelEx 폴더에 복사한 `M98WRAP.DLL`, `M98SHELL.DLL`, `M98ADV.DLL`, `M98USR1.DLL`을 제거하거나 이전 DLL을 백업했다면 복원합니다.
+2. `core.ini`의 `[DCFG1]` `contents=` 줄에서 추가한 `m98wrap`, `m98shell`, `m98adv`, `m98usr1`, `m98gdi3` 항목과 3~7단계에서 추가한 연결 줄만 제거합니다. 설치 뒤 다른 수정이 없었다면 백업해 둔 원본 `COREBAK.INI`를 `core.ini`로 복원해도 됩니다.
+3. KernelEx 폴더에 복사한 `M98WRAP.DLL`, `M98SHELL.DLL`, `M98ADV.DLL`, `M98USR1.DLL`, `M98GDI3.DLL`을 제거하거나 이전 DLL을 백업했다면 복원합니다.
 4. 프로그램 폴더에 복사한 `DBGHELP.DLL`, `DWMAPI.DLL`, `BCRYPT.DLL`도 제거하거나 이전 파일을 복원합니다.
 5. 게스트를 콜드 부팅합니다. 설정 편집에 문제가 생기면 백업한 원본 `core.ini`를 복원합니다.
 
@@ -151,6 +200,6 @@ Windows 98 SE용 KernelEx API 확장 시험을 위한 파일이며 최신 프로
 
 ## 이번 API 묶음 검증
 
-M98WRP19 기준으로 SList 7개, 스레드풀 work/callback 12개, InitOnce 4개, NLS 2개, FLS·스레드·파이버 13개의 제한된 계약 시험이 실제 설치된 Win98에서 정적 import로 통과했습니다. KERNEL32 표의 89개 등록 이름 전체가 완전 호환이라는 뜻은 아닙니다. 통합 회귀 시험 10개와 USER32 클립보드 시험 6개가 통과했습니다. Notepad++ 8.9.8은 다음 `GDI32.GdiAlphaBlend` 누락에서 멈춥니다.
+M98WRP19 기준으로 SList 7개, 스레드풀 work/callback 12개, InitOnce 4개, NLS 2개, FLS·스레드·파이버 13개의 제한된 계약 시험이 실제 설치된 Win98에서 정적 import로 통과했습니다. KERNEL32 표의 89개 등록 이름 전체가 완전 호환이라는 뜻은 아닙니다. 통합 회귀 시험 10개와 USER32 클립보드 시험 6개가 통과했습니다. 그라디언트 픽셀 작업량 제한을 보강한 GDI32 공급자 `M98GDI3.DLL`은 직접 호출과 콜드 부팅 후 정적 import 경로에서 각각 14개 제한 사례를 통과했고, 별도 세 이름 정적 import 시험도 통과했습니다. 앞선 TLS 정리 수정판은 16회 DLL 적재/해제 시험을 통과했습니다. 이는 작은 픽셀·오류 계약의 결과이며 GDI32 전체의 호환률이 아닙니다. Notepad++ 8.9.8은 이전 `GDI32.GdiAlphaBlend` 로더 오류를 넘어섰지만, 쓰기 가능한 앱 폴더에서 `WM_CREATE` 접근 위반이 관찰되어 편집기 기능은 아직 확인되지 않았습니다.
 
 FLS/lifecycle 13개는 공통 백엔드에 함께 연결해야 합니다. 예제 `integration/core.ini`와 `porting/runtime-routes.json`의 해당 기능 묶음을 기존 설정에 병합하고 정상 종료 후 다시 부팅합니다. `CreateThread`와 종료 함수 일부만 이전 공급자에 남기면 콜백 처리가 누락될 수 있습니다. 역방향 파이버 변환, raw/강제 종료, 일부 플래그와 내부 스레드풀 종료 정리는 아직 미완료입니다. 정리 콜백이 일시 중단된 파이버를 삭제하려는 요청은 ERROR_BUSY로 거부합니다.

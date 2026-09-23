@@ -35,6 +35,15 @@ if ((Get-FileHash -LiteralPath (Require-File 'build/M98USER.DLL') -Algorithm SHA
     (Get-FileHash -LiteralPath (Require-File 'build/clipboard/M98USER.DLL') -Algorithm SHA256).Hash) {
   throw 'Clipboard provider differs from the tested shipping DLL'
 }
+& python (Require-File 'tests/gdi_alpha_check_pe98.py') `
+  (Require-File 'build/gdi-alpha/M98GDI.DLL') `
+  (Require-File 'build/gdi-alpha/GDIFIX.DLL') `
+  (Require-File 'build/gdi-alpha/gdi_alpha_host.exe') `
+  (Require-File 'build/gdi-alpha/gdi_alpha_import_probe.exe') `
+  (Require-File 'build/gdi-alpha/gdi_alpha_lifetime.exe') `
+  (Require-File 'build/gdi-alpha/gdi_alpha_direct_contract.exe') `
+  (Require-File 'build/gdi-alpha/gdi_alpha_static_contract.exe')
+if ($LASTEXITCODE -ne 0) { throw 'GDI32 provider/probe PE98 validation failed' }
 # These static import gates use the exact isolated test artifacts compiled by
 # release/build-dlls.ps1; verify they match the packaged wrapper DLL.
 foreach ($candidate in @('build/finalpath/m98wrap.dll', 'build/stream/m98wrap.dll',
@@ -145,6 +154,26 @@ if ($includeShell) {
 
 $inputs = [ordered]@{
   'M98USER.DLL' = 'build/M98USER.DLL'
+  'M98GDI.DLL' = 'build/gdi-alpha/M98GDI.DLL'
+  'src/m98_gdi_alpha.c' = 'src/m98_gdi_alpha.c'
+  'src/m98_gdi_alpha.h' = 'src/m98_gdi_alpha.h'
+  'src/m98gdi.c' = 'src/m98gdi.c'
+  'tests/gdi_alpha_fixture.c' = 'tests/gdi_alpha_fixture.c'
+  'tests/gdi_alpha_host.c' = 'tests/gdi_alpha_host.c'
+  'tests/gdi_alpha_import_probe.c' = 'tests/gdi_alpha_import_probe.c'
+  'tests/gdi_alpha_lifetime.c' = 'tests/gdi_alpha_lifetime.c'
+  'tests/gdi_alpha_contract.c' = 'tests/gdi_alpha_contract.c'
+  'tests/gdi_alpha_check_pe98.py' = 'tests/gdi_alpha_check_pe98.py'
+  'tools/build-gdi-alpha.ps1' = 'tools/build-gdi-alpha.ps1'
+  'docs/GDI_ALPHA_FAMILY_AUDIT.md' = 'docs/GDI_ALPHA_FAMILY_AUDIT.md'
+  'docs/GDI_ALPHA_GUEST_BASELINE.md' = 'docs/GDI_ALPHA_GUEST_BASELINE.md'
+  'docs/GDI_ALPHA_PORT.md' = 'docs/GDI_ALPHA_PORT.md'
+  'guest-tests/GDIFIX.DLL' = 'build/gdi-alpha/GDIFIX.DLL'
+  'guest-tests/gdi_alpha_host.exe' = 'build/gdi-alpha/gdi_alpha_host.exe'
+  'guest-tests/gdi_alpha_import_probe.exe' = 'build/gdi-alpha/gdi_alpha_import_probe.exe'
+  'guest-tests/gdi_alpha_lifetime.exe' = 'build/gdi-alpha/gdi_alpha_lifetime.exe'
+  'guest-tests/gdi_alpha_direct_contract.exe' = 'build/gdi-alpha/gdi_alpha_direct_contract.exe'
+  'guest-tests/gdi_alpha_static_contract.exe' = 'build/gdi-alpha/gdi_alpha_static_contract.exe'
   'src/m98_clipboard.c' = 'src/m98_clipboard.c'
   'src/m98_clipboard.h' = 'src/m98_clipboard.h'
   'src/m98user.c' = 'src/m98user.c'
@@ -402,3 +431,4 @@ Write-Host '89-entry KERNEL32 wrapper and focused NLS/threadpool/callback/InitOn
 Write-Host 'Guest static/integrated/fixture probes, SList fault probe and TPMARK.DLL included: True'
 Write-Host 'UXTHEME.DLL KnownDLL candidate included: True'
 Write-Host 'KSWITCH.EXE guarded mapping helper included: True'
+Write-Host 'M98GDI.DLL GDI32 alpha provider, source and focused probes included: True'

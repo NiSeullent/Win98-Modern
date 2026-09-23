@@ -1,0 +1,165 @@
+{
+  "schema": "w98mod.npp-seh-wm-create.v1",
+  "application": {
+    "name": "Notepad++",
+    "version": "8.9.8 x86",
+    "host_binary": "benchmarks/media/npp-8.9.8/notepad++.exe",
+    "host_sha256": "960ad7a8d443536ceeeafa18f99aecb70793fc7c4fb6ef23678a9d46bbf7bc78",
+    "guest_pe_identity": {
+      "image_base": "0x00400000",
+      "size_of_image": "0x00767000",
+      "timestamp": "0x6A8B0FD6"
+    },
+    "guest_file_sha256_verified": false
+  },
+  "environment": {
+    "guest": "Windows 98 SE 4.10, directly installed, VirtualBox COM1 agent",
+    "working_copy": "writable guest application directory",
+    "tracer": {
+      "guest_name": "NPPSEH.EXE",
+      "sha256": "205381285ef3fd6808ba7454fef0ab4741086c9e34599c3cb9bb1a9a4487889c",
+      "hash_verified_upload_receipt": "build/gdi-alpha/guest-npp-seh-tracer-put.json"
+    },
+    "installed_configuration_at_prior_verified_checkpoint": {
+      "gdi32_provider": {
+        "guest_name": "M98GDI2.DLL",
+        "sha256": "c6db6ed0898ff2e0a884771de706d5d854019ba859605dc97ae8d9588237cc9b",
+        "hash_verified_upload_receipt": "build/gdi-alpha/guest-v2-provider-upload.json"
+      },
+      "gdi_backend": {
+        "guest_name": "MSIMG32.DLL",
+        "sha256": "e2a644c38cd814a63239b0376cb9921d824c492b8816781ae7f3e8724efabee5",
+        "guest_readback_receipt": "build/gdi-alpha-audit/guest-kex-msimg32-get.json"
+      },
+      "core_ini_sha256": "f5971feed8f55adabf2a4b77fd7f1116a67e37ed2d4ad698701990f0f4ef2044",
+      "hash_verified_upload_receipt": "build/guest/core-m98gdi2-put.json",
+      "registered_provider_names": [
+        "m98wrp19",
+        "m98shl3",
+        "m98ad2",
+        "m98usr1",
+        "m98gdi2"
+      ],
+      "gdi32_routes": {
+        "GdiAlphaBlend": "m98gdi2.0",
+        "GdiGradientFill": "m98gdi2.0",
+        "GdiTransparentBlt": "m98gdi2.0"
+      },
+      "trace_time_hash_readback_performed": false
+    }
+  },
+  "capture": {
+    "trace_receipt": "build/gdi-alpha/guest-npp-seh-v2.json",
+    "trace_receipt_sha256": "81032f3ce40728d9a2c8d4d3f61758024dea8acb5b674bca6b397beb8e63418b",
+    "trace_stdout_sha256": "6af4bb2b334778e21599e44b1dea2534774353f26b1fe806c3c89da7992355a7",
+    "trace_output_truncated": false,
+    "summary": {
+      "debug_events": 111,
+      "access_violations": 4,
+      "all_reported_exceptions_first_chance": true,
+      "bounded_termination_after_ms": 20000,
+      "target_exit_code": 1460
+    },
+    "independent_modal_probe": {
+      "receipt": "build/gdi-alpha/guest-npp-v2-writable.json",
+      "stdout_sha256": "ce2ff0763c258f66a9e54bf345b4a34039ea676c0c4c08c0a01ac0f669a1e79c",
+      "screenshot_sha256": "1a4e4bd7c5938cba667fdbd1ef979c167f2248f06f8913a20336f6325c3adc3f",
+      "observed_modal_title": "Exception On WM_CREATE",
+      "observed_ms": 30005,
+      "editor_window_observed": false
+    }
+  },
+  "module_identity_matches": [
+    {
+      "guest_base": "0xBFF70000",
+      "guest_size_of_image": "0x00073000",
+      "guest_timestamp": "0x3733EB91",
+      "matching_pinned_media_module": "KERNEL32.DLL",
+      "pinned_media_sha256": "6771ab74633e9de1359864bd4306a2ed669bec50de7ac9bb9978c05bf04563ca",
+      "guest_file_sha256_verified": false
+    },
+    {
+      "guest_base": "0xBFE90000",
+      "guest_size_of_image": "0x0008C000",
+      "guest_timestamp": "0x3738D939",
+      "matching_pinned_media_module": "COMCTL32.DLL",
+      "pinned_media_sha256": "f2fdfd8f5bda73dadcea400c9ebce10e8fc5df46057e23a7f2133a17278fddac",
+      "guest_file_sha256_verified": false
+    }
+  ],
+  "exception_sequence": [
+    {
+      "index": 1,
+      "code": "0xC0000005",
+      "module": "KERNEL32.DLL",
+      "module_offset": "0x0000117E",
+      "access": "read",
+      "fault_address": "0xFFFFFFFF"
+    },
+    {
+      "index": 2,
+      "code": "0xC0000005",
+      "module": "COMCTL32.DLL",
+      "module_offset": "0x00000005",
+      "access": "read",
+      "fault_address": "0xFFFFFFFF",
+      "stack_first_five_dwords": [
+        "0x00400000",
+        "0x000005FA",
+        "0x0000000B",
+        "0x0000000B",
+        "0x00E0CB70"
+      ]
+    },
+    {
+      "index": 3,
+      "code": "0xE06D7363",
+      "module": "notepad++.exe",
+      "module_offset": "0x00368902"
+    },
+    {
+      "index": 4,
+      "code": "0xC0000005",
+      "module": "KERNEL32.DLL",
+      "module_offset": "0x0000A606",
+      "access": "read",
+      "fault_address": "0xFFFFFFFF"
+    },
+    {
+      "index": 5,
+      "code": "0xC0000005",
+      "module": "notepad++.exe",
+      "module_offset": "0x001AAD44",
+      "access": "read",
+      "fault_address": "0xFFFFFFFF",
+      "instruction": "movzx eax, word ptr [ebx]"
+    },
+    {
+      "index": 6,
+      "code": "0xE06D7363",
+      "module": "notepad++.exe",
+      "module_offset": "0x00368902"
+    }
+  ],
+  "source_and_binary_correspondence": {
+    "notepad_plus_plus_tag": "v8.9.8",
+    "source_files": [
+      "PowerEditor/src/WinControls/TabBar/TabBar.cpp:253-338,489-535",
+      "PowerEditor/src/dpiManagerV2.cpp:210-216",
+      "PowerEditor/src/resource.h:373-378"
+    ],
+    "likely_call_path": "TabBarPlus::init -> setCloseBtnImageList -> DPIManagerV2::loadIcon -> COMCTL32 ordinal 381",
+    "import_thunk_va": "0x007C90A8",
+    "import": "COMCTL32.dll ordinal 381",
+    "call_site_va": "0x005AAD5F",
+    "observed_resource_id": "0x05FA (IDR_CLOSETAB)",
+    "pinned_oem_export_ordinal_381_rva": "0x00000000",
+    "npp_later_fault_va": "0x005AAD44",
+    "npp_later_fault_function": "TabBarPlus::setCloseBtnImageList, icon ID vector iteration"
+  },
+  "interpretation": {
+    "ordinal_hole_call": "Strong inference: the loader resolved the zero-RVA OEM COMCTL32 ordinal 381 to the DLL base; execution of the MZ header explains EIP at base+5 and the five icon-call arguments remaining on stack. Runtime IAT bytes were not captured.",
+    "later_npp_fault": "Observed at vector element read in the same tab-close icon routine. EBX and vector storage were not recorded, so its state and relationship to the earlier COMCTL32 fault remain unproven.",
+    "outcome": "Notepad++ did not show an editor window in the separate 30-second probe; no successful app functionality or API-wide compatibility follows from this trace."
+  }
+}

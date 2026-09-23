@@ -83,6 +83,15 @@
         "GetUpdatedClipboardFormats",
         "RemoveClipboardFormatListener"
       ]
+    },
+    "gdi-alpha-raster": {
+      "dll": "GDI32.DLL",
+      "table": 0,
+      "names": [
+        "GdiAlphaBlend",
+        "GdiGradientFill",
+        "GdiTransparentBlt"
+      ]
     }
   }
 }
