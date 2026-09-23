@@ -1,4 +1,6 @@
-# 4GB RAM workstream
+# PAE and physical RAM workstream for CSM systems
+
+The current completion target is to use all usable physical RAM exposed by a modern CSM-capable system, including RAM above the 4 GiB address boundary. The 512 MiB and 4 GiB virtual machines below are controlled milestones, not proof of that target. No Win98 PAE memory-manager implementation exists yet.
 
 `memprobe.exe` reports physical memory exposed by `GlobalMemoryStatus` and, if available, `GlobalMemoryStatusEx`. `memstress.exe` makes bounded allocations in one or more simultaneous processes, writes a page-specific four-byte pattern across every 4 KiB page, then checks each page again after all workers have touched their allocations. Workers hold their allocations until the parent samples the overlap. Both are measurement tools, not a 4GB patch.
 
@@ -16,7 +18,7 @@ The output has three parts:
 
 ## Disposable RAM and PAE experiments
 
-`memory/build-media.py` builds `vm/accel/memory-tests/memory-probes.iso` from the two Win98 executables and the 16-bit DOS `E820.COM` probe. Build the executables with `build.ps1` first. NASM and `pycdlib` are required. `memory/build-e820-floppy.py` also builds a bootable ShizukuDOS floppy from this repository's sources with `E820.COM` in its FAT12 root. It needs NASM but no external DOS binaries. Both builds refuse to overwrite existing media so experiment hashes stay meaningful. The media contain no Windows installation files.
+`memory/build-media.py` builds `vm/accel/memory-tests/memory-probes.iso` from the two Win98 executables and the 16-bit DOS `E820.COM` probe. Build the executables with `build.ps1` first. NASM and `pycdlib` are required. `memory/build-e820-autoboot.py` builds a bootable floppy that prints the E820 map automatically without DOS or keyboard input. `memory/build-e820-floppy.py` can also build an interactive ShizukuDOS probe floppy from this repository's sources. Both need NASM and no external DOS binaries. The builds refuse to overwrite existing media so experiment hashes stay meaningful. The media contain no Windows installation files.
 
 `vm/memory-scale.ps1` creates **full, independent clones** of the powered-off `Win98Modern-Base` VM. It rejects linked media by checking the cloned VDI's UUID, `Parent UUID: base`, medium type, registered owner, and location inside the experiment directory. It also records the Base disk hash, leaves the Base VM and existing app-test VM untouched, disables networking, and refuses to start when another VM runs or the host has less than guest RAM plus 4 GiB free. All clone data and evidence stay under the ignored `vm/accel/memory-tests/` directory.
 
@@ -34,16 +36,16 @@ Run one configuration at a time from the project root:
 To read the firmware map when Windows cannot boot, run the same full clone from the probe floppy after all other VMs are off:
 
 ```powershell
-python memory/build-e820-floppy.py
+python memory/build-e820-autoboot.py
 ./vm/memory-scale.ps1 -Action Start -MemoryMiB 4096 -Pae On -BootMode Firmware
-# At the ShizukuDOS prompt: EXEC E820.COM
+# The boot sector prints E820 ranges automatically.
 ./vm/memory-scale.ps1 -Action Capture -MemoryMiB 4096 -Pae On -Label e820-firmware
 ./vm/memory-scale.ps1 -Action StopFirmware -MemoryMiB 4096 -Pae On -BootMode Firmware
 # If this is the only phase for the clone:
 ./vm/memory-scale.ps1 -Action Finish -MemoryMiB 4096 -Pae On -ShutdownKind FirmwareProbeStop
 ```
 
-`StopFirmware` only targets the disposable clone after confirming a floppy boot and real-mode vCPU state, then verifies that the floppy hash is unchanged. The ShizukuDOS probe shell has no file-write service; the stop does not represent a successful Windows shutdown. To test Windows in that clone after the firmware capture, skip `Finish`, start it with `-BootMode Windows`, and write the single final finish record after the Windows phase.
+`BootMode Firmware` enables nested paging for the real-mode probe; `BootMode Windows` restores the Base VM's nested-paging-off setting before Windows starts. `StopFirmware` only targets the disposable clone after confirming a floppy boot and real-mode vCPU state, then verifies that the floppy hash is unchanged. The autonomous boot sector has no file-write code; the stop does not represent a successful Windows shutdown. To test Windows in that clone after the firmware capture, skip `Finish`, start it with `-BootMode Windows`, and write the single final finish record after the Windows phase.
 
 `Finish` requires the clone to be powered off. The default `-ShutdownKind Normal` requires an APM shutdown request in `VBox.log`. If a captured stall led to a forced stop, save the CPU instruction/register evidence as `shutdown-cpu.txt` in the clone folder and use `-ShutdownKind ForcedAfterStall`; the finish record marks that outcome explicitly. A prepared clone is never silently replaced; choose a new configuration or retain and inspect the existing clone. Supported RAM settings are 512, 1024, 2048, 3072, and 4096 MiB, each with PAE `On` or `Off`. At each setting capture boot behavior, `D:\MEMPROBE.EXE`, `D:\MEMSTRS.EXE 8 1`, guest `SYSTEM.INI` changes if any, and shutdown/reboot behavior. Increase stress gradually only after a small run is stable. Before selecting **Restart in MS-DOS mode**, copy `D:\E820.COM` to `C:\E820.COM` in the disposable clone; this VM's CD driver is unavailable in real DOS mode. Then run `C:\E820.COM` and capture the firmware map. The optical drive may have a different letter on another boot.
 
@@ -65,4 +67,10 @@ An independent 512 MiB, PAE-off clone reached the Windows 98 desktop. `GlobalMem
 
 The subsequent Windows shutdown stayed at its splash screen. VirtualBox recorded no APM shutdown request. Repeated debugger samples found the guest at BIOS `F000:709D`, a self-jump (`EB FD`), with CR0 paging off. A guest-facing ACPI power-button signal had no effect. After retaining screen, log, and CPU evidence, only this disposable clone was forcibly powered off; `finish.json` records `ForcedAfterStall`, and the Base disk SHA-256 remained unchanged. Local evidence is under the ignored `vm/accel/memory-tests/Win98Modern-Mem-512-PAE-Off/` directory. The cause of this shutdown stall has not been isolated to RAM size, the DOS-mode roundtrip, or a guest driver.
 
-Microsoft [KB253912](https://ftp.zx.net.nz/pub/Patches/ftp.microsoft.com/MISC/KB/en-us/253/912.HTM) describes the VCache address-space failure beyond 512 MiB. [KB304943](https://ftp.zx.net.nz/pub/Patches/ftp.microsoft.com/MISC/KB/en-us/304/943.HTM) says Windows 98 was not designed for more than 1 GiB and `MaxPhysPage=40000` limits use to 1 GiB. Neither adjustment implements 4GB. A genuine solution requires Win9x VMM and memory manager changes, including physical page accounting, cache mapping, PCI/MMIO holes, and regression testing. Those changes are not yet implemented.
+### 4 GiB PAE on/off comparison (2026-09-23)
+
+Separate full clones were configured at 4096 MiB with PAE on and off. The autonomous real-mode BIOS probe completed in both. Both E820 maps included a type-1 RAM range at guest physical base `0x0000000100000000` with length `0x0000000020000000` (512 MiB above the 4 GiB boundary). The E820 maps matched across PAE settings. This establishes what the virtual firmware advertises, not what Windows accepts.
+
+Both Windows boots stopped at the same DOS text startup error naming Windows, `CONFIG.SYS`, and `AUTOEXEC.BAT`, before the desktop. Both guests then issued an APM shutdown request and powered off. `MEMPROBE.EXE` and `MEMSTRS.EXE` could not run, so there is **no guest-visible usable-RAM measurement at 4 GiB**. At the captured error screen, VirtualBox reported `CR0=0x10`, `CR3=0`, and `CR4=0`; paging and CR4.PAE were off at that instant. These real-mode samples do not establish whether CR4.PAE changed earlier during the failed Windows initialization. Enabling VirtualBox's PAE flag did not make this unmodified Win98 installation boot with 4 GiB, and no 4 GiB Win98 memory support has been demonstrated. Both clones are powered off; their `finish.json` files confirm the Base disk hash still matches. Local screenshots, logs, and register samples remain in the ignored `vm/accel/memory-tests/Win98Modern-Mem-4096-PAE-On/` and `Win98Modern-Mem-4096-PAE-Off/` folders.
+
+Microsoft [KB253912](https://ftp.zx.net.nz/pub/Patches/ftp.microsoft.com/MISC/KB/en-us/253/912.HTM) describes the VCache address-space failure beyond 512 MiB. [KB304943](https://ftp.zx.net.nz/pub/Patches/ftp.microsoft.com/MISC/KB/en-us/304/943.HTM) says Windows 98 was not designed for more than 1 GiB and `MaxPhysPage=40000` limits use to 1 GiB. Neither adjustment implements PAE or all-RAM use. A genuine solution requires Win9x VMM and memory manager changes, including physical page accounting, cache mapping, PCI/MMIO holes, above-4-GiB frames, and regression testing across CSM systems. Those changes are not yet implemented.
