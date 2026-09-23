@@ -15,6 +15,7 @@
 #include "m98_threadpool.h"
 #include "m98_initonce.h"
 #include "m98_slist.h"
+#include "m98_fls.h"
 
 #ifndef ALL_PROCESSOR_GROUPS
 #define ALL_PROCESSOR_GROUPS 0xffff
@@ -1697,9 +1698,21 @@ static const m98_named_api kernel32_apis[] = {
     M98_API("CloseThreadpoolWork", m98_CloseThreadpoolWork),
     M98_API("CompareStringEx", m98_CompareStringEx),
     M98_API("CompareStringOrdinal", m98_CompareStringOrdinal),
+    M98_API("ConvertThreadToFiber", m98_ConvertThreadToFiber),
+    M98_API("ConvertThreadToFiberEx", m98_ConvertThreadToFiberEx),
+    M98_API("CreateFiber", m98_CreateFiber),
+    M98_API("CreateFiberEx", m98_CreateFiberEx),
+    M98_API("CreateThread", m98_CreateThread),
     M98_API("CreateThreadpoolWork", m98_CreateThreadpoolWork),
+    M98_API("DeleteFiber", m98_DeleteFiber),
     M98_API("DisassociateCurrentThreadFromCallback", m98_DisassociateCurrentThreadFromCallback),
+    M98_API("ExitThread", m98_ExitThread),
     M98_API("FindFirstStreamW", m98_FindFirstStreamW),
+    M98_API("FlsAlloc", m98_FlsAlloc),
+    M98_API("FlsFree", m98_FlsFree),
+    M98_API("FlsGetValue", m98_FlsGetValue),
+    M98_API("FlsSetValue", m98_FlsSetValue),
+    M98_API("FreeLibraryAndExitThread", m98_FreeLibraryAndExitThread),
     M98_API("FreeLibraryWhenCallbackReturns", m98_FreeLibraryWhenCallbackReturns),
     M98_API("GetActiveProcessorCount", m98_GetActiveProcessorCount),
     M98_API("GetActiveProcessorGroupCount", m98_GetActiveProcessorGroupCount),
@@ -1760,6 +1773,7 @@ static const m98_named_api kernel32_apis[] = {
     M98_API("SetEventWhenCallbackReturns", m98_SetEventWhenCallbackReturns),
     M98_API("SleepConditionVariableSRW", m98_SleepConditionVariableSRW),
     M98_API("SubmitThreadpoolWork", m98_SubmitThreadpoolWork),
+    M98_API("SwitchToFiber", m98_SwitchToFiber),
     M98_API("TryAcquireSRWLockExclusive", m98_TryAcquireSRWLockExclusive),
     M98_API("TryAcquireSRWLockShared", m98_TryAcquireSRWLockShared),
     M98_API("TrySubmitThreadpoolCallback", m98_TrySubmitThreadpoolCallback),

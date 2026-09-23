@@ -1,9 +1,9 @@
 # Win98 FLS and fiber/thread lifecycle bridge
 
-Status: independent `FLSFIX.DLL` implementation and direct API-table tests.
-The four FLS functions are real bounded implementations, but the complete
-Windows thread/fiber lifecycle is **not** routed through them yet. No full
-Windows API or application compatibility percentage follows from this test.
+Status: thirteen API entries are linked in `M98WRP19.DLL` and explicitly
+routed in the installed Win98 guest. Direct, static-import and system MSVCRT
+callback tests passed. This is a supported contract subset; the complete
+Windows thread/fiber lifecycle and application compatibility remain incomplete.
 
 ## Source lineage and native boundary
 
@@ -66,8 +66,10 @@ finalizer therefore cannot delete its still-running stack or clear the foreign
 thread's unrelated TLS context.
 
 `CreateThread` wraps the start function so an ordinary return runs FLS
-rundown in user context. Routed `ExitThread` and `FreeLibraryAndExitThread`
-run the same teardown before native exit or unload. `FlsGetValue` returns
+rundown in user context. Routed `ExitThread` runs the same teardown before
+native exit. `FreeLibraryAndExitThread` unloads first and then enters routed
+exit, matching the reviewed native order. The provider itself must stay
+loaded throughout. `FlsGetValue` returns
 NULL plus `ERROR_SUCCESS` for a valid empty bridge slot and NULL with an
 error for an invalid index. Callback pointers are associated with their
 allocation base at registration; a later unmapped/different allocation is
@@ -187,41 +189,209 @@ This corrected source checkpoint is:
 - `fls_smoke.exe` SHA256:
   `4c73e0aaab7bbc816352df5e7960122aa535820b3e13fdae3a955eb47d547ca0`.
 
-Guest execution of this corrected checkpoint is a new handoff gate. The older
-guest receipts above establish only their listed fixture hashes and do not
-automatically validate these concurrency fixes.
+Guest execution of this historical corrected checkpoint passed, as recorded
+in the reviewed-fixture confirmation below. Those receipts establish only
+their listed hashes and do not validate later abandonment changes.
+
+## Routed callback termination and retirement reservations
+
+The next review reproduced unfinished retirements when an `FlsFree` callback
+called routed `ExitThread`, `FreeLibraryAndExitThread`, or current-fiber
+`DeleteFiber`. The callback's held record reference and RETIRING slot used to
+be released only when that callback returned. Termination prevented that
+return; current-fiber deletion could then wait forever on its own reference.
+The pre-correction host fixture reported missing/repeated retirement callbacks
+for exit/unload, a two-second owner-thread timeout for current-fiber deletion,
+and an incorrect exit status when a later cleanup callback requested exit again.
+
+The corrected bridge links each active retirement/rundown continuation to its
+thread context before invoking user code. Routed termination drains these
+continuations while the original stacks still exist. A continuation releases
+its current callback reference exactly once, drains remaining values, retires
+the captured generation, and then proceeds with record/thread cleanup. Normal
+callback return uses the same release path. Nested `FlsFree` and a callback
+which requests termination again resume the top interrupted continuation;
+the eventual native exit never returns into its abandoned C frame. A rundown
+advances its saved slot cursor before invoking user code, so an interrupted
+callback is not repeated.
+
+A separate deterministic review exposed an additional foreign-thread race:
+rundown could detach a value, unlock, and start its callback after another
+thread's `FlsFree` had already returned and made the slot reusable. Each slot
+generation now reserves detached callback work under the same lock. Retirement
+waits outside the lock for foreign reservations. Callback return or routed
+abandonment releases that reservation exactly once. A rundown callback may
+free its own index without waiting on itself: it completes retirement, while
+the slot remains RETIRING until that local callback returns or is abandoned.
+This defers reuse of that index inside its own callback; it does not invoke an
+old-generation callback after the slot has been reassigned.
+
+Continuations still occupy their invoking native fiber's stack. A global list
+under the FLS lock records that fiber identity, including frames owned by
+another thread context. Deleting a different fiber with any such live frame
+now preserves the fiber and sets `ERROR_BUSY`; it does not free a stack still
+referenced by cleanup. Normal callback completion removes its frame by
+identity. Full deletion/abandonment of suspended callback fibers is a remaining
+compatibility feature, not implemented by this guard. Moving a paused callback
+frame to another thread or terminating an OS thread while another resumable
+fiber owns its cleanup frames remains outside the validated lifecycle subset.
+
+Two Win98 integration details are also corrected:
+
+- The native Win98 `CreateThread` import receives a local writable thread-ID
+  output when the application passes NULL. A native creation error is saved
+  before freeing the thunk allocation and restored afterward.
+- `FreeLibraryAndExitThread` now calls `FreeLibrary`, then routed `ExitThread`.
+  [Pinned Wine `kernelbase/thread.c`, lines 180–184](https://github.com/wine-mirror/wine/blob/df15af3652511150490934682202d45af892f887/dlls/kernelbase/thread.c#L180-L184)
+  and [ReactOS `kernel32/client/loader.c`, lines 507–530](https://github.com/reactos/reactos/blob/9dc3ca87209fd8ebabd96c8ea95d439c13e7fdf8/dll/win32/kernel32/client/loader.c#L507-L530)
+  unload before exit. The host's independent marker-DLL probe likewise saw the
+  module absent during FLS teardown. The provider must be lifetime-pinned;
+  unloading the last reference to the executing fixture/provider is unsupported.
+
+The pinned Wine `RtlFlsFree`/`RtlProcessFlsData` bodies and ReactOS
+`FlsFree`/`BaseRundownFls` bodies were re-read for this change. Their NT
+PEB/TEB, locking, and exception-unwind mechanisms do not supply a Win98
+abandonment protocol. These continuation and reservation mechanisms are new
+project code, with no copied upstream implementation body.
+
+### Host evidence and guest handoff
+
+The final `tools/build-fls.ps1` host run and original-Win98 PE/import gate pass.
+Besides the earlier four regressions, the normal suite now checks a rundown
+callback freeing its own index, deferred reuse until callback return, and
+seven bounded child processes:
+
+| Child mode | Verified bridge behavior |
+| --- | --- |
+| `-normal` | Nested `FlsFree` returns and both indices become reusable. |
+| `-exit` | Nested callback exits its thread; remaining callbacks run once. |
+| `-unload` | Callback unloads an extra fixture reference and exits. |
+| `-delete` | Callback deletes its current fiber without waiting on itself. |
+| `-repeat` | A remaining callback requests exit again during abandonment. |
+| `-foreign` | Thread cleanup waits for a foreign in-flight record reference. |
+| `-rundown` | A natural rundown callback begins nested free, whose callback exits. |
+
+Every child verifies surviving foreign-record callbacks, exact invocation
+counts, retirement completion, and post-termination slot reuse. Parent process
+waits are bounded at eight seconds; owner-thread completion is bounded at two
+seconds. `/term-bridge` runs only these seven cases; `/review-self-free` runs
+the self-free reservation case. Timeouts fail the bridge suite rather than
+leaving an indefinitely blocked test process.
+
+`/term-native` observes the same seven scenarios using dynamically obtained
+native host APIs. Normal, exit, unload, delete, and repeated exit completed.
+The foreign-reference scenario also completed, but native Windows allowed the
+owner to exit before the foreign callback was released; the bridge deliberately
+waits to protect its record/stack lifetime. Nested termination started from an
+already-running native rundown did not finish within two seconds and is
+recorded as observation exit 124. These two differences are not described as
+strict native equivalence.
+
+The independent `tools/build-fls-rundown-race.ps1` builds
+`tests/fls_rundown_race.c` and verifies both blocked foreign-rundown retirement
+and the suspended-fiber deletion guard. Its host bridge tests pass, and the
+dynamic native comparator also waits for the blocked rundown callback. Its
+Win98 PE32/OEM import gate passes. Source/binary freeze for the new handoff:
+
+| File | SHA-256 |
+| --- | --- |
+| `src/m98_fls.c` | `cbdee3c2224760f3817631471e90aea43ee4c97d0922440c492ee5af95d67139` |
+| `src/m98_fls.h` | `cb71bc1a9680976840cccc6afef1e0fd85c950f3444acd16cdefefe78144f8d7` |
+| `tests/fls_smoke.c` | `a7efa4186043498a589cb04e2593681fdf63fb180b196adffb129d7b75829950` |
+| `build/fls/FLSFIX.DLL` | `9bd96fb195091f4e5a29e905dddb8768346a1d1f12bb296fa82a49a98453733e` |
+| `build/fls/fls_smoke.exe` | `b676d56546a37c8f9f612fb2cdfbe2b8faed372306fce7b667d6a934a8d0d5cd` |
+| `build/fls-rundown-race/FLSRACE.EXE` | `09b8d54bee6bf93ffcfca328b13cbc4e068d9b77a02f523157e1c2cff022e7d2` |
+
+The independent race build emits the same fixture DLL hash. The following
+root-agent direct guest receipts now cover the frozen fixture and smoke:
+
+- `build/guest/receipt-fls-final19-direct.json`: `C:\M98LAB\FLSSM19.EXE`,
+  exit 0, no timeout, 1,395 output bytes, output SHA-256
+  `669b51d662713a22c6af16dbf5380ce6f680603e67e62fa93a7ecf4acbe163ec`.
+  The complete fixture suite, self-free reservation case, and all seven
+  bounded termination children pass.
+- `build/guest/receipt-fls13-final19-direct.json`: `C:\M98LAB\FLSD19.EXE`,
+  exit 0, no timeout, 122 output bytes, output SHA-256
+  `712bcd84c2b249ea301ed292e8ef5622b7ae8267dbfa45c189134842d30cfce9`.
+  The independent 13-API direct-table probe passes and observes the marker
+  module **absent** during free-exit FLS cleanup, matching the native host.
+- `build/guest/receipt-fls-rundown-race19-direct.json`: the race probe hash
+  `09b8d54bee6bf93ffcfca328b13cbc4e068d9b77a02f523157e1c2cff022e7d2`,
+  exit 0, no timeout, 243 bytes, output SHA-256
+  `4b49faeb228deceb1a48c858b500af9e2ad95e77a4dd4f20c6e7fe9797f4effa`.
+  Foreign-rundown retirement waits and the suspended-fiber guard pass.
+
+The independent reviewer subsequently strengthened the race probe with an
+event immediately before the freeing thread calls `FlsFree`. Its new EXE
+SHA-256 is `b525a71abe9c373b0451c42b6f4bbb1c0c4b99689b916a5e665f3e1f1de06bb1`;
+the fixture DLL is unchanged. This stronger probe passes on the host and fails
+against the isolated pre-fix fixture (`4bf539...9785b`) with an early-return
+diagnostic. The earlier race guest receipt above does not cover that revised
+probe; its guest rerun is a separate gate.
 
 ## Remaining integration and behavior gaps
 
-This is a direct API-table fixture. KernelEx `CORE.INI`, shared `m98wrap`,
-static imports, real Notepad++ plugins, and application behavior have not been
-verified for FLS. The routing must include the four FLS APIs **and** the
-native fiber/thread lifecycle entries in the same backend. If original
+The installed provider now routes the four FLS APIs **and** nine native/Ex
+fiber/thread lifecycle entries to the same backend. Real Notepad++ plugins
+and application functionality remain unverified. If original
 `CreateThread`, `ConvertThreadToFiber`, `CreateFiber`, `DeleteFiber`, or exit
 imports bypass the table, callbacks or fiber identity can be missed.
 
 KernelEx core's `DisableThreadLibraryCalls` blocks a core natural-exit hook.
 The API-library `DLL_THREAD_DETACH` is under loader lock and is deliberately
 unused for application callbacks. Natural returns from native/unrouted
-`CreateThread`, CRT `_beginthreadex`, `CreateRemoteThread`, direct native
+`CreateThread`, `CreateRemoteThread`, direct native
 `ExitThread`, forced `TerminateThread`, suspended threads that never start,
-and process shutdown remain unproven. Cross-thread deletion of an executing
-fiber, callback-triggered thread exit during an unfinished `FlsFree`, and
-concurrent module unload during callback invocation also need targeted
-semantics and safety work. The owner-allocation guard cannot prevent an
+and process shutdown remain unproven. `ConvertFiberToThread` and an exported
+`IsThreadAFiber` are not implemented. Nonzero `FIBER_FLAG_FLOAT_SWITCH` and
+independent stack commit/reserve sizes remain unsupported. Native threadpool
+workers created inside the provider currently bypass the routed `CreateThread`
+thunk and do not yet have linked FLS teardown. Cross-thread deletion of an
+executing fiber, full suspended-fiber abandonment, callbacks which escape
+through raw native exit/SEH/longjmp, and concurrent module unload during
+callback invocation also need targeted semantics and safety work. The
+owner-allocation guard cannot prevent an
 unload race after the guard but before the call. No arbitrary callback is
 run from `DllMain`. These are concrete blockers to calling the lifecycle
 foundation complete or marking FLS fully compatible.
 
-In particular, the new current-fiber deletion wait covers references held by
-foreign callbacks. A callback inside `FlsFree` that deletes its own current
-fiber holds a reference whose release requires that same callback to return;
-that unsupported reentrant thread-termination route can block the wait. Solving
-it requires a cancellation/abandonment protocol for the interrupted `FlsFree`
-operation and its retiring slot, not transferring TLS cleanup to another thread.
-The independent fixture is not registered in the production provider or shipped
-as a production FLS implementation while these lifecycle gaps remain.
+The direct fixture's 13 API entries form a tested supported subset, not the
+complete FLS/fiber/thread family. Production provider registration and static
+application routing require separate evidence; their status must not be
+inferred from the independent fixture or host tests.
 
 ## Reviewed fixture guest confirmation
 
 The revised FLSFIX.DLL (`4bf539384e18a5d444aeb2c7cfe78e5f8d6c288bcbf0a9054bdb16b738a9785b`) and expanded probe (`4c73e0aaab7bbc816352df5e7960122aa535820b3e13fdae3a955eb47d547ca0`) ran in the directly installed Windows 98 SE guest. All four new regression lines and the existing fixture suite passed (exit 0; 591 output bytes). Receipt: `build/guest/receipt-fls-reviewed18.json`; output SHA-256 `aa910da1e53dbca07ded99390a17a8667e76f3e797fd0fc19be5f11deda5d7fe`. This confirms the stated direct fixture paths; the production-routing and lifecycle gaps above remain.
+
+## Provider19 installed guest checkpoint
+
+The directly installed Korean Win98 SE guest cold-booted with current NEM
+hardware acceleration and provider SHA256
+`ee96a7d5dfda768f21eb0098b8dafdd4080a018847329e5e145d8086b7a46cd4`.
+CORE.INI SHA256 is
+`a4a3e8e6286321a5a80a96d62bb2acc2386ba3ba384a780ef3c93f4e4c433598`.
+Its 114 explicit routes cover 38 names in three profiles, including all thirteen
+FLS/lifecycle entries. The KERNEL32 table contains 89 names.
+
+`build/guest/suite-lifecycle19-routed.json` passed all ten tests. The static FLS
+probe passed (output SHA256
+`416ff3b4bd2ff387b09b8b5a3ac7bc1508f2737bd9bcffc9fef02f79860af2f8`),
+including unload-before-exit ordering. The independent revised race probe also
+passed through both the fixture and dynamically resolved installed FLS calls
+(output SHA256 `0650d39838a8e4dc61adb4f2e159ab975631588712f4d0824271719b91bb8875`).
+The same race executable failed against the pre-fix fixture on the host,
+confirming that the regression distinguishes the fix.
+
+THRLIFE V2 observed EXE and system MSVCRT CreateThread/ExitThread imports routed
+to M98WRP19, while the provider's own imports resolved to original KERNEL32.
+Natural return, explicit ExitThread and MSVCRT _beginthreadex each ran their
+callback on the expected thread exactly once; final count was three. Output
+SHA256: `b60f40b3dbfab4d4972311fa2c7b8cfa78b5650f7d6195c7df01d6b274bfc695`.
+This proves those ordinary runtime paths, not raw kernel entry or every CRT.
+
+The complete direct fixture suite, including seven bounded termination children,
+also passed before installation (`receipt-fls-final19-direct.json`, output
+SHA256 `669b51d662713a22c6af16dbf5380ce6f680603e67e62fa93a7ecf4acbe163ec`)
+and after routing (within the ten-test suite). Notepad++ advanced beyond FlsAlloc
+but still fails to start at USER32.RemoveClipboardFormatListener.

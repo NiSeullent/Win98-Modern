@@ -88,3 +88,21 @@ files identify the guest as Windows 4.10 and record current hardware-acceleratio
 evidence. The newer agent uploaded to `C:\M98LAB\M98AG2.EXE` also acknowledged
 STOP in the guest and its console exited cleanly. This verifies the lab channel
 and the direct cases only; it does not establish application startup.
+
+## Lifecycle family regression bundle
+
+After installing the matching provider and all six groups in
+`porting/runtime-routes.json`, cold boot, start `C:\M98LAB\M98AG2.EXE`, and
+wait for the visible agent-ready line. Then run:
+
+```powershell
+python remote/tester.py remote/suites/api-lifecycle.json --output build/guest/lifecycle-results.json
+```
+
+The suite verifies the selected `agent_guest_path` against the local agent
+binary, uploads explicit test files with hash checks, and runs ten FLS, CRT,
+provider-table, InitOnce, threadpool, SList and NLS checks. The file hash proves
+the selected on-disk agent image; launching that image is a separate bootstrap
+step. The default path for older suites remains `M98AGENT.EXE`. The suite does
+not edit CORE.INI or perform provider upgrades. It records the current boot's
+hardware acceleration evidence.

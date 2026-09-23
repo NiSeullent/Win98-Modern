@@ -18,13 +18,8 @@ $flags = @(
   '-Wl,--no-insert-timestamp'
 )
 
-& $compiler @flags '-o' (Join-Path $buildDir 'm98wrap.dll') `
-  (Join-Path $projectRoot 'src/m98wrap.c') `
-  (Join-Path $projectRoot 'src/m98nls_ex.c') `
-  (Join-Path $projectRoot 'src/m98_threadpool.c') `
-  (Join-Path $projectRoot 'src/m98_initonce.c') `
-  (Join-Path $projectRoot 'src/m98_slist.c') `
-  (Join-Path $projectRoot 'src/wine_uppercase.c') '-lkernel32'
+$wrapperSources = @(& (Join-Path $projectRoot 'tools/m98wrap-sources.ps1') -ProjectRoot $projectRoot)
+& $compiler @flags '-o' (Join-Path $buildDir 'm98wrap.dll') @wrapperSources '-lkernel32'
 if ($LASTEXITCODE -ne 0) { throw 'm98wrap.dll build failed' }
 & python (Join-Path $projectRoot 'tests/check_pe98.py') (Join-Path $buildDir 'm98wrap.dll')
 if ($LASTEXITCODE -ne 0) { throw 'm98wrap.dll PE98 validation failed' }
@@ -43,15 +38,21 @@ if ($LASTEXITCODE -ne 0) { throw 'm98wrap.dll PE98 validation failed' }
 & (Join-Path $projectRoot 'tools/build-threadpool-exit.ps1')
 & (Join-Path $projectRoot 'tools/build-initonce.ps1')
 & (Join-Path $projectRoot 'tools/build-slist.ps1')
+& (Join-Path $projectRoot 'tools/build-fls.ps1')
+& (Join-Path $projectRoot 'tools/build-fls-rundown-race.ps1')
+& (Join-Path $projectRoot 'tools/build-fls-integration.ps1')
+& (Join-Path $projectRoot 'tools/build-thread-lifecycle.ps1')
 # Put the exact shipping wrapper beside each integration probe. The executable
 # directory precedes the working directory in the loader search order, so a
 # leftover local DLL must not silently substitute for the artifact being tested.
-foreach ($testDir in @('initonce', 'threadpool', 'slist')) {
+foreach ($testDir in @('initonce', 'threadpool', 'slist', 'fls-integration')) {
   Copy-Item -LiteralPath (Join-Path $buildDir 'm98wrap.dll') `
     -Destination (Join-Path $buildDir "$testDir/m98wrap.dll") -Force
 }
 Push-Location $buildDir
 try {
+  & (Join-Path $buildDir 'fls-integration/fls_integrated.exe')
+  if ($LASTEXITCODE -ne 0) { throw 'Shipping m98wrap.dll FLS integration failed' }
   & (Join-Path $buildDir 'initonce/initonce_integrated_probe.exe')
   if ($LASTEXITCODE -ne 0) { throw 'Shipping m98wrap.dll InitOnce integration failed' }
   & (Join-Path $buildDir 'slist/slist_integrated_probe.exe')
@@ -64,7 +65,7 @@ foreach ($candidate in @('finalpath/m98wrap.dll', 'stream/m98wrap.dll',
                          'localeinfo/m98wrap.dll', 'restart/m98wrap.dll',
                          'processpath/m98wrap.dll', 'condition/m98wrap.dll',
                          'initonce/m98wrap.dll', 'threadpool/m98wrap.dll',
-                         'slist/m98wrap.dll')) {
+                         'slist/m98wrap.dll', 'fls-integration/m98wrap.dll')) {
   $actual = (Get-FileHash -LiteralPath (Join-Path $buildDir $candidate) -Algorithm SHA256).Hash
   if ($actual -ne $wrapperHash) {
     throw "KERNEL32 test DLL differs from release m98wrap.dll: $candidate"

@@ -45,10 +45,15 @@ def run_suite(client: Client, suite: dict, report: dict, save) -> None:
         raise RuntimeError("agent did not report the required Win98 4.10 guest")
     local_agent = ROOT / "build/m98agent.exe"
     expected_agent = (local_agent.stat().st_size, hashlib.sha256(local_agent.read_bytes()).hexdigest())
-    actual_agent = client.remote_hash(r"C:\M98LAB\M98AGENT.EXE")
+    # Versioned agent filenames allow a running executable to stay intact while
+    # a replacement is staged. Verify the explicitly selected on-disk image;
+    # the caller must launch that image before running the suite.
+    agent_path = suite.get("agent_guest_path", r"C:\M98LAB\M98AGENT.EXE")
+    actual_agent = client.remote_hash(agent_path)
     if expected_agent != actual_agent:
         raise RuntimeError("guest agent file differs from the local tested build")
     report["agent_sha256"] = actual_agent[1]
+    report["agent_guest_path"] = agent_path
     save()
     for item in suite.get("files", []):
         source = (ROOT / item["source"]).resolve(strict=True)

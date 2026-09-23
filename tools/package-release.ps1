@@ -33,7 +33,7 @@ foreach ($candidate in @('build/finalpath/m98wrap.dll', 'build/stream/m98wrap.dl
                          'build/localeinfo/m98wrap.dll', 'build/restart/m98wrap.dll',
                          'build/processpath/m98wrap.dll', 'build/condition/m98wrap.dll',
                          'build/initonce/m98wrap.dll', 'build/threadpool/m98wrap.dll',
-                         'build/slist/m98wrap.dll')) {
+                         'build/slist/m98wrap.dll', 'build/fls-integration/m98wrap.dll')) {
   $actual = (Get-FileHash -LiteralPath (Require-File $candidate) -Algorithm SHA256).Hash
   $shipped = (Get-FileHash -LiteralPath (Require-File 'build/m98wrap.dll') -Algorithm SHA256).Hash
   if ($actual -ne $shipped) { throw "KERNEL32 test DLL differs from packaged m98wrap.dll: $candidate" }
@@ -77,7 +77,11 @@ foreach ($artifact in @(
   'build/slist/slist_import_probe.exe',
   'build/slist/slist_integrated_probe.exe',
   'build/slist/slist_fault_smoke.exe',
-  'build/slist/slist_native_probe.exe'
+  'build/slist/slist_native_probe.exe',
+  'build/fls/FLSFIX.DLL', 'build/fls/fls_smoke.exe',
+  'build/fls-rundown-race/FLSRACE.EXE',
+  'build/fls-integration/fls_direct.exe', 'build/fls-integration/fls_static.exe',
+  'build/fls-integration/fls_integrated.exe', 'build/thread-lifecycle/THRLIFE.EXE'
 )) { [void](Require-File $artifact) }
 Push-Location $projectRoot
 try {
@@ -99,6 +103,10 @@ try {
   if ($LASTEXITCODE -ne 0) { throw 'Threadpool work/callback PE/import validation failed' }
   & python 'tests/check_initonce_pe98.py'
   if ($LASTEXITCODE -ne 0) { throw 'InitOnce family PE/import validation failed' }
+  & python 'tests/fls_check_pe98.py' 'build/fls/FLSFIX.DLL' 'build/fls/fls_smoke.exe' 'build/fls-rundown-race/FLSRACE.EXE' 'build/thread-lifecycle/THRLIFE.EXE'
+  if ($LASTEXITCODE -ne 0) { throw 'FLS fixture PE/import validation failed' }
+  & python 'tests/fls_integration_pe98.py'
+  if ($LASTEXITCODE -ne 0) { throw 'FLS integration PE/import validation failed' }
   & python 'tests/check_slist_pe98.py'
   if ($LASTEXITCODE -ne 0) { throw 'SList family PE/import validation failed' }
 } finally { Pop-Location }
@@ -128,6 +136,33 @@ if ($includeShell) {
 }
 
 $inputs = [ordered]@{
+  'porting/runtime-routes.json' = 'porting/runtime-routes.json'
+  'integration/core.ini' = 'integration/core.ini'
+  'remote/patch_core_family.py' = 'remote/patch_core_family.py'
+  'remote/patch_core_wrapper_upgrade.py' = 'remote/patch_core_wrapper_upgrade.py'
+  'tools/build-fls-rundown-race.ps1' = 'tools/build-fls-rundown-race.ps1'
+  'tests/fls_rundown_race.c' = 'tests/fls_rundown_race.c'
+  'guest-tests/FLSRACE.EXE' = 'build/fls-rundown-race/FLSRACE.EXE'
+  'tools/m98wrap-sources.ps1' = 'tools/m98wrap-sources.ps1'
+  'tools/build-fls.ps1' = 'tools/build-fls.ps1'
+  'tools/build-fls-integration.ps1' = 'tools/build-fls-integration.ps1'
+  'tools/build-thread-lifecycle.ps1' = 'tools/build-thread-lifecycle.ps1'
+  'src/m98_fls.c' = 'src/m98_fls.c'
+  'src/m98_fls.h' = 'src/m98_fls.h'
+  'tests/fls_fixture.c' = 'tests/fls_fixture.c'
+  'tests/fls_smoke.c' = 'tests/fls_smoke.c'
+  'tests/fls_import_probe.c' = 'tests/fls_import_probe.c'
+  'tests/fls_check_pe98.py' = 'tests/fls_check_pe98.py'
+  'tests/fls_integration_pe98.py' = 'tests/fls_integration_pe98.py'
+  'tests/thread_lifecycle_probe.c' = 'tests/thread_lifecycle_probe.c'
+  'docs/FLS_PORT_IMPLEMENTATION.md' = 'docs/FLS_PORT_IMPLEMENTATION.md'
+  'docs/KERNELEX_THREAD_LIFECYCLE.md' = 'docs/KERNELEX_THREAD_LIFECYCLE.md'
+  'guest-tests/FLSFIX.DLL' = 'build/fls/FLSFIX.DLL'
+  'guest-tests/fls_smoke.exe' = 'build/fls/fls_smoke.exe'
+  'guest-tests/fls_static.exe' = 'build/fls-integration/fls_static.exe'
+  'guest-tests/fls_integrated.exe' = 'build/fls-integration/fls_integrated.exe'
+  'guest-tests/fls_direct.exe' = 'build/fls-integration/fls_direct.exe'
+  'guest-tests/THRLIFE.EXE' = 'build/thread-lifecycle/THRLIFE.EXE'
   'm98wrap.dll'                   = 'build/m98wrap.dll'
   'm98adv.dll'                    = 'build/m98adv.dll'
   'UXTHEME.DLL'                   = 'build/uxtheme-known/UXTHEME.DLL'
@@ -339,7 +374,7 @@ Write-Host "DWMAPI.DLL included: $includeDwmApi"
 Write-Host "BCRYPT.DLL included: $includeBCrypt"
 Write-Host "M98SHELL.DLL included: $includeShell"
 Write-Host 'M98ADV.DLL included: True'
-Write-Host '76-entry KERNEL32 wrapper and focused NLS/threadpool/callback/InitOnce/SList test sources included: True'
+Write-Host '89-entry KERNEL32 wrapper and focused NLS/threadpool/callback/InitOnce/SList/FLS test sources included: True'
 Write-Host 'Guest static/integrated/fixture probes, SList fault probe and TPMARK.DLL included: True'
 Write-Host 'UXTHEME.DLL KnownDLL candidate included: True'
 Write-Host 'KSWITCH.EXE guarded mapping helper included: True'

@@ -1,0 +1,130 @@
+{
+  "schema": "w98mod.app-guest-checkpoint.v1",
+  "provider": {
+    "guest_path": "C:\\WINDOWS\\KernelEx\\M98WRP19.DLL",
+    "sha256": "ee96a7d5dfda768f21eb0098b8dafdd4080a018847329e5e145d8086b7a46cd4"
+  },
+  "environment": "Directly installed Korean Windows 98 SE / Win98Modern-Accel-128 / current NEM hardware virtualization",
+  "evidence_policy": "Process launch and a visible window are observations, not successful application functionality. VSCode is classified by local PE inspection, not a guest execution.",
+  "records": [
+    {
+      "app": "Notepad++",
+      "version": "8.9.8",
+      "local_executable": "benchmarks/media/npp-8.9.8/notepad++.exe",
+      "executable_sha256": "960ad7a8d443536ceeeafa18f99aecb70793fc7c4fb6ef23678a9d46bbf7bc78",
+      "machine": "0x14c",
+      "pe_magic": "0x10b",
+      "status": "loader_failed",
+      "observation": "USER32.RemoveClipboardFormatListener",
+      "app_functionality_verified": false,
+      "receipt": {
+        "command": "C:\\M98LAB\\APP_PROBE.EXE 10000 \"D:\\NPP\\notepad++.exe\"",
+        "cwd": "C:\\M98LAB",
+        "timeout_ms": 20000,
+        "exit_code": 2,
+        "timed_out": false,
+        "output_truncated": false,
+        "output_bytes": 28,
+        "output_sha256": "c00a728251343d6be3171a2a18b4df819541157b3fc9724cca0476ec63d88020",
+        "output": "LAUNCH_FAIL win32_error=31\r\n",
+        "guest": "m98agent/v1 protocol=1 os=4.10 build=67766446",
+        "transport": "VirtualBox COM1 local named pipe",
+        "pipe": "\\\\.\\pipe\\Win98Modern-Lab"
+      },
+      "screenshot_local": "build/guest/npp-after-fls19.png",
+      "screenshot_sha256": "9747230630339ad15c0d870ec221a1f76b82c133d84a30d820f1638ec2988185"
+    },
+    {
+      "app": "Chromium",
+      "version": "150.0.7871.0 r1639845",
+      "local_executable": "benchmarks/media/chromium-150-r1639845/chrome-win/chrome.exe",
+      "executable_sha256": "772e6385a7d8be9bf4622722dcef5ad52fc2966b7ffc760e580e68c3a4fcb452",
+      "machine": "0x14c",
+      "pe_magic": "0x10b",
+      "status": "loader_failed",
+      "observation": "CHROME_ELF.DLL imports missing KERNEL32.AddVectoredExceptionHandler",
+      "app_functionality_verified": false,
+      "receipt": {
+        "command": "C:\\M98LAB\\APP_PROBE.EXE 10000 \"D:\\CHROME\\chrome.exe\"",
+        "cwd": "D:\\CHROME",
+        "timeout_ms": 20000,
+        "exit_code": 2,
+        "timed_out": false,
+        "output_truncated": false,
+        "output_bytes": 28,
+        "output_sha256": "c00a728251343d6be3171a2a18b4df819541157b3fc9724cca0476ec63d88020",
+        "output": "LAUNCH_FAIL win32_error=31\r\n",
+        "guest": "m98agent/v1 protocol=1 os=4.10 build=67766446",
+        "transport": "VirtualBox COM1 local named pipe",
+        "pipe": "\\\\.\\pipe\\Win98Modern-Lab"
+      },
+      "screenshot_local": "build/guest/chromium-after-fls19.png",
+      "screenshot_sha256": "6dab08467af29f00ce2c85a57a47892b96e6911b05b3d3d4b236f7c6190c7415"
+    },
+    {
+      "app": "Supermium",
+      "version": "144.0.7559.256 R5",
+      "local_executable": "benchmarks/media/supermium-144-r5/Supermium/chrome.exe",
+      "executable_sha256": "10a50b3ebabdacddc9063c7b4429e80e85d8600df89990e7a321c54cfea16209",
+      "machine": "0x14c",
+      "pe_magic": "0x10b",
+      "status": "loader_failed",
+      "observation": "P_NTD.DLL imports missing NTDLL.LdrGetProcedureAddress",
+      "app_functionality_verified": false,
+      "receipt": {
+        "command": "C:\\M98LAB\\APP_PROBE.EXE 10000 \"D:\\SUPER\\chrome.exe\"",
+        "cwd": "D:\\SUPER\\144.0.7559.256",
+        "timeout_ms": 20000,
+        "exit_code": 2,
+        "timed_out": false,
+        "output_truncated": false,
+        "output_bytes": 28,
+        "output_sha256": "c00a728251343d6be3171a2a18b4df819541157b3fc9724cca0476ec63d88020",
+        "output": "LAUNCH_FAIL win32_error=31\r\n",
+        "guest": "m98agent/v1 protocol=1 os=4.10 build=67766446",
+        "transport": "VirtualBox COM1 local named pipe",
+        "pipe": "\\\\.\\pipe\\Win98Modern-Lab"
+      },
+      "screenshot_local": "build/guest/supermium-after-fls19-versioncwd.png",
+      "screenshot_sha256": "7318dd8bdc714da7ffcdd8b987e252af1c080f8e86c26a87a0919f8b6fb84f2e"
+    },
+    {
+      "app": "VLC",
+      "version": "3.0.24",
+      "local_executable": "benchmarks/media/vlc-3.0.24/vlc-3.0.24/vlc.exe",
+      "executable_sha256": "499d578564d27529bc08ef9ccb4c5043e25a49d21d2d41fb2176cc3563e8f0d7",
+      "machine": "0x14c",
+      "pe_magic": "0x10b",
+      "status": "error_dialog_only",
+      "observation": "VLC media player could not start; invalid command line options or no plugins found",
+      "app_functionality_verified": false,
+      "receipt": {
+        "command": "C:\\M98LAB\\APP_PROBE.EXE 30000 \"D:\\VLC\\vlc.exe\"",
+        "cwd": "D:\\VLC",
+        "timeout_ms": 40000,
+        "exit_code": 0,
+        "timed_out": false,
+        "output_truncated": false,
+        "output_bytes": 410,
+        "output_sha256": "f095c5c5b596f291353f7c9af609dd33704fb48d54c535cb102e3dc6008b8029",
+        "output": "LAUNCHED child_pid=4294815763\r\nOBSERVATION_LIMIT_MS=30000\r\nWINDOW_FIRST_SEEN hwnd=0x00000328 elapsed_ms=726 class=\"#32770\" title=\"VLC media player\"\r\nOBSERVED_MS=30004\r\nFINAL_WINDOW hwnd=0x00000328 elapsed_ms=30004 class=\"#32770\" title=\"VLC media player\"\r\nFINAL_VISIBLE_WINDOW_COUNT=1\r\nALIVE_AFTER_OBSERVATION=1\r\nWM_CLOSE_POSTED_COUNT=1\r\nTARGET_EXIT_CODE=0\r\nIMMEDIATE_CHILD_REAPED=1\r\nDESCENDANTS_NOT_TRACKED=1\r\n",
+        "guest": "m98agent/v1 protocol=1 os=4.10 build=67766446",
+        "transport": "VirtualBox COM1 local named pipe",
+        "pipe": "\\\\.\\pipe\\Win98Modern-Lab"
+      },
+      "screenshot_local": "build/guest/vlc19-appcwd-live.png",
+      "screenshot_sha256": "9b4f0945b23ae3edcb2383ab5cbe79620d973c73fbaf163953eec5d8c1eb41cf"
+    },
+    {
+      "app": "VSCode",
+      "version": "1.138.0",
+      "local_executable": "benchmarks/media/vscode-1.138.0-x64/Code.exe",
+      "executable_sha256": "081417b5e8032c703cf9e25e4886ab10c417ad1b8b87cfd1244c67d15331a8a6",
+      "machine": "0x8664",
+      "pe_magic": "0x20b",
+      "status": "architecture_blocked",
+      "observation": "PE32+ AMD64; current Win98 x86 runtime cannot load this target",
+      "app_functionality_verified": false
+    }
+  ]
+}

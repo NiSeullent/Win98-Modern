@@ -35,6 +35,21 @@
       "InterlockedPushListSList",
       "InterlockedPushListSListEx",
       "QueryDepthSList"
+    ],
+    "fls-lifecycle": [
+      "ConvertThreadToFiber",
+      "ConvertThreadToFiberEx",
+      "CreateFiber",
+      "CreateFiberEx",
+      "CreateThread",
+      "DeleteFiber",
+      "ExitThread",
+      "FlsAlloc",
+      "FlsFree",
+      "FlsGetValue",
+      "FlsSetValue",
+      "FreeLibraryAndExitThread",
+      "SwitchToFiber"
     ]
   }
 }

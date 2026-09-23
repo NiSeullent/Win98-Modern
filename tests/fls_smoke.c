@@ -403,6 +403,236 @@ static BOOL command_contains(const char *needle)
     return FALSE;
 }
 
+static DWORD term_a,term_b,term_guard,term_mode,term_hold,term_rundown;
+static HANDLE term_foreign_ready,term_foreign_release;
+static HANDLE term_owner_ready,term_hold_entered,term_hold_release;
+static int term_own_value,term_foreign_value;
+static volatile LONG term_a_own,term_a_foreign,term_b_own,term_b_foreign,term_guard_calls;
+static VOID WINAPI term_a_callback(PVOID value)
+{
+    if(value==&term_foreign_value) {
+        InterlockedIncrement(&term_a_foreign);
+        if(term_mode==4&&term_a_own) bridge_exit(74); /* exit again during abandonment */
+        return;
+    }
+    if(value!=&term_own_value) fail("termination A value");
+    InterlockedIncrement(&term_a_own);
+    if(term_mode==0) return;
+    if(term_mode==2) bridge_free_exit(fixture,72);
+    else if(term_mode==3) bridge_delete(GetCurrentFiber());
+    else bridge_exit(71);
+    fail("callback thread termination returned");
+}
+static VOID WINAPI term_b_callback(PVOID value)
+{
+    if(value==&term_foreign_value) { InterlockedIncrement(&term_b_foreign); return; }
+    if(value!=&term_own_value) fail("termination B value");
+    InterlockedIncrement(&term_b_own);
+    if(!bridge_free(term_a)) fail("nested retirement A");
+}
+static VOID WINAPI term_guard_callback(PVOID value)
+{
+    if(value!=&term_own_value) fail("termination guard value");
+    InterlockedIncrement(&term_guard_calls);
+}
+static VOID WINAPI term_hold_callback(PVOID value)
+{
+    if(value!=&term_own_value) fail("termination foreign in-flight value");
+    SetEvent(term_hold_entered);
+    if(WaitForSingleObject(term_hold_release,5000)!=WAIT_OBJECT_0)
+        fail("termination foreign in-flight release");
+}
+static DWORD WINAPI term_hold_worker(LPVOID unused)
+{
+    (void)unused;
+    if(!bridge_free(term_hold)) fail("termination foreign retirement");
+    return 0;
+}
+static VOID WINAPI term_rundown_callback(PVOID value)
+{
+    if(value!=&term_own_value||!bridge_free(term_b)) fail("nested retirement during rundown");
+    fail("terminating nested rundown callback returned");
+}
+static DWORD WINAPI term_foreign_worker(LPVOID unused)
+{
+    (void)unused;
+    if(!bridge_set(term_a,&term_foreign_value)||!bridge_set(term_b,&term_foreign_value))
+        fail("termination foreign values");
+    SetEvent(term_foreign_ready);
+    if(WaitForSingleObject(term_foreign_release,10000)!=WAIT_OBJECT_0)
+        fail("termination foreign release");
+    return 0;
+}
+static DWORD WINAPI term_owner_worker(LPVOID unused)
+{
+    (void)unused;
+    if(term_mode==3&&!bridge_convert(NULL)) fail("termination convert");
+    if(!bridge_set(term_a,&term_own_value)||!bridge_set(term_b,&term_own_value)||
+       !bridge_set(term_guard,&term_own_value)) fail("termination owner values");
+    if(term_mode==5) {
+        if(!bridge_set(term_hold,&term_own_value)) fail("termination held value");
+        SetEvent(term_owner_ready);
+        if(WaitForSingleObject(term_hold_entered,5000)!=WAIT_OBJECT_0)
+            fail("termination foreign callback entered");
+    }
+    if(term_mode==6) {
+        if(!bridge_set(term_rundown,&term_own_value)) fail("termination rundown value");
+        return 0;
+    }
+    if(term_mode==2&&!LoadLibraryA("FLSFIX.DLL")) fail("termination fixture lifetime pin");
+    if(!bridge_free(term_b)) fail("outer retirement B");
+    if(term_mode) fail("terminating callback returned to FlsFree caller");
+    return 70;
+}
+static void termination_child(BOOL native)
+{
+    HANDLE foreign,owner,holder=NULL; DWORD id,code,reused_a,reused_b;
+    if(native) {
+        HMODULE kernel=GetModuleHandleA("KERNEL32.DLL");
+        bridge_alloc=(alloc_fn)GetProcAddress(kernel,"FlsAlloc");
+        bridge_free=(free_fn)GetProcAddress(kernel,"FlsFree");
+        bridge_get=(get_fn)GetProcAddress(kernel,"FlsGetValue");
+        bridge_set=(set_fn)GetProcAddress(kernel,"FlsSetValue");
+        if(!bridge_alloc||!bridge_free||!bridge_get||!bridge_set) ExitProcess(77);
+        bridge_create_thread=CreateThread; bridge_exit=ExitThread;
+        bridge_free_exit=FreeLibraryAndExitThread;
+        bridge_convert=ConvertThreadToFiber; bridge_delete=DeleteFiber;
+    }
+    if(command_contains("-exit")) term_mode=1;
+    if(command_contains("-unload")) term_mode=2;
+    if(command_contains("-delete")) term_mode=3;
+    if(command_contains("-repeat")) term_mode=4;
+    if(command_contains("-foreign")) term_mode=5;
+    if(command_contains("-rundown")) term_mode=6;
+    term_foreign_ready=CreateEventA(NULL,TRUE,FALSE,NULL);
+    term_foreign_release=CreateEventA(NULL,TRUE,FALSE,NULL);
+    if(!term_foreign_ready||!term_foreign_release) fail("termination events");
+    if(term_mode==6) {
+        term_rundown=bridge_alloc(term_rundown_callback);
+        if(term_rundown==FLS_OUT_OF_INDEXES) fail("termination rundown slot");
+    }
+    term_a=bridge_alloc(term_a_callback); term_b=bridge_alloc(term_b_callback);
+    term_guard=bridge_alloc(term_guard_callback);
+    if(term_a==FLS_OUT_OF_INDEXES||term_b==FLS_OUT_OF_INDEXES||term_guard==FLS_OUT_OF_INDEXES)
+        fail("termination slots");
+    if(term_mode==5) {
+        term_hold=bridge_alloc(term_hold_callback);
+        term_owner_ready=CreateEventA(NULL,TRUE,FALSE,NULL);
+        term_hold_entered=CreateEventA(NULL,TRUE,FALSE,NULL);
+        term_hold_release=CreateEventA(NULL,TRUE,FALSE,NULL);
+        if(term_hold==FLS_OUT_OF_INDEXES||!term_owner_ready||!term_hold_entered||!term_hold_release)
+            fail("termination in-flight setup");
+    }
+    foreign=bridge_create_thread(NULL,0,term_foreign_worker,NULL,0,&id);
+    if(!foreign||WaitForSingleObject(term_foreign_ready,5000)!=WAIT_OBJECT_0)
+        fail("termination foreign ready");
+    owner=bridge_create_thread(NULL,0,term_owner_worker,NULL,0,&id);
+    if(term_mode==5) {
+        if(!owner||WaitForSingleObject(term_owner_ready,5000)!=WAIT_OBJECT_0)
+            fail("termination owner holds foreign value");
+        holder=bridge_create_thread(NULL,0,term_hold_worker,NULL,0,&id);
+        if(!holder||WaitForSingleObject(term_hold_entered,5000)!=WAIT_OBJECT_0)
+            fail("termination foreign callback active");
+        if(WaitForSingleObject(owner,100)!=WAIT_TIMEOUT) {
+            if(!native) fail("termination ignored foreign reference");
+            say("OBSERVED: native owner terminated before foreign callback release\r\n");
+        }
+        SetEvent(term_hold_release);
+    }
+    if(!owner||WaitForSingleObject(owner,2000)!=WAIT_OBJECT_0) {
+        if(native) {
+            say("OBSERVED: native nested callback termination did not complete within 2 seconds\r\n");
+            ExitProcess(124);
+        }
+        fail("callback termination deadlocked its thread");
+    }
+    if(!GetExitCodeThread(owner,&code)) fail("termination exit code");
+    if(!native&&term_mode!=3&&code!=(term_mode==0?70:term_mode==2?72:term_mode==4?74:71))
+        fail("termination exit status preserved");
+    if(term_a_own!=1||term_a_foreign!=1||term_b_own!=1||term_b_foreign!=1||term_guard_calls!=1)
+        fail("abandoned retirement omitted or repeated callbacks");
+    reused_a=bridge_alloc(NULL); reused_b=bridge_alloc(NULL);
+    if(reused_a==FLS_OUT_OF_INDEXES||reused_b==FLS_OUT_OF_INDEXES)
+        fail("post-termination allocation");
+    if(!native&& !((reused_a==term_a&&reused_b==term_b)||(reused_a==term_b&&reused_b==term_a)))
+        fail("abandoned retiring slots not reusable");
+    if(!bridge_set(reused_a,&term_own_value)||bridge_get(reused_a)!=&term_own_value||
+       !bridge_free(reused_a)||!bridge_free(reused_b)||!bridge_free(term_guard))
+        fail("post-termination generation reuse");
+    if(term_mode==6&&!bridge_free(term_rundown)) fail("termination rundown slot free");
+    if(holder) {
+        if(WaitForSingleObject(holder,5000)!=WAIT_OBJECT_0) fail("foreign retirement completed");
+        CloseHandle(holder); CloseHandle(term_owner_ready);
+        CloseHandle(term_hold_entered); CloseHandle(term_hold_release);
+    }
+    SetEvent(term_foreign_release);
+    if(WaitForSingleObject(foreign,5000)!=WAIT_OBJECT_0) fail("termination foreign completion");
+    if(term_a_foreign!=1||term_b_foreign!=1) fail("old foreign generation survived reuse");
+    CloseHandle(owner); CloseHandle(foreign);
+    CloseHandle(term_foreign_ready); CloseHandle(term_foreign_release);
+    say(native?"OBSERVED: native bounded callback termination completed\r\n":
+               "PASS: bridge bounded callback termination and slot reuse\r\n");
+    ExitProcess(0);
+}
+static void termination_parent(BOOL native)
+{
+    static const char *modes[]={"-normal","-exit","-unload","-delete","-repeat","-foreign","-rundown"};
+    DWORD i,n,j,code; char path[MAX_PATH],command[MAX_PATH+96];
+    STARTUPINFOA startup={0}; PROCESS_INFORMATION process;
+    BOOL failed=FALSE;
+    if(!GetModuleFileNameA(NULL,path,sizeof(path))) fail("termination child path");
+    for(i=0;i<7;++i) {
+        n=0; command[n++]='"'; for(j=0;path[j];++j)command[n++]=path[j];command[n++]='"';
+        { const char *s=native?" /term-child-native":" /term-child-bridge"; while(*s)command[n++]=*s++; }
+        for(j=0;modes[i][j];++j)command[n++]=modes[i][j]; command[n]=0;
+        startup.cb=sizeof(startup); startup.dwFlags=STARTF_USESHOWWINDOW; startup.wShowWindow=SW_HIDE;
+        if(!CreateProcessA(NULL,command,NULL,NULL,TRUE,0,NULL,NULL,&startup,&process))
+            fail("termination child launch");
+        if(WaitForSingleObject(process.hProcess,8000)!=WAIT_OBJECT_0) {
+            TerminateProcess(process.hProcess,124); WaitForSingleObject(process.hProcess,2000);
+            code=124;
+        } else if(!GetExitCodeProcess(process.hProcess,&code)) fail("termination child status");
+        CloseHandle(process.hThread); CloseHandle(process.hProcess);
+        say(native?"OBSERVED native ":"CHECK bridge "); say(modes[i]); hex32(" exit=",code);
+        if(!native&&code) failed=TRUE;
+    }
+    if(failed) fail("bounded callback termination child");
+    if(!native) say("PASS: FLS seven bounded nested-retirement termination children\r\n");
+}
+
+static DWORD self_slot, self_other;
+static LONG self_calls;
+static VOID WINAPI self_free_callback(PVOID value)
+{
+    if(value!=&marker_natural) fail("self-free callback value");
+    InterlockedIncrement(&self_calls);
+    if(!bridge_free(self_slot)) fail("rundown callback frees its own slot");
+    self_other=bridge_alloc(NULL);
+    if(self_other==FLS_OUT_OF_INDEXES||self_other==self_slot)
+        fail("active self-free callback generation reused");
+}
+static DWORD WINAPI self_free_worker(LPVOID unused)
+{
+    (void)unused;
+    if(!bridge_set(self_slot,&marker_natural)) fail("self-free worker value");
+    return 0;
+}
+static void self_free_rundown_regression(void)
+{
+    DWORD id, again;
+    HANDLE worker;
+    self_slot=bridge_alloc(self_free_callback);
+    if(self_slot==FLS_OUT_OF_INDEXES) fail("self-free allocation");
+    worker=bridge_create_thread(NULL,0,self_free_worker,NULL,0,&id);
+    if(!worker||WaitForSingleObject(worker,5000)!=WAIT_OBJECT_0||self_calls!=1)
+        fail("self-free callback deadlocked or repeated");
+    CloseHandle(worker);
+    again=bridge_alloc(NULL);
+    if(again!=self_slot) fail("self-free completed generation not reusable");
+    if(!bridge_free(again)||!bridge_free(self_other)) fail("self-free cleanup");
+    say("PASS: FLS rundown callback self-free keeps generation until return\r\n");
+}
+
 void mainCRTStartup(void)
 {
     table_fn get_table;
@@ -427,6 +657,11 @@ void mainCRTStartup(void)
     bridge_create_thread = (thread_create_fn)api(table, "CreateThread");
     bridge_exit = (thread_exit_fn)api(table, "ExitThread");
     bridge_free_exit = (free_exit_fn)api(table, "FreeLibraryAndExitThread");
+
+    if(command_contains("/term-child-")) termination_child(command_contains("/term-child-native"));
+    if(command_contains("/term-native")) { termination_parent(TRUE); ExitProcess(0); }
+    if(command_contains("/term-bridge")) { termination_parent(FALSE); ExitProcess(0); }
+    if(command_contains("/review-self-free")) { self_free_rundown_regression(); ExitProcess(0); }
 
     /* Each mode can demonstrate its pre-fix failure without reaching another
      * regression first. All modes are also exercised in the normal suite. */
@@ -515,6 +750,8 @@ void mainCRTStartup(void)
     conversion_reentry_regression();
     current_delete_regression();
     concurrent_conversion_regression();
+    self_free_rundown_regression();
+    termination_parent(FALSE);
     say("PASS: direct FLS fixture slots, fibers, callbacks, thread exit hooks\r\n");
     ExitProcess(0);
 }

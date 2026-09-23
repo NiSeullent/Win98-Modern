@@ -264,7 +264,7 @@ void mainCRTStartup(void)
     table = get_table();
     if (!table || !table->target_library ||
         compare(table->target_library, "KERNEL32.DLL") != 0 ||
-        table[1].target_library != 0 || table->named_apis_count != 76)
+        table[1].target_library != 0 || table->named_apis_count != 89)
         fail("KernelEx table layout");
     for (i = 1; i < table->named_apis_count; ++i)
         if (compare(table->named_apis[i-1].name, table->named_apis[i].name) >= 0)
@@ -627,7 +627,7 @@ void mainCRTStartup(void)
         fail("file info invalid handle");
     CloseHandle(file);
 
-    report("PASS: 76-entry KernelEx table and sampled API behavior\r\n");
+    report("PASS: 89-entry KernelEx table and sampled API behavior\r\n");
     FreeLibrary(dll);
     ExitProcess(0);
 }

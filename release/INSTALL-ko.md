@@ -3,7 +3,7 @@
 이 ZIP에는 실험용 KernelEx API 라이브러리 `m98wrap.dll`, `m98shell.dll`, `m98adv.dll`, KernelEx용 결합 테마 후보 `UXTHEME.DLL`, 안전 범위를 제한한 전환 도구 `KSWITCH.EXE`, 앱 로컬용 `dbghelp.dll`, `dwmapi.dll`, `bcrypt.dll`이 들어 있습니다.
 Windows 98 SE용 KernelEx API 확장 시험을 위한 파일이며 최신 프로그램의 실행을
 보장하지 않습니다. 설치는 Windows 98 SE **32비트 게스트**에서 수동으로 합니다.
-이 미리보기의 `m98wrap.dll`에는 KERNEL32 이름 76개가 등록돼 있습니다. 이는
+이 미리보기의 `m98wrap.dll`에는 KERNEL32 이름 89개가 등록돼 있습니다. 이는
 등록된 함수 이름의 수이며 전체 Windows API 호환률이나 앱 구동률이 아닙니다.
 그중 `GetFinalPathNameByHandleW`, `FindFirstStreamW`, `GetLocaleInfoEx`,
 `GetApplicationRestartSettings`, `QueryFullProcessImageNameA/W`의
@@ -46,18 +46,32 @@ Windows 98 SE용 KernelEx API 확장 시험을 위한 파일이며 최신 프로
    ```
 
    다른 라이브러리 이름이 이미 있으면 그대로 보존하고 `m98wrap`만 추가합니다. 제공된 KernelEx 소스의 `core.ini` 전체로 설치본을 덮어쓰지 마세요.
-4. `[DCFG1.names.98]`, `[DCFG1.names.Me]`, `[WINXP.names]` 세 섹션에서
-   다음 두 연결을 추가하거나 기존 연결을 바꿉니다. 각 섹션에 같은 이름을
-   중복해서 넣지 마세요. 기존 KernelEx의 다른 로캘 구현보다 이 DLL을
-   선택하기 위해 필요합니다.
+4. `[DCFG1.names.98]`, `[DCFG1.names.Me]`, `[WINXP.names]` 세 섹션에
+   `porting/runtime-routes.json`의 여섯 기능 묶음(38개 이름)을 모두 연결합니다.
+   일부 기본 함수만 이전 공급자에 남으면 FLS 종료 콜백이 누락될 수 있습니다.
+   호스트로 복사한 설정 파일에는 ZIP의 도구로 114개 연결을 함께 적용할 수 있습니다.
+   3단계의 `contents=` 등록을 먼저 반영한 파일을 입력으로 사용하세요.
 
-   ```ini
-   KERNEL32.CompareStringEx=m98wrap.0
-   KERNEL32.LCMapStringEx=m98wrap.0
+   ```powershell
+   python remote/patch_core_family.py CORE-BEFORE.INI CORE-READY.INI --library m98wrap --family all
+   ```
+
+   출력은 아직 존재하지 않는 새 파일이어야 합니다. 도구는 기존의 관련 없는
+   설정·줄바꿈을 보존하고 충돌·중복 연결을 거부합니다. 결과를 검토한 뒤
+   백업한 게스트 설정을 `CORE-READY.INI` 내용으로 교체합니다.
+   `integration/core.ini`는 연결 예시이며 설치본 전체를 덮어쓰는 파일이 아닙니다.
+
+   버전 이름을 쓰는 이전 공급자에서 업그레이드할 때는 `contents=`에 공급자를
+   중복 등록하지 말고, 먼저 별도 출력 파일로 기존 연결 전체를 이동합니다.
+   다음은 이전 이름이 `m98wrp18`인 경우의 예시입니다. 실제 설치 이름으로 바꿉니다.
+
+   ```powershell
+   python remote/patch_core_wrapper_upgrade.py CORE-BEFORE.INI CORE-MIGRATED.INI --old m98wrp18 --new m98wrap
+   python remote/patch_core_family.py CORE-MIGRATED.INI CORE-READY.INI --library m98wrap --family all
    ```
 
 5. 저장한 뒤 게스트를 **정상 종료하고 완전히 껐다가 다시 켭니다**.
-   새 DLL의 함수 이름 76개 등록만으로 각 함수의 동작이 검증되는 것은
+   새 DLL의 함수 이름 89개 등록만으로 각 함수의 동작이 검증되는 것은
    아닙니다. 설치한 KernelEx를 통한 정적 import와 실제 앱 동작을 각각
    확인하세요.
 
@@ -124,4 +138,6 @@ Windows 98 SE용 KernelEx API 확장 시험을 위한 파일이며 최신 프로
 
 ## 이번 API 묶음 검증
 
-M98WRP18 기준으로 SList 7개, 스레드풀 work/callback 12개, InitOnce 4개, NLS 2개의 제한된 계약 시험이 실제 설치된 Win98에서 정적 import로 통과했습니다. KERNEL32 표의 76개 등록 이름 전체가 완전 호환이라는 뜻은 아닙니다. Notepad++ 8.9.8은 현재 FlsAlloc 누락에서 멈춥니다. FLS는 독립 시험 구현으로만 제공하며 이 패치에는 설치하지 않습니다.
+M98WRP19 기준으로 SList 7개, 스레드풀 work/callback 12개, InitOnce 4개, NLS 2개, FLS·스레드·파이버 13개의 제한된 계약 시험이 실제 설치된 Win98에서 정적 import로 통과했습니다. KERNEL32 표의 89개 등록 이름 전체가 완전 호환이라는 뜻은 아닙니다. 통합 회귀 시험 10개가 통과했으며 시스템 MSVCRT의 스레드 종료 콜백도 확인했습니다. Notepad++ 8.9.8은 현재 USER32.RemoveClipboardFormatListener 누락에서 멈춥니다.
+
+FLS/lifecycle 13개는 공통 백엔드에 함께 연결해야 합니다. 예제 `integration/core.ini`와 `porting/runtime-routes.json`의 해당 기능 묶음을 기존 설정에 병합하고 정상 종료 후 다시 부팅합니다. `CreateThread`와 종료 함수 일부만 이전 공급자에 남기면 콜백 처리가 누락될 수 있습니다. 역방향 파이버 변환, raw/강제 종료, 일부 플래그와 내부 스레드풀 종료 정리는 아직 미완료입니다. 정리 콜백이 일시 중단된 파이버를 삭제하려는 요청은 ERROR_BUSY로 거부합니다.

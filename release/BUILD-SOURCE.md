@@ -44,9 +44,9 @@ of the ADVAPI API library. The script checks PE32/Win98 loader headers,
 base relocations, original-media native imports, UXTHEME's original 48 plus
 six added exports, and the guarded mapping helper. Its UXTHEME checker uses
 the pinned target app's **import names only**; that app is not inside the ZIP.
-At this preview snapshot `m98wrap.dll` has a 76-name KernelEx KERNEL32 table.
+At this preview snapshot `m98wrap.dll` has a 89-name KernelEx KERNEL32 table.
 This is the number of registered names, not a whole-Windows-API compatibility
-percentage or a claim that all 76 behaviors are complete.
+percentage or a claim that all 89 behaviors are complete.
 
 `build-dlls.ps1` also runs the included focused builds for final-path, stream,
 locale information, application restart, process path, SRW condition
@@ -125,8 +125,10 @@ focused build; its executable is not shipped as a guest test.
 
 All shipped probes, fixtures and the marker are covered by package checksums and
 can be rebuilt from the included source. Including a test executable in the ZIP
-does not assert a guest pass for a newly packaged snapshot. The isolated FLS
-experiment is not included in this patch ZIP or its production wrapper.
+does not assert a guest pass for a newly packaged snapshot. The FLS backend and its thirteen routed thread/fiber API subset are included.
+Its direct, static-import, independent race and CRT lifecycle probes are included
+as separate evidence layers; see the FLS and KernelEx lifecycle documents for
+unsupported flags, raw exit paths and suspended-callback fiber limitations.
 
 Generated file hashes can differ across compiler versions. The ZIP's
 `SHA256SUMS.txt` records files actually shipped, not locally rebuilt output.
@@ -135,9 +137,23 @@ In the source checkout, create a release ZIP after building and validating:
 
 ```powershell
 .\release\build-dlls.ps1
-.\tools\package-release.ps1 -Version 0.1.3-preview
+.\tools\package-release.ps1 -Version 0.1.5-preview
 ```
 
-Replace `0.1.3-preview` with the chosen release version. The packaging script writes
+Replace `0.1.5-preview` with the chosen release version. The packaging script writes
 the ZIP and its `.sha256` file under `build/releases/` and selects every ZIP
 member from a fixed list.
+
+## Shared wrapper source recipe
+
+Every wrapper build consumes `tools/m98wrap-sources.ps1`. The list is explicit
+and ordered, including the FLS module; it is reused by the checkout, focused
+API builds and this release rebuild. Integration probes must use byte-identical
+copies of the shipping wrapper.
+
+Additional guest probes: `fls_static.exe` (13 installed KERNEL32 imports),
+`fls_direct.exe` / `fls_integrated.exe` (explicit API tables), `fls_smoke.exe`
+(slot/fiber/termination regression children), `FLSRACE.EXE` (controlled concurrent
+rundown and suspended-callback deletion guard), and `THRLIFE.EXE` (EXE/MSVCRT
+thread routing and callbacks). Keep `FLSFIX.DLL` and `TPMARK.DLL` beside the
+fixture probes. These tests exercise defined subsets, not every native behavior.

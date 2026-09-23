@@ -27,25 +27,23 @@ For each binary, record direct and delay-load imports, dependent DLLs, loader fa
 ## Notepad++ 8.9.8 guest probe
 
 Latest 2026-09-24 result: the installed Win98 SE guest cold-booted with
-`M98WRP18.DLL` (76 KERNEL32 table names), SHA-256
-`0da854a1a6ff42296e2e5c7fda92e07a660351a5b14b568f18c2846c609c2f3e`.
-Five static-import suites passed: InitOnce (4 APIs), threadpool work (5),
-threadpool callback extensions (7), SList (7), and NLS (2). These are **25
-focused API contract subsets**, not 25 fully compatible API implementations.
-The SList suite includes a 65,537-node chain and 40,000 concurrent transfers;
-the callback suite checks actual DLL detach notification. The 76-entry table
-smoke also passed. Exact provider, source, test and supporting artifact hashes
-are recorded in `benchmarks/api-guest-evidence-v1.json`.
+`M98WRP19.DLL` (89 KERNEL32 table names), SHA-256
+`ee96a7d5dfda768f21eb0098b8dafdd4080a018847329e5e145d8086b7a46cd4`.
+Six static-import suites passed: InitOnce (4 APIs), threadpool work (5),
+threadpool callback extensions (7), SList (7), NLS (2), and FLS/lifecycle (13).
+These are **38 focused API contract subsets**, not 38 fully compatible APIs.
+The ten-test lifecycle regression bundle also passed the 89-name table smoke,
+FLS concurrency/termination tests, and EXE plus system MSVCRT thread-exit
+callbacks. Exact source/provider/test hashes are in
+`benchmarks/api-guest-evidence-v1.json` and family documents.
 
 Notepad++ itself still does not start. APP_PROBE returned exit 2 and
-`LAUNCH_FAIL win32_error=31`; the next displayed missing name was
-`KERNEL32.FlsAlloc` (`build/guest/npp-after-families18.png`). The FLS family
-already has a separately tested implementation, with three review-found
-lifetime/reentry fixes and four new Win98 regressions passing. It remains an
-isolated fixture until core lifecycle routing and outstanding reentrant
-thread-termination semantics are implemented. Its function names are not
-added to production solely to move the loader error. Other required apps
-have no new guest-functionality result in this checkpoint.
+`LAUNCH_FAIL win32_error=31`; the next displayed missing name is now
+`USER32.RemoveClipboardFormatListener` (`build/guest/npp-after-fls19.png`).
+The previous FlsAlloc import no longer blocks loading. The clipboard listener
+and message-delivery family belongs in the catalogue dependency plan; this
+loader progression is not application functionality. The remaining targets were checked as below; no required app has a new
+functionality pass.
 
 Earlier provider16 stopped at `InitializeSListHead`. A preceding warm restart
 of a combined change produced one VxD exception preserved in a separate
@@ -59,3 +57,23 @@ The first x86 portable build attempt in the Windows 98 SE + KernelEx guest stopp
 With the bridge beside `notepad++.exe`, the next guest loader dialog reported missing `DWMAPI.DLL` (`vm/npp-shim-result.png`). An app-local DLL exports the two directly imported DWM functions and reports disabled composition. After initial shims the guest showed a generic invalid-format error (`vm/npp-new-alert-upper.png`); changing the executable's PE version fields in an **ignored local test copy** did not help (`vm/npp-pe410-error-revealed.png`). A clean retry with app-local BCRYPT exposed the specific issue: `DWMAPI.DLL` had no base relocation directory, so Win98 could not load it after another shim occupied the preferred base (`vm/npp-after-bcrypt.png`). The DWM build now forces a real base relocation; its PE gate, host smoke, and Win98 guest direct smoke pass (`vm/dwm-reloc-guest-smoke.png`).
 
 The seven direct BCRYPT imports are provided by an app-local SHA-256/MD5/HMAC subset. Its PE gate, host known-answer tests, and Win98 guest direct smoke pass (`vm/bcrypt-guest-smoke.png`). MD5/SHA256 and HMAC pseudo-handle paths also passed a direct guest smoke (`vm/pseudo-guest-smoke.png`). With DBGHELP, relocatable DWMAPI, and BCRYPT present, Notepad++ next stopped at the absent `SHCreateItemFromParsingName` export in native `SHELL32.DLL` (`vm/npp-after-dwm-reloc.png`). A new KernelEx Shell API library now supplies `SHCreateItemFromParsingName`, `SHParseDisplayName`, and the focused file-system case of `SHOpenFolderAndSelectItems`; direct and static-import guest probes passed, and Explorer selected the test file (`vm/select-shell3-guest.png`). The following Notepad++ loader error is `UXTHEME.DLL!DrawThemeTextEx` (`vm/npp-after-uxtheme.png`). A no-theme bridge passed direct guest testing, but KernelEx's KnownDLL redirection bypasses an app-local `UXTHEME.DLL`, so the app has **not** started. None of the publisher binaries or test ISOs is distributed by this project.
+
+## Provider19 five-application checkpoint
+
+Exact executable hashes, PE architectures and receipts are recorded in
+`benchmarks/app-guest-checkpoint-provider19.json`. App media remain ignored.
+
+| Selected application | Actual current result | Next shared prerequisite |
+| --- | --- | --- |
+| Chromium 150 x86 | Loader error 31; CHROME_ELF.DLL requires KERNEL32.AddVectoredExceptionHandler | Exception dispatch and vectored-handler family |
+| Supermium 144 R5 x86 | After selecting its version directory as cwd, loader error 31; P_NTD.DLL requires NTDLL.LdrGetProcedureAddress | NT loader/export-resolution backend and bundled wrapper dependency closure |
+| VLC 3.0.24 x86 | Process launches but only a failure dialog appears: invalid options or no plugins found. Same result with application directory as cwd. No player UI or playback | Plugin discovery/loading and full dependent API contracts |
+| Notepad++ 8.9.8 x86 | Loader error 31 at USER32.RemoveClipboardFormatListener after FLS integration | Clipboard listeners, viewer chain, messages and window lifetime |
+| VSCode 1.138.0 x64 | Local PE32+ AMD64 inspection; not launched in x86 Win98 | x64 execution plus user API/loader architecture path |
+
+VLC's APP_PROBE exit 0 means the observation tool completed and closed the
+observed process. Its screenshot shows an error dialog, so it is explicitly
+not an application success. Supermium's first root-cwd attempt could not find
+CHROME_ELF.DLL; using the packaged version directory resolved that layout issue
+and exposed the NT loader prerequisite. This does not establish installation
+or application compatibility. No target version was replaced by an older one.

@@ -15,7 +15,8 @@ $exeFlags = @('-std=c11','-Os','-Wall','-Wextra','-Werror',
     '-Wl,--subsystem,console:4.10','-Wl,--major-image-version,4',
     '-Wl,--minor-image-version,10','-Wl,--disable-dynamicbase',
     '-Wl,--disable-nxcompat','-Wl,--disable-tsaware')
-& $cc @dllFlags '-o' (Join-Path $out 'm98wrap.dll') (Join-Path $root 'src/m98wrap.c') (Join-Path $root 'src/m98nls_ex.c') (Join-Path $root 'src/m98_threadpool.c') (Join-Path $root 'src/m98_initonce.c') (Join-Path $root 'src/m98_slist.c') (Join-Path $root 'src/wine_uppercase.c') '-lkernel32'
+$dllSources = @(& (Join-Path $PSScriptRoot 'm98wrap-sources.ps1') -ProjectRoot $root)
+& $cc @dllFlags '-o' (Join-Path $out 'm98wrap.dll') @dllSources '-lkernel32'
 if ($LASTEXITCODE -ne 0) { throw 'm98wrap build failed' }
 & $cc @exeFlags '-o' (Join-Path $out 'productinfo_smoke.exe') (Join-Path $root 'tests/productinfo_smoke.c') '-lkernel32'
 if ($LASTEXITCODE -ne 0) { throw 'direct smoke build failed' }

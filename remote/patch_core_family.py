@@ -62,17 +62,19 @@ def main():
     parser.add_argument("--family", required=True)
     args = parser.parse_args()
     families = json.loads((ROOT / "porting/runtime-routes.json").read_text(encoding="utf-8"))["families"]
-    if args.family not in families:
+    if args.family != "all" and args.family not in families:
         parser.error("unknown reviewed family")
+    names = (sorted({name for group in families.values() for name in group})
+             if args.family == "all" else families[args.family])
     if args.output.exists() or args.output.resolve() == args.source.resolve():
         parser.error("output must be a new path")
     original = args.source.read_bytes()
-    updated = patch(original, args.library, families[args.family])
+    updated = patch(original, args.library, names)
     with args.output.open("xb") as stream:
         stream.write(updated)
     print(json.dumps({"source_sha256":hashlib.sha256(original).hexdigest(),
         "output_sha256":hashlib.sha256(updated).hexdigest(), "family":args.family,
-        "provider":args.library, "route_count":len(families[args.family])*len(SECTIONS)}))
+        "provider":args.library, "route_count":len(names)*len(SECTIONS)}))
 
 
 if __name__ == "__main__":

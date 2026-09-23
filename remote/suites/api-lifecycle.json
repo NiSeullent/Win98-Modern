@@ -1,0 +1,145 @@
+{
+  "schema": "m98.remote-suite.v1",
+  "prerequisite": "Install and cold boot the matching provider with all six runtime route groups. This suite does not edit CORE.INI.",
+  "files": [
+    {
+      "source": "build/m98wrap.dll",
+      "guest_path": "C:\\M98LAB\\M98WRAP.DLL"
+    },
+    {
+      "source": "build/finalpath/smoke.exe",
+      "guest_path": "C:\\M98LAB\\SMOKE89.EXE"
+    },
+    {
+      "source": "build/threadpool/TPMARK.DLL",
+      "guest_path": "C:\\M98LAB\\TPMARK.DLL"
+    },
+    {
+      "source": "build/fls/FLSFIX.DLL",
+      "guest_path": "C:\\M98LAB\\FLSFIX.DLL"
+    },
+    {
+      "source": "build/fls/fls_smoke.exe",
+      "guest_path": "C:\\M98LAB\\FLSSM19.EXE"
+    },
+    {
+      "source": "build/fls-rundown-race/FLSRACE.EXE",
+      "guest_path": "C:\\M98LAB\\FLSRACE.EXE"
+    },
+    {
+      "source": "build/fls-integration/fls_static.exe",
+      "guest_path": "C:\\M98LAB\\FLSI19.EXE"
+    },
+    {
+      "source": "build/thread-lifecycle/THRLIFE.EXE",
+      "guest_path": "C:\\M98LAB\\THRLIFE.EXE"
+    },
+    {
+      "source": "build/slist/slist_import_probe.exe",
+      "guest_path": "C:\\M98LAB\\SLISTIMP.EXE"
+    },
+    {
+      "source": "build/threadpool/threadpool_callback_static.exe",
+      "guest_path": "C:\\M98LAB\\TPCBS18.EXE"
+    },
+    {
+      "source": "build/threadpool/threadpool_guest_import_smoke.exe",
+      "guest_path": "C:\\M98LAB\\TPFULL17.EXE"
+    },
+    {
+      "source": "build/initonce/initonce_import_probe.exe",
+      "guest_path": "C:\\M98LAB\\ONCEIMP.EXE"
+    },
+    {
+      "source": "build/nls-ex/nls_ex_import_probe.exe",
+      "guest_path": "C:\\M98LAB\\NLSI14.EXE"
+    }
+  ],
+  "tests": [
+    {
+      "id": "provider-table",
+      "command": "C:\\M98LAB\\SMOKE89.EXE",
+      "contains": [
+        "PASS: 89-entry"
+      ],
+      "timeout_ms": 60000
+    },
+    {
+      "id": "fls-static",
+      "command": "C:\\M98LAB\\FLSI19.EXE",
+      "contains": [
+        "PASS: static FLS",
+        "module absent"
+      ],
+      "timeout_ms": 60000
+    },
+    {
+      "id": "thread-and-crt-routing",
+      "command": "C:\\M98LAB\\THRLIFE.EXE",
+      "contains": [
+        "FLS_ROUTE=active index=",
+        "FLS_STAGE: MSVCRT _beginthreadex natural return",
+        "callback_count=0x00000003",
+        "PASS: native thread primitives"
+      ],
+      "timeout_ms": 60000
+    },
+    {
+      "id": "fls-rundown-race",
+      "command": "C:\\M98LAB\\FLSRACE.EXE",
+      "contains": [
+        "PASS: bridge retirement waits for in-flight rundown callback",
+        "PASS: suspended cleanup fiber deletion rejected; callback resumed"
+      ],
+      "timeout_ms": 60000
+    },
+    {
+      "id": "fls-direct",
+      "command": "C:\\M98LAB\\FLSSM19.EXE",
+      "contains": [
+        "PASS: FLS seven bounded",
+        "PASS: direct FLS"
+      ],
+      "timeout_ms": 60000
+    },
+    {
+      "id": "slist-static",
+      "command": "C:\\M98LAB\\SLISTIMP.EXE",
+      "contains": [
+        "PASS: SList seven-API"
+      ],
+      "timeout_ms": 60000
+    },
+    {
+      "id": "threadpool-callback-static",
+      "command": "C:\\M98LAB\\TPCBS18.EXE",
+      "contains": [
+        "PASS: static callback"
+      ],
+      "timeout_ms": 60000
+    },
+    {
+      "id": "threadpool-work-static",
+      "command": "C:\\M98LAB\\TPFULL17.EXE",
+      "contains": [
+        "PASS:"
+      ],
+      "timeout_ms": 60000
+    },
+    {
+      "id": "initonce-static",
+      "command": "C:\\M98LAB\\ONCEIMP.EXE",
+      "contains": [
+        "PASS:"
+      ],
+      "timeout_ms": 60000
+    },
+    {
+      "id": "nls-static",
+      "command": "C:\\M98LAB\\NLSI14.EXE",
+      "contains": [],
+      "timeout_ms": 60000
+    }
+  ],
+  "agent_guest_path": "C:\\M98LAB\\M98AG2.EXE"
+}

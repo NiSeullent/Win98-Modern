@@ -91,6 +91,22 @@ subsystems.
    maintaining a stale list of individual functions. Reboot only after copying
    the versioned DLL and verified configuration, then test ordinary imports.
 
+## One source recipe and independent lifecycle checks
+
+`tools/m98wrap-sources.ps1` is the explicit ordered source list shared by the
+checkout build, release rebuild and focused wrapper tests. Adding a backend
+requires updating this one list; the release gate also requires identical
+wrapper hashes beside integration tests. This prevents a newly ported family
+from appearing in one build while silently missing from another.
+
+For lifecycle families, the implementer and reviewer use separate probes.
+The FLS work includes a thirteen-entry static import probe, a system MSVCRT
+`_beginthreadex` routing probe, and bounded child processes for callbacks that
+terminate their own threads. An API-provider's imports must remain native while
+application and CRT imports route through the new backend, or recursion results.
+The installed guest's IAT ownership is checked explicitly. A passing direct
+fixture alone does not authorize promoting the same names into the provider.
+
 Initial foundations cover ABI/loader, object lifetime, synchronization, thread
 teardown, Unicode, file/I/O, COM, graphics, networking, security, NT services
 and WinRT. Full threadpool work/timer/wait/I/O/cleanup behavior depends on these

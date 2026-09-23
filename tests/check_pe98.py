@@ -18,6 +18,15 @@ import pefile
 NATIVE_KERNEL32 = frozenset(
     {
         "CloseHandle",
+        "VirtualQuery",
+        "TlsSetValue",
+        "TlsGetValue",
+        "TlsAlloc",
+        "SwitchToFiber",
+        "ExitThread",
+        "DeleteFiber",
+        "CreateFiber",
+        "ConvertThreadToFiber",
         "CompareStringW",
         "CreateEventA",
         "CreateFileA",

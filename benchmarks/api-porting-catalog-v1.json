@@ -1,8 +1,8 @@
 {
   "artifacts": {
-    "catalog.csv": "d482afce37efcf71f64aed9e9c4486103411ee6258af137dcb0efe61a77b3f3d",
-    "catalog.jsonl.gz": "c95b2a6135f1a68b98ed869e4f9e1f6db2eb25f572729daf7963f9d1e05f8623",
-    "work-queue.json": "12cc43087ef50d9e12d8b752a068617b7261affb8bdf262209692ef9189b1e21"
+    "catalog.csv": "33307eb6a92d66c27a0042d3ade477a6eb6f82ca1f1ac6e35415b6b49943e7a9",
+    "catalog.jsonl.gz": "e2d2d8ae8a300937ec1fb4b86846693218ca7b7c627a2d966719a8420cb1b2a0",
+    "work-queue.json": "a4c25d17ac043890a7404f9e36d755b0b3f266ebdf2261ca7c9168793a0d051b"
   },
   "batch_summary_policy": "Named functional batches plus the 20 largest default batches; complete membership is in work-queue.json",
   "batches": [
@@ -146,12 +146,12 @@
       "depends_on": [
         "thread-lifecycle"
       ],
-      "guest_subset_verified_candidates": 0,
+      "guest_subset_verified_candidates": 11,
       "historical_evidence_candidates": 0,
       "id": "fiber-tls-fls",
       "native_export_present": 11,
       "priority": 2,
-      "project_declared": 0,
+      "project_declared": 11,
       "required_gates": [
         "ABI_and_contract_review",
         "both_Wine_and_ReactOS_review",
@@ -162,7 +162,7 @@
         "guest_static_import",
         "application_regression"
       ],
-      "state": "awaiting_contract_review",
+      "state": "partial_guest_subset_evidence",
       "title": "TLS, FLS and fiber lifecycle",
       "upstream_sources": {
         "kernelex": 1,
@@ -1103,6 +1103,528 @@
           "path": "build/slist/slist_import_probe.exe",
           "sha256": "ecc3a109057e7391f1d4697e296c622be0f71f601d06f527cfcdea7aac343073"
         }
+      },
+      {
+        "apis": [
+          {
+            "dll": "KERNEL32.DLL",
+            "name": "InitOnceBeginInitialize"
+          },
+          {
+            "dll": "KERNEL32.DLL",
+            "name": "InitOnceComplete"
+          },
+          {
+            "dll": "KERNEL32.DLL",
+            "name": "InitOnceExecuteOnce"
+          },
+          {
+            "dll": "KERNEL32.DLL",
+            "name": "InitOnceInitialize"
+          }
+        ],
+        "core_ini_sha256": "a4a3e8e6286321a5a80a96d62bb2acc2386ba3ba384a780ef3c93f4e4c433598",
+        "documentation": "docs/INITONCE_PORT.md",
+        "environment": {
+          "acceleration": "VirtualBox NEM hardware virtualization; current boot checked by vm/run.ps1",
+          "os": "Directly installed Korean Windows 98 SE",
+          "vm": "Win98Modern-Accel-128"
+        },
+        "evidence_kind": "guest_static_import_contract_subset",
+        "family": "initonce",
+        "full_compatibility_verified": false,
+        "id": "guest-m98wrp19-initonce-2026-09-24",
+        "limitations": "Invalid-use exceptions differ in the two previously documented cases; polling wait is not an NT keyed event.",
+        "provider": {
+          "guest_path": "C:\\WINDOWS\\KernelEx\\M98WRP19.DLL",
+          "path": "build/m98wrap.dll",
+          "sha256": "ee96a7d5dfda768f21eb0098b8dafdd4080a018847329e5e145d8086b7a46cd4"
+        },
+        "receipt": {
+          "command": "C:\\M98LAB\\ONCEIMP.EXE",
+          "cwd": "C:\\M98LAB",
+          "exit_code": 0,
+          "guest": "m98agent/v1 protocol=1 os=4.10 build=67766446",
+          "output": "PASS: static KERNEL32 InitOnce four-API contracts and 192 worker races\r\n",
+          "output_bytes": 72,
+          "output_sha256": "c0356210364223dac3ebe0cb8068f166d6694eadae3950326c6f67e08a9787ac",
+          "output_truncated": false,
+          "pipe": "\\\\.\\pipe\\Win98Modern-Lab",
+          "timed_out": false,
+          "timeout_ms": 60000,
+          "transport": "VirtualBox COM1 local named pipe"
+        },
+        "scope": "Four-API initialization, aligned context, mixed manual/ExecuteOnce state, retry and 192 worker races",
+        "source_hashes": {
+          "src/kex_abi.h": "87899e80ba1076fa0a2ccde507304f1553cdd6bf4468cb708f361d749a2673fd",
+          "src/m98_fls.c": "cbdee3c2224760f3817631471e90aea43ee4c97d0922440c492ee5af95d67139",
+          "src/m98_fls.h": "cb71bc1a9680976840cccc6afef1e0fd85c950f3444acd16cdefefe78144f8d7",
+          "src/m98_initonce.c": "74d7d663f4969f9b4a62788695a345e96f90b2059d40cb376a9649abc2383e5d",
+          "src/m98_initonce.h": "4dedec974f4e34280e8b88bb00eed1bc7e7f5530f2456aa89643d3847b57e55c",
+          "src/m98_slist.c": "7e45a2664706e9d1e3df2b21bfc5969fea57f27f454584fbe69791599b39b44d",
+          "src/m98_slist.h": "8e6c343a712c6ef431c75213e4cbd0ea4b873126b636e88830e7b3c5d90fae5f",
+          "src/m98_threadpool.c": "70f7df8c39f4ee28489c51e04500ad0c21bdeece5b17043eccc04ed2f19e74f0",
+          "src/m98_threadpool.h": "6bfc4552d75e346db1cb477a4c4c758fd99f6c977886bf54618a7fae7638bb8c",
+          "src/m98nls_ex.c": "8f9fcd1b5ed2a9a446ed64f4568386c7013d1cbe459106a15dd95fda8366344c",
+          "src/m98nls_ex.h": "1dcefe53ee05290fe6d2f77df454534aeb7a08327b9ad17d90788d3e6d0e4505",
+          "src/m98wrap.c": "c17dd0f10407ddd2f4fb8a3f045d2939729c174558d4b5d37e1dcf16df0fdf1a",
+          "src/wine_uppercase.c": "59a48d395e850d39eee0c6919fdc7ed73d28e7982da544a6d300c454d83bb888",
+          "tests/initonce_import_probe.c": "4502d97f3a30e1acde4f295ca5cab48916df5cb5887a6d3ee577167a797202bd",
+          "tests/initonce_smoke.c": "75154964cfb0b42310531b9745b060a46e4b9effa5bff435f59fec6423e4d83b"
+        },
+        "suite": "remote/suites/api-lifecycle.json",
+        "suite_sha256": "ab0817d22f6e50610c7d151bc39c303b09bfaabc826ee8aa31417fb4a9d23d8f",
+        "test": {
+          "path": "build/initonce/initonce_import_probe.exe",
+          "sha256": "eda1117c4b288eb8d9961496ae52b575dfd95888350a483e65951564f6750ea6"
+        }
+      },
+      {
+        "apis": [
+          {
+            "dll": "KERNEL32.DLL",
+            "name": "CompareStringEx"
+          },
+          {
+            "dll": "KERNEL32.DLL",
+            "name": "LCMapStringEx"
+          }
+        ],
+        "core_ini_sha256": "a4a3e8e6286321a5a80a96d62bb2acc2386ba3ba384a780ef3c93f4e4c433598",
+        "documentation": "docs/NLS_EX_PORT.md",
+        "environment": {
+          "acceleration": "VirtualBox NEM hardware virtualization; current boot checked by vm/run.ps1",
+          "os": "Directly installed Korean Windows 98 SE",
+          "vm": "Win98Modern-Accel-128"
+        },
+        "evidence_kind": "guest_static_import_contract_subset",
+        "family": "nls-ex",
+        "full_compatibility_verified": false,
+        "id": "guest-m98wrp19-nls-ex-2026-09-24",
+        "limitations": "Limited static probe does not establish all flags/locales or modern linguistic-data parity.",
+        "provider": {
+          "guest_path": "C:\\WINDOWS\\KernelEx\\M98WRP19.DLL",
+          "path": "build/m98wrap.dll",
+          "sha256": "ee96a7d5dfda768f21eb0098b8dafdd4080a018847329e5e145d8086b7a46cd4"
+        },
+        "receipt": {
+          "command": "C:\\M98LAB\\NLSI14.EXE",
+          "cwd": "C:\\M98LAB",
+          "exit_code": 0,
+          "guest": "m98agent/v1 protocol=1 os=4.10 build=67766446",
+          "output": "",
+          "output_bytes": 0,
+          "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "output_truncated": false,
+          "pipe": "\\\\.\\pipe\\Win98Modern-Lab",
+          "timed_out": false,
+          "timeout_ms": 60000,
+          "transport": "VirtualBox COM1 local named pipe"
+        },
+        "scope": "Static en-US comparison and lowercase mapping through the sibling KernelEx Unicode provider",
+        "source_hashes": {
+          "src/kex_abi.h": "87899e80ba1076fa0a2ccde507304f1553cdd6bf4468cb708f361d749a2673fd",
+          "src/m98_fls.c": "cbdee3c2224760f3817631471e90aea43ee4c97d0922440c492ee5af95d67139",
+          "src/m98_fls.h": "cb71bc1a9680976840cccc6afef1e0fd85c950f3444acd16cdefefe78144f8d7",
+          "src/m98_initonce.c": "74d7d663f4969f9b4a62788695a345e96f90b2059d40cb376a9649abc2383e5d",
+          "src/m98_initonce.h": "4dedec974f4e34280e8b88bb00eed1bc7e7f5530f2456aa89643d3847b57e55c",
+          "src/m98_slist.c": "7e45a2664706e9d1e3df2b21bfc5969fea57f27f454584fbe69791599b39b44d",
+          "src/m98_slist.h": "8e6c343a712c6ef431c75213e4cbd0ea4b873126b636e88830e7b3c5d90fae5f",
+          "src/m98_threadpool.c": "70f7df8c39f4ee28489c51e04500ad0c21bdeece5b17043eccc04ed2f19e74f0",
+          "src/m98_threadpool.h": "6bfc4552d75e346db1cb477a4c4c758fd99f6c977886bf54618a7fae7638bb8c",
+          "src/m98nls_ex.c": "8f9fcd1b5ed2a9a446ed64f4568386c7013d1cbe459106a15dd95fda8366344c",
+          "src/m98nls_ex.h": "1dcefe53ee05290fe6d2f77df454534aeb7a08327b9ad17d90788d3e6d0e4505",
+          "src/m98wrap.c": "c17dd0f10407ddd2f4fb8a3f045d2939729c174558d4b5d37e1dcf16df0fdf1a",
+          "src/wine_uppercase.c": "59a48d395e850d39eee0c6919fdc7ed73d28e7982da544a6d300c454d83bb888",
+          "tests/nls_ex_import_probe.c": "7212924fa9fa84275517aec4526003034d2670bbc3ab6ea5ecbf47bada1ca23a"
+        },
+        "suite": "remote/suites/api-lifecycle.json",
+        "suite_sha256": "ab0817d22f6e50610c7d151bc39c303b09bfaabc826ee8aa31417fb4a9d23d8f",
+        "test": {
+          "path": "build/nls-ex/nls_ex_import_probe.exe",
+          "sha256": "b756589b4705efa15ba47004f61804452dd5bb3bc1a6a006cb07a61d825d6a46"
+        }
+      },
+      {
+        "apis": [
+          {
+            "dll": "KERNEL32.DLL",
+            "name": "CloseThreadpoolWork"
+          },
+          {
+            "dll": "KERNEL32.DLL",
+            "name": "CreateThreadpoolWork"
+          },
+          {
+            "dll": "KERNEL32.DLL",
+            "name": "FreeLibraryWhenCallbackReturns"
+          },
+          {
+            "dll": "KERNEL32.DLL",
+            "name": "SubmitThreadpoolWork"
+          },
+          {
+            "dll": "KERNEL32.DLL",
+            "name": "WaitForThreadpoolWorkCallbacks"
+          }
+        ],
+        "core_ini_sha256": "a4a3e8e6286321a5a80a96d62bb2acc2386ba3ba384a780ef3c93f4e4c433598",
+        "documentation": "docs/THREADPOOL_WORK_PORT.md",
+        "environment": {
+          "acceleration": "VirtualBox NEM hardware virtualization; current boot checked by vm/run.ps1",
+          "os": "Directly installed Korean Windows 98 SE",
+          "vm": "Win98Modern-Accel-128"
+        },
+        "evidence_kind": "guest_static_import_contract_subset",
+        "family": "threadpool-work",
+        "full_compatibility_verified": false,
+        "id": "guest-m98wrp19-threadpool-work-2026-09-24",
+        "limitations": "Custom pools and timer/wait/I/O/cleanup groups remain outstanding.",
+        "provider": {
+          "guest_path": "C:\\WINDOWS\\KernelEx\\M98WRP19.DLL",
+          "path": "build/m98wrap.dll",
+          "sha256": "ee96a7d5dfda768f21eb0098b8dafdd4080a018847329e5e145d8086b7a46cd4"
+        },
+        "receipt": {
+          "command": "C:\\M98LAB\\TPFULL17.EXE",
+          "cwd": "C:\\M98LAB",
+          "exit_code": 0,
+          "guest": "m98agent/v1 protocol=1 os=4.10 build=67766446",
+          "output": "PASS: static Win98 threadpool lifecycle, parallelism, cancel, deferred unload\r\n",
+          "output_bytes": 79,
+          "output_sha256": "8d211601f8525aac30b95958fd294b4825db7ad97e868fd67a3b07127db6b37a",
+          "output_truncated": false,
+          "pipe": "\\\\.\\pipe\\Win98Modern-Lab",
+          "timed_out": false,
+          "timeout_ms": 60000,
+          "transport": "VirtualBox COM1 local named pipe"
+        },
+        "scope": "Default work pool, parallelism, queue cancellation, queued/active Close and deferred DLL unload",
+        "source_hashes": {
+          "src/kex_abi.h": "87899e80ba1076fa0a2ccde507304f1553cdd6bf4468cb708f361d749a2673fd",
+          "src/m98_fls.c": "cbdee3c2224760f3817631471e90aea43ee4c97d0922440c492ee5af95d67139",
+          "src/m98_fls.h": "cb71bc1a9680976840cccc6afef1e0fd85c950f3444acd16cdefefe78144f8d7",
+          "src/m98_initonce.c": "74d7d663f4969f9b4a62788695a345e96f90b2059d40cb376a9649abc2383e5d",
+          "src/m98_initonce.h": "4dedec974f4e34280e8b88bb00eed1bc7e7f5530f2456aa89643d3847b57e55c",
+          "src/m98_slist.c": "7e45a2664706e9d1e3df2b21bfc5969fea57f27f454584fbe69791599b39b44d",
+          "src/m98_slist.h": "8e6c343a712c6ef431c75213e4cbd0ea4b873126b636e88830e7b3c5d90fae5f",
+          "src/m98_threadpool.c": "70f7df8c39f4ee28489c51e04500ad0c21bdeece5b17043eccc04ed2f19e74f0",
+          "src/m98_threadpool.h": "6bfc4552d75e346db1cb477a4c4c758fd99f6c977886bf54618a7fae7638bb8c",
+          "src/m98nls_ex.c": "8f9fcd1b5ed2a9a446ed64f4568386c7013d1cbe459106a15dd95fda8366344c",
+          "src/m98nls_ex.h": "1dcefe53ee05290fe6d2f77df454534aeb7a08327b9ad17d90788d3e6d0e4505",
+          "src/m98wrap.c": "c17dd0f10407ddd2f4fb8a3f045d2939729c174558d4b5d37e1dcf16df0fdf1a",
+          "src/wine_uppercase.c": "59a48d395e850d39eee0c6919fdc7ed73d28e7982da544a6d300c454d83bb888",
+          "tests/threadpool_marker.c": "09e213392ca350057e1d7cc227da643245ac716cf46fe9494f2449585b51e310",
+          "tests/threadpool_smoke.c": "9b57a4a0de238fc117d00bf0d795f305c9d70da5bdf7d6d0072f6e2f793569e5"
+        },
+        "suite": "remote/suites/api-lifecycle.json",
+        "suite_sha256": "ab0817d22f6e50610c7d151bc39c303b09bfaabc826ee8aa31417fb4a9d23d8f",
+        "supporting_artifacts": [
+          {
+            "path": "build/threadpool/TPMARK.DLL",
+            "sha256": "ab90d2b68fb2658dd23573b172e6f6ad02b394569dc9edf9af20c7de12c9338d"
+          }
+        ],
+        "test": {
+          "path": "build/threadpool/threadpool_guest_import_smoke.exe",
+          "sha256": "6c03fda354102ffbff0f732589461ebcb32e532d8d15d0718d6cbdffe2662810"
+        }
+      },
+      {
+        "apis": [
+          {
+            "dll": "KERNEL32.DLL",
+            "name": "CallbackMayRunLong"
+          },
+          {
+            "dll": "KERNEL32.DLL",
+            "name": "DisassociateCurrentThreadFromCallback"
+          },
+          {
+            "dll": "KERNEL32.DLL",
+            "name": "LeaveCriticalSectionWhenCallbackReturns"
+          },
+          {
+            "dll": "KERNEL32.DLL",
+            "name": "ReleaseMutexWhenCallbackReturns"
+          },
+          {
+            "dll": "KERNEL32.DLL",
+            "name": "ReleaseSemaphoreWhenCallbackReturns"
+          },
+          {
+            "dll": "KERNEL32.DLL",
+            "name": "SetEventWhenCallbackReturns"
+          },
+          {
+            "dll": "KERNEL32.DLL",
+            "name": "TrySubmitThreadpoolCallback"
+          }
+        ],
+        "core_ini_sha256": "a4a3e8e6286321a5a80a96d62bb2acc2386ba3ba384a780ef3c93f4e4c433598",
+        "documentation": "docs/THREADPOOL_CALLBACK_PORT.md",
+        "environment": {
+          "acceleration": "VirtualBox NEM hardware virtualization; current boot checked by vm/run.ps1",
+          "os": "Directly installed Korean Windows 98 SE",
+          "vm": "Win98Modern-Accel-128"
+        },
+        "evidence_kind": "guest_static_import_contract_subset",
+        "family": "threadpool-callback",
+        "full_compatibility_verified": false,
+        "id": "guest-m98wrp19-threadpool-callback-2026-09-24",
+        "limitations": "Default pool only; no exhaustion injection, custom pools, cleanup groups, timers/waits/I/O or full invalid-handle equivalence.",
+        "provider": {
+          "guest_path": "C:\\WINDOWS\\KernelEx\\M98WRP19.DLL",
+          "path": "build/m98wrap.dll",
+          "sha256": "ee96a7d5dfda768f21eb0098b8dafdd4080a018847329e5e145d8086b7a46cd4"
+        },
+        "receipt": {
+          "command": "C:\\M98LAB\\TPCBS18.EXE",
+          "cwd": "C:\\M98LAB",
+          "exit_code": 0,
+          "guest": "m98agent/v1 protocol=1 os=4.10 build=67766446",
+          "output": "PASS: static callback deferred resources, disassociation, simple work and long-work capacity\r\n",
+          "output_bytes": 94,
+          "output_sha256": "b5dc528c1ebb56f3f27514fef6c923fff2e2546b2b400896af0720e88d8178ae",
+          "output_truncated": false,
+          "pipe": "\\\\.\\pipe\\Win98Modern-Lab",
+          "timed_out": false,
+          "timeout_ms": 60000,
+          "transport": "VirtualBox COM1 local named pipe"
+        },
+        "scope": "Deferred CS/mutex/semaphore/event/DLL cleanup, disassociation lifetime, simple callback/finalization and long-work capacity",
+        "source_hashes": {
+          "src/kex_abi.h": "87899e80ba1076fa0a2ccde507304f1553cdd6bf4468cb708f361d749a2673fd",
+          "src/m98_fls.c": "cbdee3c2224760f3817631471e90aea43ee4c97d0922440c492ee5af95d67139",
+          "src/m98_fls.h": "cb71bc1a9680976840cccc6afef1e0fd85c950f3444acd16cdefefe78144f8d7",
+          "src/m98_initonce.c": "74d7d663f4969f9b4a62788695a345e96f90b2059d40cb376a9649abc2383e5d",
+          "src/m98_initonce.h": "4dedec974f4e34280e8b88bb00eed1bc7e7f5530f2456aa89643d3847b57e55c",
+          "src/m98_slist.c": "7e45a2664706e9d1e3df2b21bfc5969fea57f27f454584fbe69791599b39b44d",
+          "src/m98_slist.h": "8e6c343a712c6ef431c75213e4cbd0ea4b873126b636e88830e7b3c5d90fae5f",
+          "src/m98_threadpool.c": "70f7df8c39f4ee28489c51e04500ad0c21bdeece5b17043eccc04ed2f19e74f0",
+          "src/m98_threadpool.h": "6bfc4552d75e346db1cb477a4c4c758fd99f6c977886bf54618a7fae7638bb8c",
+          "src/m98nls_ex.c": "8f9fcd1b5ed2a9a446ed64f4568386c7013d1cbe459106a15dd95fda8366344c",
+          "src/m98nls_ex.h": "1dcefe53ee05290fe6d2f77df454534aeb7a08327b9ad17d90788d3e6d0e4505",
+          "src/m98wrap.c": "c17dd0f10407ddd2f4fb8a3f045d2939729c174558d4b5d37e1dcf16df0fdf1a",
+          "src/wine_uppercase.c": "59a48d395e850d39eee0c6919fdc7ed73d28e7982da544a6d300c454d83bb888",
+          "tests/threadpool_callback_smoke.c": "2691d36f01bca99cbe82cbf6a29f7f6c0a1dc2ce2dcdeb5c68871cee83da0992",
+          "tests/threadpool_marker.c": "09e213392ca350057e1d7cc227da643245ac716cf46fe9494f2449585b51e310"
+        },
+        "suite": "remote/suites/api-lifecycle.json",
+        "suite_sha256": "ab0817d22f6e50610c7d151bc39c303b09bfaabc826ee8aa31417fb4a9d23d8f",
+        "supporting_artifacts": [
+          {
+            "path": "build/threadpool/TPMARK.DLL",
+            "sha256": "ab90d2b68fb2658dd23573b172e6f6ad02b394569dc9edf9af20c7de12c9338d"
+          }
+        ],
+        "test": {
+          "path": "build/threadpool/threadpool_callback_static.exe",
+          "sha256": "7b0c463a18e8e389245ce0715bc21024bfdc70631a85671275fb1c21710e93c2"
+        }
+      },
+      {
+        "apis": [
+          {
+            "dll": "KERNEL32.DLL",
+            "name": "InitializeSListHead"
+          },
+          {
+            "dll": "KERNEL32.DLL",
+            "name": "InterlockedFlushSList"
+          },
+          {
+            "dll": "KERNEL32.DLL",
+            "name": "InterlockedPopEntrySList"
+          },
+          {
+            "dll": "KERNEL32.DLL",
+            "name": "InterlockedPushEntrySList"
+          },
+          {
+            "dll": "KERNEL32.DLL",
+            "name": "InterlockedPushListSList"
+          },
+          {
+            "dll": "KERNEL32.DLL",
+            "name": "InterlockedPushListSListEx"
+          },
+          {
+            "dll": "KERNEL32.DLL",
+            "name": "QueryDepthSList"
+          }
+        ],
+        "core_ini_sha256": "a4a3e8e6286321a5a80a96d62bb2acc2386ba3ba384a780ef3c93f4e4c433598",
+        "documentation": "docs/SLIST_PORT.md",
+        "environment": {
+          "acceleration": "VirtualBox NEM hardware virtualization; current boot checked by vm/run.ps1",
+          "os": "Directly installed Korean Windows 98 SE",
+          "vm": "Win98Modern-Accel-128"
+        },
+        "evidence_kind": "guest_static_import_contract_subset",
+        "family": "slist",
+        "full_compatibility_verified": false,
+        "id": "guest-m98wrp19-slist-2026-09-24",
+        "limitations": "No NTDLL routing or infinite-delay ABA guarantee; reclaimed-page SEH recovery has a separate direct fixture receipt.",
+        "provider": {
+          "guest_path": "C:\\WINDOWS\\KernelEx\\M98WRP19.DLL",
+          "path": "build/m98wrap.dll",
+          "sha256": "ee96a7d5dfda768f21eb0098b8dafdd4080a018847329e5e145d8086b7a46cd4"
+        },
+        "receipt": {
+          "command": "C:\\M98LAB\\SLISTIMP.EXE",
+          "cwd": "C:\\M98LAB",
+          "exit_code": 0,
+          "guest": "m98agent/v1 protocol=1 os=4.10 build=67766446",
+          "output": "PASS: SList alignment/LIFO/fastcall+stdcall batch/flush\r\nINFO: large HeapAlloc alignment offset=0x00000004\r\nPASS: SList depth wrap/65537-node chain\r\nPASS: SList concurrent 4 producers/4 consumers/40000 reuse transfers\r\nPASS: SList seven-API public-contract suite\r\n",
+          "output_bytes": 264,
+          "output_sha256": "97e24e9814387fd0b3a4aff10de1a705cebf85d5e7ac12f26871eb766caf7e02",
+          "output_truncated": false,
+          "pipe": "\\\\.\\pipe\\Win98Modern-Lab",
+          "timed_out": false,
+          "timeout_ms": 60000,
+          "transport": "VirtualBox COM1 local named pipe"
+        },
+        "scope": "Seven static KERNEL32 SList imports: LIFO/return values, fastcall+stdcall batch, flush, 65537-node depth wrap and 40000 concurrent node transfers",
+        "source_hashes": {
+          "src/kex_abi.h": "87899e80ba1076fa0a2ccde507304f1553cdd6bf4468cb708f361d749a2673fd",
+          "src/m98_fls.c": "cbdee3c2224760f3817631471e90aea43ee4c97d0922440c492ee5af95d67139",
+          "src/m98_fls.h": "cb71bc1a9680976840cccc6afef1e0fd85c950f3444acd16cdefefe78144f8d7",
+          "src/m98_initonce.c": "74d7d663f4969f9b4a62788695a345e96f90b2059d40cb376a9649abc2383e5d",
+          "src/m98_initonce.h": "4dedec974f4e34280e8b88bb00eed1bc7e7f5530f2456aa89643d3847b57e55c",
+          "src/m98_slist.c": "7e45a2664706e9d1e3df2b21bfc5969fea57f27f454584fbe69791599b39b44d",
+          "src/m98_slist.h": "8e6c343a712c6ef431c75213e4cbd0ea4b873126b636e88830e7b3c5d90fae5f",
+          "src/m98_threadpool.c": "70f7df8c39f4ee28489c51e04500ad0c21bdeece5b17043eccc04ed2f19e74f0",
+          "src/m98_threadpool.h": "6bfc4552d75e346db1cb477a4c4c758fd99f6c977886bf54618a7fae7638bb8c",
+          "src/m98nls_ex.c": "8f9fcd1b5ed2a9a446ed64f4568386c7013d1cbe459106a15dd95fda8366344c",
+          "src/m98nls_ex.h": "1dcefe53ee05290fe6d2f77df454534aeb7a08327b9ad17d90788d3e6d0e4505",
+          "src/m98wrap.c": "c17dd0f10407ddd2f4fb8a3f045d2939729c174558d4b5d37e1dcf16df0fdf1a",
+          "src/wine_uppercase.c": "59a48d395e850d39eee0c6919fdc7ed73d28e7982da544a6d300c454d83bb888",
+          "tests/slist_import_probe.c": "e1792ccf6ff95a53f23b5c1960b3b12de0edc59e2f09eae8ea91f7f92dc1be3b",
+          "tests/slist_smoke.c": "86d99b5f0026922bcbf4b9cbde5c4338c6eab0554f1f90f60a497fac3911cdca"
+        },
+        "suite": "remote/suites/api-lifecycle.json",
+        "suite_sha256": "ab0817d22f6e50610c7d151bc39c303b09bfaabc826ee8aa31417fb4a9d23d8f",
+        "test": {
+          "path": "build/slist/slist_import_probe.exe",
+          "sha256": "ecc3a109057e7391f1d4697e296c622be0f71f601d06f527cfcdea7aac343073"
+        }
+      },
+      {
+        "apis": [
+          {
+            "dll": "KERNEL32.DLL",
+            "name": "ConvertThreadToFiber"
+          },
+          {
+            "dll": "KERNEL32.DLL",
+            "name": "ConvertThreadToFiberEx"
+          },
+          {
+            "dll": "KERNEL32.DLL",
+            "name": "CreateFiber"
+          },
+          {
+            "dll": "KERNEL32.DLL",
+            "name": "CreateFiberEx"
+          },
+          {
+            "dll": "KERNEL32.DLL",
+            "name": "CreateThread"
+          },
+          {
+            "dll": "KERNEL32.DLL",
+            "name": "DeleteFiber"
+          },
+          {
+            "dll": "KERNEL32.DLL",
+            "name": "ExitThread"
+          },
+          {
+            "dll": "KERNEL32.DLL",
+            "name": "FlsAlloc"
+          },
+          {
+            "dll": "KERNEL32.DLL",
+            "name": "FlsFree"
+          },
+          {
+            "dll": "KERNEL32.DLL",
+            "name": "FlsGetValue"
+          },
+          {
+            "dll": "KERNEL32.DLL",
+            "name": "FlsSetValue"
+          },
+          {
+            "dll": "KERNEL32.DLL",
+            "name": "FreeLibraryAndExitThread"
+          },
+          {
+            "dll": "KERNEL32.DLL",
+            "name": "SwitchToFiber"
+          }
+        ],
+        "core_ini_sha256": "a4a3e8e6286321a5a80a96d62bb2acc2386ba3ba384a780ef3c93f4e4c433598",
+        "documentation": "docs/FLS_PORT_IMPLEMENTATION.md",
+        "environment": {
+          "acceleration": "VirtualBox NEM; current boot hardware acceleration captured in lifecycle suite",
+          "os": "Directly installed Korean Windows 98 SE",
+          "vm": "Win98Modern-Accel-128"
+        },
+        "evidence_kind": "guest_static_import_contract_subset",
+        "family": "fls-lifecycle",
+        "full_compatibility_verified": false,
+        "id": "guest-m98wrp19-fls-lifecycle-2026-09-24",
+        "limitations": "Supported subset only. Reverse conversion, IsThreadAFiber, float-switch, independent stack sizes, raw/forced exits, process shutdown, internal threadpool FLS teardown and arbitrary callback module unload remain incomplete. Suspended callback fiber deletion returns ERROR_BUSY.",
+        "provider": {
+          "guest_path": "C:\\WINDOWS\\KernelEx\\M98WRP19.DLL",
+          "path": "build/m98wrap.dll",
+          "sha256": "ee96a7d5dfda768f21eb0098b8dafdd4080a018847329e5e145d8086b7a46cd4"
+        },
+        "receipt": {
+          "command": "C:\\M98LAB\\FLSI19.EXE",
+          "cwd": "C:\\M98LAB",
+          "exit_code": 0,
+          "guest": "m98agent/v1 protocol=1 os=4.10 build=67766446",
+          "output": "OBSERVED: module absent during free-exit FLS callback\r\nPASS: static FLS and 13-API thread/fiber lifecycle contract subset\r\n",
+          "output_bytes": 123,
+          "output_sha256": "416ff3b4bd2ff387b09b8b5a3ac7bc1508f2737bd9bcffc9fef02f79860af2f8",
+          "output_truncated": false,
+          "pipe": "\\\\.\\pipe\\Win98Modern-Lab",
+          "timed_out": false,
+          "timeout_ms": 60000,
+          "transport": "VirtualBox COM1 local named pipe"
+        },
+        "scope": "Thirteen static KERNEL32 imports: per-fiber values, callbacks, slot free/reuse, CreateThread NULL output, natural and explicit exit, unload-before-exit, zero-flags Ex creation/conversion.",
+        "source_hashes": {
+          "src/kex_abi.h": "87899e80ba1076fa0a2ccde507304f1553cdd6bf4468cb708f361d749a2673fd",
+          "src/m98_fls.c": "cbdee3c2224760f3817631471e90aea43ee4c97d0922440c492ee5af95d67139",
+          "src/m98_fls.h": "cb71bc1a9680976840cccc6afef1e0fd85c950f3444acd16cdefefe78144f8d7",
+          "src/m98_initonce.c": "74d7d663f4969f9b4a62788695a345e96f90b2059d40cb376a9649abc2383e5d",
+          "src/m98_initonce.h": "4dedec974f4e34280e8b88bb00eed1bc7e7f5530f2456aa89643d3847b57e55c",
+          "src/m98_slist.c": "7e45a2664706e9d1e3df2b21bfc5969fea57f27f454584fbe69791599b39b44d",
+          "src/m98_slist.h": "8e6c343a712c6ef431c75213e4cbd0ea4b873126b636e88830e7b3c5d90fae5f",
+          "src/m98_threadpool.c": "70f7df8c39f4ee28489c51e04500ad0c21bdeece5b17043eccc04ed2f19e74f0",
+          "src/m98_threadpool.h": "6bfc4552d75e346db1cb477a4c4c758fd99f6c977886bf54618a7fae7638bb8c",
+          "src/m98nls_ex.c": "8f9fcd1b5ed2a9a446ed64f4568386c7013d1cbe459106a15dd95fda8366344c",
+          "src/m98nls_ex.h": "1dcefe53ee05290fe6d2f77df454534aeb7a08327b9ad17d90788d3e6d0e4505",
+          "src/m98wrap.c": "c17dd0f10407ddd2f4fb8a3f045d2939729c174558d4b5d37e1dcf16df0fdf1a",
+          "src/wine_uppercase.c": "59a48d395e850d39eee0c6919fdc7ed73d28e7982da544a6d300c454d83bb888",
+          "tests/fls_import_probe.c": "600d889f09808115e3ce128d1edb26f571d51d38ba039c33e62565e6e9270844"
+        },
+        "suite": "remote/suites/api-lifecycle.json",
+        "suite_sha256": "ab0817d22f6e50610c7d151bc39c303b09bfaabc826ee8aa31417fb4a9d23d8f",
+        "supporting_artifacts": [
+          {
+            "path": "build/threadpool/TPMARK.DLL",
+            "sha256": "ab90d2b68fb2658dd23573b172e6f6ad02b394569dc9edf9af20c7de12c9338d"
+          }
+        ],
+        "test": {
+          "path": "build/fls-integration/fls_static.exe",
+          "sha256": "b87660f383ae97a38d411f9c1d28cb6fcde040fb2f24e5c02aa675ac34632804"
+        }
       }
     ],
     "schema": "w98mod.api-guest-evidence.v1"
@@ -1122,15 +1644,15 @@
     "sdk_candidates": 151330,
     "supplemental_records": 234613,
     "unassigned_records": 0,
-    "with_current_guest_subset_evidence": 25,
+    "with_current_guest_subset_evidence": 38,
     "with_historical_guest_subset_evidence": 0,
     "with_native_export": 79445,
-    "with_project_declaration": 110,
+    "with_project_declaration": 123,
     "with_upstream_declarations": 189808
   },
   "evidence_policy": "Export declarations, native presence, stubs and forwarders do not demonstrate behavior. Linked guest receipts verify only stated contract subsets for pinned provider/test hashes; unassessed does not mean known-broken. Earlier tests not yet entered in the registry remain documented separately.",
   "inputs": {
-    "behavioral_evidence_sha256": "6034206d8a33e9ae5df00721d2f76d08919d5ad70d8bb9a9cca9a47d72552ee8",
+    "behavioral_evidence_sha256": "ae0c69d7cc593c402a7009f032885c8ff8dab52fbd1cfed0edff34b8f58a5241",
     "groups_sha256": "e9daf6fd1987a592ad548a911a2c95ba87658a27a695b0b4c35aeda04b215d29",
     "native_manifest_sha256": "d0e4f23d8df4f6e3536495621cc50a55df0d257f9b604bbc59028e038ee5b023",
     "project_sources": {
@@ -1140,7 +1662,7 @@
       "src/dbghelp_shim.def": "7356272c853e122422cb4e61df9444517ec6a8a8673a4c6294464e1abba0d8c4",
       "src/dwmapi_shim.c": "f7cee410f772f22c6823898501c8a1139a9ad2cac647aac4e938b5b73c2547b6",
       "src/dwmapi_shim.def": "f1c805a02536a9e50ddd86d4a466d9c862d9fbffd0e6c161d3eed04980034d4e",
-      "src/m98_fls.c": "85b270039bf6ea21d65e0cd6b0cfb30f9231260f03eee8602fe4caa6a7456256",
+      "src/m98_fls.c": "cbdee3c2224760f3817631471e90aea43ee4c97d0922440c492ee5af95d67139",
       "src/m98_initonce.c": "74d7d663f4969f9b4a62788695a345e96f90b2059d40cb376a9649abc2383e5d",
       "src/m98_slist.c": "7e45a2664706e9d1e3df2b21bfc5969fea57f27f454584fbe69791599b39b44d",
       "src/m98_threadpool.c": "70f7df8c39f4ee28489c51e04500ad0c21bdeece5b17043eccc04ed2f19e74f0",
@@ -1148,7 +1670,7 @@
       "src/m98nls_ex.c": "8f9fcd1b5ed2a9a446ed64f4568386c7013d1cbe459106a15dd95fda8366344c",
       "src/m98shell.c": "4f000360388f5d191d7be2b2adec320ff0d2ba58673faea87e7811b5098f3ee7",
       "src/m98shell_openfolder.c": "c24329bca0a1108c27109fc1d14a8006fa36809cedbf17672d71ff3081dd3e17",
-      "src/m98wrap.c": "d44007775e3dad44150d396737cba40902d6a31d6ec3064ea698e1ceaa30a32c",
+      "src/m98wrap.c": "c17dd0f10407ddd2f4fb8a3f045d2939729c174558d4b5d37e1dcf16df0fdf1a",
       "src/uxtheme_shim.c": "7cce15921549603e8e1bd06df858efa6b014030ed0608d997057e5fc74997a2c",
       "src/uxtheme_shim.def": "e620b3251793b9c7aaaf846d711c7dd85eb9cd416da11a2ffd486ef9ba6e5f88",
       "src/uxtheme_sysfont.c": "074ab49bcc030baf53238cc0d05f42fcc218654172e82f510ea975af0ee87057",
@@ -1157,8 +1679,8 @@
     "sdk_inventory_sha256": "e95ee97b426941d3deb1d6f3f34a4f460c012f8a5623b1dc0a7e53f445b033c0",
     "source_receipt_sha256": "3436be1f29b84e4495258c8455222fdc988cb562b5eb11717d2b1f2d0674bc49",
     "sources_manifest_sha256": "39e12d6ab017179b0b837388b19111b25d2b14c70d1ca5594a71ec53053429a9",
-    "upstream_exports_sha256": "4ab5ebdc092013b0126e15a345a4d0b7a0f96f038c69cc6fab160c08404c13ce",
-    "upstream_summary_sha256": "2605d57e22d349c82bf138c95d2b7ccb815259793187cfd919b883d84904fefc"
+    "upstream_exports_sha256": "35e0f1ba2f84750b18acb2816eb3a8c76e6405874a7d8afa74cbe5b64edb90b4",
+    "upstream_summary_sha256": "409046a53c1272ad406aa8a0ca42251173936e6b9424cb200c6a0613c39b88e1"
   },
   "largest_default_batches": [
     {
@@ -2289,20 +2811,20 @@
       }
     ],
     "interpretation": "A declaration, including an export_declaration, is not proof of implemented behavior; stub/forward/data are explicitly separate.",
-    "jsonl_sha256": "4ab5ebdc092013b0126e15a345a4d0b7a0f96f038c69cc6fab160c08404c13ce",
+    "jsonl_sha256": "35e0f1ba2f84750b18acb2816eb3a8c76e6405874a7d8afa74cbe5b64edb90b4",
     "manifest_sha256": "39e12d6ab017179b0b837388b19111b25d2b14c70d1ca5594a71ec53053429a9",
     "receipt_sha256": "3436be1f29b84e4495258c8455222fdc988cb562b5eb11717d2b1f2d0674bc49",
-    "row_count": 288790,
+    "row_count": 288803,
     "rows_by_kind": {
       "data": 3688,
-      "export_declaration": 179009,
+      "export_declaration": 179022,
       "forward": 50328,
       "stub": 55765
     },
     "rows_by_source": {
       "kernelex": 1094,
       "onecore": 92237,
-      "project": 76,
+      "project": 89,
       "reactos": 44132,
       "vxkex": 16742,
       "wine": 134509
@@ -7075,7 +7597,7 @@
       },
       {
         "policy": "working_tree_declarations_only",
-        "revision": "working-tree@9d315234671f4218ea19bf8c5abcb6450b19c2f3",
+        "revision": "working-tree@fca60dfcc2917e8fc6ba7f045d1a9bc058b004ba",
         "source": "project"
       }
     ]
