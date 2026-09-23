@@ -73,5 +73,7 @@ The guest agent builds as PE32 console 4.10 with 30 OEM-native KERNEL32 imports.
 On 2026-09-23 COM1 registration completed using the OEM CD, but the next boot
 raised VxD 0D and then 0E exceptions. The test clone was snapshotted as
 `before-com-recovery-20260923`. Patcher9x v0.9.91 found VMM32 already patched for
-TLB and made no change. Hardware/driver isolation is in progress. No successful
+TLB and made no change. UART-off recovery reached safe mode, followed by a clean
+restart to the normal desktop. A 16450 UART is the next isolated trial; this
+does not yet establish which component caused the first exception. No successful
 guest PING, file transfer, or remote test suite is claimed yet.

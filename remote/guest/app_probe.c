@@ -10,7 +10,9 @@
 #include <windows.h>
 
 #define MAX_COMMAND 4095u
-#define MAX_WINDOWS 32u
+/* 16 first-seen plus 16 final lines fit the remote agent's 64 KiB capture
+ * even if every class/title byte expands to a four-byte escape. */
+#define MAX_WINDOWS 16u
 #define MAX_OBSERVE_MS 30000u
 #define SAMPLE_MS 200u
 #define CLOSE_GRACE_MS 2000u
