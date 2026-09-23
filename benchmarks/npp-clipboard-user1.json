@@ -1,0 +1,22 @@
+{
+  "schema": "w98mod.app-loader-checkpoint.v1",
+  "app": "Notepad++",
+  "version": "8.9.8 x86",
+  "executable_sha256": "960ad7a8d443536ceeeafa18f99aecb70793fc7c4fb6ef23678a9d46bbf7bc78",
+  "environment": "Directly installed Korean Windows 98 SE, Win98Modern-Accel-128, current VirtualBox NEM hardware acceleration",
+  "kernel32_provider": {"name":"M98WRP19.DLL","sha256":"ee96a7d5dfda768f21eb0098b8dafdd4080a018847329e5e145d8086b7a46cd4"},
+  "user32_provider": {"name":"M98USR1.DLL","sha256":"4932584fcb7f1af493dbebfd76a38ede4f04b5543a0559cdd8fd1c33ff8b3fc7"},
+  "core_ini_sha256": "2e853bcdd3a686ad8d105ee47219049efcdd9fbcfeddeac29c9d061eadd0bcc9",
+  "route_evidence": "build/guest/suite-clipboard-user1.json",
+  "command": "C:\\M98LAB\\APP_PROBE.EXE 30000 \"D:\\NPP\\notepad++.exe\"",
+  "cwd": "D:\\NPP",
+  "receipt": "build/guest/receipt-npp-clipboard-user1.json",
+  "exit_code": 2,
+  "win32_error": 31,
+  "screenshot": "build/guest/npp-after-clipboard-user1.png",
+  "screenshot_sha256": "385c3c85a531dc10c9922a5d0c68ae6d26b6fb397ec816e63cba61cf51828d93",
+  "visual_loader_error": "NOTEPAD++.EXE refers to missing GDI32.DLL!GdiAlphaBlend",
+  "status": "loader_failed",
+  "app_functionality_verified": false,
+  "interpretation": "The earlier USER32.RemoveClipboardFormatListener loader block was passed with the routed clipboard provider. This subsequent GDI32 import block is a separate graphics family. No editor window or editing function was observed."
+}

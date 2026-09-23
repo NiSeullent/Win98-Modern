@@ -18,6 +18,8 @@ import re
 import subprocess
 import tarfile
 
+from measure_pe_coverage import c_table_exports
+
 
 ROOT = Path(__file__).resolve().parents[1]
 SCHEMA = "w98mod.upstream-exports.v1"
@@ -220,7 +222,8 @@ def parse_def_text(data: str, source: str, revision: str, path: str,
 
 
 def parse_macro_line(raw: str, source: str, revision: str, path: str,
-                     line: int, file_sha: str) -> tuple[dict | None, str | None]:
+                     line: int, file_sha: str,
+                     project_dll: str | None = None) -> tuple[dict | None, str | None]:
     content = raw.strip()
     if content.startswith(("#", "//", "/*", "*")) or not re.search(r"\b(DECL_API|M98_API)\s*\(", content):
         return None, None
@@ -235,7 +238,9 @@ def parse_macro_line(raw: str, source: str, revision: str, path: str,
     if "*/" in name or not name.strip() or any(c.isspace() for c in name):
         return None, "noncanonical_api_name"
     if source == "project":
-        dll = "KERNEL32.DLL"  # Current M98_API table in src/m98wrap.c.
+        if not project_dll:
+            return None, "unresolved_project_table_target"
+        dll = module_name(project_dll)
     else:
         dll = module_name(PurePosixPath(path).parent.name)
     kind = "forward" if target.lower().endswith("_fwd") else (
@@ -461,8 +466,15 @@ def project_macro_rows(root: Path) -> tuple[list[dict], list[dict], str]:
             continue
         sha = sha256_bytes(raw_data)
         relative = path.relative_to(root).as_posix()
+        # Target comes from the actual API table, never the implementation's
+        # filename or a KERNEL32 default. Keep ambiguous mappings visible.
+        exports = c_table_exports(path, None)
         for line, raw, conditions in c_macro_lines(raw_data.decode("utf-8-sig", "replace")):
-            row, reason = parse_macro_line(raw, "project", revision, relative, line, sha)
+            match = MACRO.search(raw)
+            name = match.group("name") if match else None
+            targets = [dll for dll, names in exports.items() if name in names]
+            row, reason = parse_macro_line(raw, "project", revision, relative, line, sha,
+                                           targets[0] if len(targets) == 1 else None)
             if row:
                 row["condition_flags"].extend(conditions)
                 rows.append(row)

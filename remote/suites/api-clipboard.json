@@ -1,0 +1,20 @@
+{
+  "schema": "m98.remote-suite.v1",
+  "prerequisite": "Install a reviewed versioned USER32 provider, route the three listener/format APIs in all active profiles, then cold boot the directly installed Windows 98 SE guest. The suite does not edit CORE.INI. Clipboard mutation runs only when the starting clipboard is empty and restores that empty state.",
+  "files": [
+    {"source":"build/clipboard/CLIPFIX.DLL","guest_path":"C:\\M98LAB\\CLIPFIX.DLL"},
+    {"source":"build/clipboard/M98USER.DLL","guest_path":"C:\\M98LAB\\M98USER.DLL"},
+    {"source":"build/clipboard-tests/clipboard_smoke.exe","guest_path":"C:\\M98LAB\\CLIPTEST.EXE"},
+    {"source":"build/clipboard-tests/clipboard_import_probe.exe","guest_path":"C:\\M98LAB\\CLIPIMP.EXE"},
+    {"source":"build/clipboard-tests/clipboard_static_suite.exe","guest_path":"C:\\M98LAB\\CLIPFULL.EXE"}
+  ],
+  "tests": [
+    {"id":"clipboard-fixture-read","command":"C:\\M98LAB\\CLIPTEST.EXE --bridge","contains":["PASS: clipboard listener and format contract probe"],"timeout_ms":30000},
+    {"id":"clipboard-shipping-read","command":"C:\\M98LAB\\CLIPTEST.EXE --shipping","contains":["PASS: clipboard listener and format contract probe"],"timeout_ms":30000},
+    {"id":"clipboard-fixture-update","command":"C:\\M98LAB\\CLIPTEST.EXE --bridge --guest-mutate","contains":["PASS: owned guest clipboard mutation, notifications, formats, and empty restore","PASS: clipboard listener and format contract probe"],"timeout_ms":30000},
+    {"id":"clipboard-shipping-update","command":"C:\\M98LAB\\CLIPTEST.EXE --shipping --guest-mutate","contains":["PASS: owned guest clipboard mutation, notifications, formats, and empty restore","PASS: clipboard listener and format contract probe"],"timeout_ms":30000},
+    {"id":"clipboard-static-imports","command":"C:\\M98LAB\\CLIPIMP.EXE","contains":["PASS: three static USER32 clipboard imports"],"timeout_ms":30000},
+    {"id":"clipboard-static-full-contract","command":"C:\\M98LAB\\CLIPFULL.EXE --require-api --bounded-provider --guest-mutate","contains":["PASS: owned guest clipboard mutation, notifications, formats, and empty restore","PASS: clipboard listener and format contract probe"],"timeout_ms":30000}
+  ],
+  "agent_guest_path": "C:\\M98LAB\\M98AG2.EXE"
+}

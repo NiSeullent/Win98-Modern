@@ -95,9 +95,20 @@ class DefAndMacroTests(unittest.TestCase):
                          ("KERNEL32.DLL!Foo", "forward"))
         row, _ = index.parse_macro_line('M98_API("FlsAlloc", m98_FlsAlloc),',
                                         "project", "working-tree@d",
-                                        "src/m98wrap.c", 20, "e" * 64)
+                                        "src/m98wrap.c", 20, "e" * 64, "KERNEL32.DLL")
         self.assertEqual(row["key"], "KERNEL32.DLL!FlsAlloc")
         self.assertEqual(row["kind"], "export_declaration")
+
+    def test_project_target_must_be_explicit(self):
+        raw = 'M98_API("AddClipboardFormatListener", m98_Add),'
+        row, reason = index.parse_macro_line(raw, "project", "working-tree@d",
+                                            "src/m98user.c", 20, "e" * 64)
+        self.assertIsNone(row)
+        self.assertEqual(reason, "unresolved_project_table_target")
+        row, reason = index.parse_macro_line(raw, "project", "working-tree@d",
+                                            "src/m98user.c", 20, "e" * 64, "USER32.DLL")
+        self.assertIsNone(reason)
+        self.assertEqual(row["key"], "USER32.DLL!AddClipboardFormatListener")
 
     def test_macro_comments_and_conditions(self):
         text = "#if 0\n/* DECL_API(\"Bad\", Bad_new), */\nDECL_API(\"Good\", Good_new),\n#endif\n"
@@ -134,6 +145,22 @@ class IntegrityTests(unittest.TestCase):
                         "-c", "user.email=catalog@example.invalid",
                         "commit", "-q", "-m", "pin"], check=True)
         return index.git_head(path)
+
+    def test_project_tables_keep_dll_identity_and_ambiguous_rows(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            (root / "src").mkdir()
+            (root / "src/providers.c").write_text(
+                'static x kernel[] = {\nM98_API("KernelOnly", k),\nM98_API("Shared", k2)\n};\n'
+                'static x user[] = {\nM98_API("Clipboard", u),\nM98_API("Shared", u2)\n};\n'
+                'static y tables[] = { {"KERNEL32.DLL", kernel, 2}, {"USER32.DLL", user, 2} };\n'
+                'M98_API("Unattached", bad)\n', encoding="utf-8")
+            self.commit_repo(root)
+            rows, unresolved, _ = index.project_macro_rows(root)
+            self.assertEqual({r["key"] for r in rows},
+                             {"KERNEL32.DLL!KernelOnly", "USER32.DLL!Clipboard"})
+            self.assertEqual(len(unresolved), 3)
+            self.assertTrue(all(r["reason"] == "unresolved_project_table_target" for r in unresolved))
 
     def test_vxkex_is_export_metadata_only(self):
         with tempfile.TemporaryDirectory() as temporary:

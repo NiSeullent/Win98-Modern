@@ -76,6 +76,16 @@ class CatalogueTests(unittest.TestCase):
         row = {"category":"winrt_idl_method_candidate", "iid":"{sample}", "interface":"IExample", "method":"Close"}
         self.assertEqual(catalog.assign_batch(row, self.groups)["id"], "winrt-iid:{sample}")
 
+    def test_complete_clipboard_family_including_native_and_supplemental(self):
+        for dll,name in (("USER32.DLL","AddClipboardFormatListener"),
+                         ("USER32.DLL","GetClipboardData"),
+                         ("USER32.DLL","GetClipboardMetadata"),
+                         ("WIN32U.DLL","NtUserGetClipboardData")):
+            row={"category":"supplemental_export_declaration","dll":dll,"name":name}
+            self.assertEqual(catalog.assign_batch(row,self.groups)["id"],"clipboard")
+        row={"category":"win32_api_set_alias","dll":"api-ms-user.dll","name":"OpenClipboard"}
+        self.assertEqual(catalog.assign_batch(row,self.groups)["id"],"api-set-routing")
+
     def test_project_literal_and_macro_tables(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

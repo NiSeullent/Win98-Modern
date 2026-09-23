@@ -91,6 +91,28 @@ subsystems.
    maintaining a stale list of individual functions. Reboot only after copying
    the versioned DLL and verified configuration, then test ordinary imports.
 
+### DLL boundaries and the clipboard batch
+
+The clipboard queue retains native operations, modern additions, server-facing
+WIN32U entries and supplemental declarations together. Its dependencies include
+window ownership, message delivery, viewer-chain forwarding, format enumeration
+and process/thread teardown. The 22 SDK USER32 names and supplemental
+`GetClipboardMetadata` remain in scope; testing three missing exports cannot
+complete this family. Existing Win98 exports are backend candidates whose
+behavior still requires validation.
+
+New USER32 functionality uses a separate API provider. Project macro indexing
+derives the target DLL from its actual API table rather than labeling every
+`M98_API` as KERNEL32. Unattached or ambiguous macros remain unresolved records.
+The reviewed runtime route manifest also records target DLL and table index.
+Its `all` operation is a union for **one target DLL**, so a USER32 provider cannot
+silently acquire the KERNEL32 family's routes through a global union.
+
+Keep an implementer's fixture distinct from the independent contract suite.
+For clipboard data-changing cases, use the disposable guest; native host oracle
+checks must preserve the user's existing clipboard. Include viewer/listener
+teardown and cross-process ownership in the review before promoting routes.
+
 ## One source recipe and independent lifecycle checks
 
 `tools/m98wrap-sources.ps1` is the explicit ordered source list shared by the
@@ -118,13 +140,16 @@ not only four storage functions.
 
 The catalogue records `listed` or `declared_in_project` separately from
 behavioral coverage. `benchmarks/api-guest-evidence-v1.json` links focused
-guest receipts for InitOnce, work/callback threadpool, SList and locale-name NLS to
+guest receipts for InitOnce, work/callback threadpool, SList, locale-name NLS,
+FLS/lifecycle and USER32 clipboard to
 the exact provider, test and source hashes. Matching snapshots are labeled
 `guest_static_subset_verified`; changed or unavailable artefacts leave the
 receipt historical. Other focused tests remain in family documents until
 entered in the registry, and unlinked rows are `unassessed`. A declaration match, source availability, native
 export, stub, forwarder, host PASS or successful DLL load is not full API
-compatibility. The catalogue reports no compatibility percentage.
+compatibility. The current catalogue links 41 focused guest contract subsets,
+including the three routed USER32 names in its 45-row clipboard batch. It
+reports no compatibility percentage.
 
 Further evidence linkage must pin implementation, provider and test hashes,
 environment/acceleration, invocation route, tested contract subset, result,

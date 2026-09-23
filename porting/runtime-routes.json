@@ -1,55 +1,88 @@
 {
-  "schema": "w98mod.runtime-routes.v1",
+  "schema": "w98mod.runtime-routes.v2",
   "families": {
-    "initonce": [
-      "InitOnceBeginInitialize",
-      "InitOnceComplete",
-      "InitOnceExecuteOnce",
-      "InitOnceInitialize"
-    ],
-    "nls-ex": [
-      "CompareStringEx",
-      "LCMapStringEx"
-    ],
-    "threadpool-work": [
-      "CloseThreadpoolWork",
-      "CreateThreadpoolWork",
-      "FreeLibraryWhenCallbackReturns",
-      "SubmitThreadpoolWork",
-      "WaitForThreadpoolWorkCallbacks"
-    ],
-    "threadpool-callback": [
-      "CallbackMayRunLong",
-      "DisassociateCurrentThreadFromCallback",
-      "LeaveCriticalSectionWhenCallbackReturns",
-      "ReleaseMutexWhenCallbackReturns",
-      "ReleaseSemaphoreWhenCallbackReturns",
-      "SetEventWhenCallbackReturns",
-      "TrySubmitThreadpoolCallback"
-    ],
-    "slist": [
-      "InitializeSListHead",
-      "InterlockedFlushSList",
-      "InterlockedPopEntrySList",
-      "InterlockedPushEntrySList",
-      "InterlockedPushListSList",
-      "InterlockedPushListSListEx",
-      "QueryDepthSList"
-    ],
-    "fls-lifecycle": [
-      "ConvertThreadToFiber",
-      "ConvertThreadToFiberEx",
-      "CreateFiber",
-      "CreateFiberEx",
-      "CreateThread",
-      "DeleteFiber",
-      "ExitThread",
-      "FlsAlloc",
-      "FlsFree",
-      "FlsGetValue",
-      "FlsSetValue",
-      "FreeLibraryAndExitThread",
-      "SwitchToFiber"
-    ]
+    "initonce": {
+      "dll": "KERNEL32.DLL",
+      "table": 0,
+      "names": [
+        "InitOnceBeginInitialize",
+        "InitOnceComplete",
+        "InitOnceExecuteOnce",
+        "InitOnceInitialize"
+      ]
+    },
+    "nls-ex": {
+      "dll": "KERNEL32.DLL",
+      "table": 0,
+      "names": [
+        "CompareStringEx",
+        "LCMapStringEx"
+      ]
+    },
+    "threadpool-work": {
+      "dll": "KERNEL32.DLL",
+      "table": 0,
+      "names": [
+        "CloseThreadpoolWork",
+        "CreateThreadpoolWork",
+        "FreeLibraryWhenCallbackReturns",
+        "SubmitThreadpoolWork",
+        "WaitForThreadpoolWorkCallbacks"
+      ]
+    },
+    "threadpool-callback": {
+      "dll": "KERNEL32.DLL",
+      "table": 0,
+      "names": [
+        "CallbackMayRunLong",
+        "DisassociateCurrentThreadFromCallback",
+        "LeaveCriticalSectionWhenCallbackReturns",
+        "ReleaseMutexWhenCallbackReturns",
+        "ReleaseSemaphoreWhenCallbackReturns",
+        "SetEventWhenCallbackReturns",
+        "TrySubmitThreadpoolCallback"
+      ]
+    },
+    "slist": {
+      "dll": "KERNEL32.DLL",
+      "table": 0,
+      "names": [
+        "InitializeSListHead",
+        "InterlockedFlushSList",
+        "InterlockedPopEntrySList",
+        "InterlockedPushEntrySList",
+        "InterlockedPushListSList",
+        "InterlockedPushListSListEx",
+        "QueryDepthSList"
+      ]
+    },
+    "fls-lifecycle": {
+      "dll": "KERNEL32.DLL",
+      "table": 0,
+      "names": [
+        "ConvertThreadToFiber",
+        "ConvertThreadToFiberEx",
+        "CreateFiber",
+        "CreateFiberEx",
+        "CreateThread",
+        "DeleteFiber",
+        "ExitThread",
+        "FlsAlloc",
+        "FlsFree",
+        "FlsGetValue",
+        "FlsSetValue",
+        "FreeLibraryAndExitThread",
+        "SwitchToFiber"
+      ]
+    },
+    "clipboard-listener-formats": {
+      "dll": "USER32.DLL",
+      "table": 0,
+      "names": [
+        "AddClipboardFormatListener",
+        "GetUpdatedClipboardFormats",
+        "RemoveClipboardFormatListener"
+      ]
+    }
   }
 }

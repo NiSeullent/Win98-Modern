@@ -26,7 +26,7 @@ For each binary, record direct and delay-load imports, dependent DLLs, loader fa
 
 ## Notepad++ 8.9.8 guest probe
 
-Latest 2026-09-24 result: the installed Win98 SE guest cold-booted with
+The previous KERNEL32-only checkpoint cold-booted the installed Win98 SE guest with
 `M98WRP19.DLL` (89 KERNEL32 table names), SHA-256
 `ee96a7d5dfda768f21eb0098b8dafdd4080a018847329e5e145d8086b7a46cd4`.
 Six static-import suites passed: InitOnce (4 APIs), threadpool work (5),
@@ -37,13 +37,26 @@ FLS concurrency/termination tests, and EXE plus system MSVCRT thread-exit
 callbacks. Exact source/provider/test hashes are in
 `benchmarks/api-guest-evidence-v1.json` and family documents.
 
-Notepad++ itself still does not start. APP_PROBE returned exit 2 and
-`LAUNCH_FAIL win32_error=31`; the next displayed missing name is now
-`USER32.RemoveClipboardFormatListener` (`build/guest/npp-after-fls19.png`).
-The previous FlsAlloc import no longer blocks loading. The clipboard listener
-and message-delivery family belongs in the catalogue dependency plan; this
-loader progression is not application functionality. The remaining targets were checked as below; no required app has a new
-functionality pass.
+At that checkpoint, APP_PROBE returned exit 2 and `LAUNCH_FAIL win32_error=31`;
+the dialog named `USER32.RemoveClipboardFormatListener`
+(`build/guest/npp-after-fls19.png`). The previous FlsAlloc import had been passed.
+
+The next guest checkpoint installed `M98USR1.DLL` (SHA-256
+`4932584fcb7f1af493dbebfd76a38ede4f04b5543a0559cdd8fd1c33ff8b3fc7`)
+and CORE.INI with nine USER32 routes (SHA-256
+`2e853bcdd3a686ad8d105ee47219049efcdd9fbcfeddeac29c9d061eadd0bcc9`).
+After a clean hardware-accelerated cold boot, the six-test clipboard suite
+passed, including full static imports, owned data round trips, six queued
+change notifications and restoration of the empty clipboard. Exact receipt:
+`build/guest/suite-clipboard-user1.json`; contract and limits:
+`docs/CLIPBOARD_CONTRACT_TESTS.md`.
+
+Notepad++ still does not start. Its next loader dialog now names
+`GDI32.DLL!GdiAlphaBlend`; APP_PROBE returned exit 2 / Win32 error 31.
+`benchmarks/npp-clipboard-user1.json` records the screenshot and tested
+provider hashes. This advances the loader dependency but proves no editing
+function. The other required application results below remain from the earlier
+provider19 checkpoint; no app gained a functionality pass.
 
 Earlier provider16 stopped at `InitializeSListHead`. A preceding warm restart
 of a combined change produced one VxD exception preserved in a separate
@@ -68,7 +81,7 @@ Exact executable hashes, PE architectures and receipts are recorded in
 | Chromium 150 x86 | Loader error 31; CHROME_ELF.DLL requires KERNEL32.AddVectoredExceptionHandler | Exception dispatch and vectored-handler family |
 | Supermium 144 R5 x86 | After selecting its version directory as cwd, loader error 31; P_NTD.DLL requires NTDLL.LdrGetProcedureAddress | NT loader/export-resolution backend and bundled wrapper dependency closure |
 | VLC 3.0.24 x86 | Process launches but only a failure dialog appears: invalid options or no plugins found. Same result with application directory as cwd. No player UI or playback | Plugin discovery/loading and full dependent API contracts |
-| Notepad++ 8.9.8 x86 | Loader error 31 at USER32.RemoveClipboardFormatListener after FLS integration | Clipboard listeners, viewer chain, messages and window lifetime |
+| Notepad++ 8.9.8 x86 | Loader error 31 at GDI32.GdiAlphaBlend after USER32 clipboard routes | GDI alpha drawing family and graphics backend |
 | VSCode 1.138.0 x64 | Local PE32+ AMD64 inspection; not launched in x86 Win98 | x64 execution plus user API/loader architecture path |
 
 VLC's APP_PROBE exit 0 means the observation tool completed and closed the

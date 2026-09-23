@@ -2,7 +2,7 @@
 
 This patch ZIP includes corresponding C source, export definitions, build
 scripts, PE validation scripts, and license notices for `m98wrap.dll`,
-`m98shell.dll`, `m98adv.dll`, `UXTHEME.DLL`, `dbghelp.dll`, `dwmapi.dll`,
+`M98USER.DLL`, `m98shell.dll`, `m98adv.dll`, `UXTHEME.DLL`, `dbghelp.dll`, `dwmapi.dll`,
 `bcrypt.dll`, and the guarded `KSWITCH.EXE` helper. It contains **three exact
 KernelEx UXTHEME source files**, not the KernelEx installer or full repository.
 It does not include Windows, Microsoft Unicode Layer, any target application,
@@ -47,6 +47,15 @@ the pinned target app's **import names only**; that app is not inside the ZIP.
 At this preview snapshot `m98wrap.dll` has a 89-name KernelEx KERNEL32 table.
 This is the number of registered names, not a whole-Windows-API compatibility
 percentage or a claim that all 89 behaviors are complete.
+
+The separate `M98USER.DLL` has three USER32 clipboard API entries. Its builder
+also produces a direct-call fixture and independently maintained probes. Host
+checks use the native APIs, fixture, shipping table and static imports without
+changing the host clipboard. Data-changing tests require explicit
+`--guest-mutate` and an actual Windows 98 guest with an empty starting clipboard.
+That flag is never enabled by the release builder. See `docs/CLIPBOARD_PORT.md`
+and `docs/CLIPBOARD_CONTRACT_TESTS.md` for the backend and evidence limits.
+The entire 45-row clipboard catalogue remains outstanding as a family.
 
 `build-dlls.ps1` also runs the included focused builds for final-path, stream,
 locale information, application restart, process path, SRW condition

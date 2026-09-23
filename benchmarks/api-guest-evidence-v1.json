@@ -1105,6 +1105,86 @@
       },
       "suite": "remote/suites/api-lifecycle.json",
       "suite_sha256": "ab0817d22f6e50610c7d151bc39c303b09bfaabc826ee8aa31417fb4a9d23d8f"
+    },
+    {
+      "id": "guest-m98usr1-clipboard-2026-09-24",
+      "family": "clipboard",
+      "apis": [
+        {
+          "dll": "USER32.DLL",
+          "name": "AddClipboardFormatListener"
+        },
+        {
+          "dll": "USER32.DLL",
+          "name": "GetUpdatedClipboardFormats"
+        },
+        {
+          "dll": "USER32.DLL",
+          "name": "RemoveClipboardFormatListener"
+        }
+      ],
+      "evidence_kind": "guest_static_import_contract_subset",
+      "environment": {
+        "os": "Directly installed Korean Windows 98 SE",
+        "vm": "Win98Modern-Accel-128",
+        "acceleration": "VirtualBox NEM partition; current cold boot captured by vm/run.ps1 and clipboard suite"
+      },
+      "provider": {
+        "path": "build/M98USER.DLL",
+        "guest_path": "C:\\WINDOWS\\KernelEx\\M98USR1.DLL",
+        "sha256": "4932584fcb7f1af493dbebfd76a38ede4f04b5543a0559cdd8fd1c33ff8b3fc7"
+      },
+      "core_ini_sha256": "2e853bcdd3a686ad8d105ee47219049efcdd9fbcfeddeac29c9d061eadd0bcc9",
+      "test": {
+        "path": "build/clipboard-tests/clipboard_static_suite.exe",
+        "sha256": "b1f2d883d02910dfbd781efdd4fbc00364a52506521a782740bbad5e37adcbf2"
+      },
+      "source_hashes": {
+        "src/m98_clipboard.c": "e82b52ff6e8f8adbd51a73dc923e6c25f4edcc080e0e030f4ca3a6cc7a6d0489",
+        "src/m98_clipboard.h": "e2374e5d6df0bdc1c962b4d8ad39f852a3b18caca696a03f2f259fa18065ebcc",
+        "src/m98user.c": "14373e0c5e53f220a2336724ce8d518d52842c62b769a49a513103a09401f48d",
+        "src/kex_abi.h": "87899e80ba1076fa0a2ccde507304f1553cdd6bf4468cb708f361d749a2673fd",
+        "tests/clipboard_smoke.c": "4f3c782709f3e2a0a3605d43cbfe7c14bcdaddf68c3c7aa1d73ab674b29a8313",
+        "remote/suites/api-clipboard.json": "990f0a1bbf6704826b8246d0c45ab645606e83ac10115db87944054fe7bfc042"
+      },
+      "supporting_artifacts": [
+        {
+          "path": "build/clipboard/CLIPFIX.DLL",
+          "sha256": "ba096c14dbc22c9b3e4612c05dde4bc07c38eb0df721f0ce0337a4c62c464f10"
+        },
+        {
+          "path": "build/clipboard-tests/clipboard_smoke.exe",
+          "sha256": "fd1ea2bc8e5121ca5d3f93d0600776bcd71cfcef21be41c2979457aad7bff08b"
+        },
+        {
+          "path": "build/clipboard-tests/clipboard_import_probe.exe",
+          "sha256": "fa3cc955e5d3071a08f17fb897a817afe28530b00698daa56e0920044c8e0cd0"
+        },
+        {
+          "path": "build/guest/core-m98usr1.ini",
+          "sha256": "2e853bcdd3a686ad8d105ee47219049efcdd9fbcfeddeac29c9d061eadd0bcc9"
+        }
+      ],
+      "receipt": {
+        "command": "C:\\M98LAB\\CLIPFULL.EXE --require-api --bounded-provider --guest-mutate",
+        "cwd": "C:\\M98LAB",
+        "timeout_ms": 30000,
+        "exit_code": 0,
+        "timed_out": false,
+        "output_truncated": false,
+        "output_bytes": 1885,
+        "output_sha256": "9b37e240f43eeb730f7e9356118955b62b87a7b7089838e4e09d18219165f7de",
+        "output": "OBSERVED: static USER32 clipboard imports bound\r\nadd result=0x00000001 error=0x4D9833AA\r\nduplicate add result=0x00000000 error=0x00000057\r\ninvalid add result=0x00000000 error=0x00000578\r\nunregistered remove result=0x00000000 error=0x00000057\r\ninvalid remove result=0x00000000 error=0x00000578\r\ndesktop add result=0x00000000 error=0x00000032\r\nremove result=0x00000001 error=0x4D9833AA\r\nduplicate remove result=0x00000000 error=0x00000057\r\ndestroyed remove result=0x00000000 error=0x00000578\r\nsame-process cross-thread add result=0x00000001 error=0x4D9833AA\r\ncross-thread post-exit remove result=0x00000000 error=0x00000578\r\nnull out-count result=0x00000000 error=0x000003E6\r\nall formats result=0x00000001 error=0x4D9833AA\r\nnull format buffer result=0x00000001 error=0x4D9833AA\r\nother-thread clipboard lock result=0x00000001 error=0x4D9833AA\r\nOBSERVED: update count before pump=0x00000000 viewer draw count before pump=0x00000002\r\nguest update count result=0x00000001 error=0x0000007A\r\nOBSERVED: first WM_CLIPBOARDUPDATE order=0x00000002 first WM_DRAWCLIPBOARD order=0x00000001\r\nOBSERVED: post-close Count before=0x00000004 GetUpdated count=0x00000004 Count after=0x00000004 sequence before=0x00000041 sequence after=0x00000041 GetUpdated result=0x00000001 error=0x0000007A\r\nOBSERVED: GetUpdated format=0x00000001\r\nOBSERVED: GetUpdated format=0x0000000D\r\nOBSERVED: GetUpdated format=0x00000010\r\nOBSERVED: GetUpdated format=0x00000007\r\nOBSERVED: native Enum format=0x00000001\r\nOBSERVED: native Enum format=0x0000000D\r\nOBSERVED: native Enum format=0x00000010\r\nOBSERVED: native Enum format=0x00000007\r\nOBSERVED: native Enum count=0x00000004 end error=0x00000000\r\nOBSERVED: queued burst WM_CLIPBOARDUPDATE delta=0x00000006 WM_DRAWCLIPBOARD delta=0x00000006\r\nPASS: owned guest clipboard mutation, notifications, formats, and empty restore\r\nPASS: clipboard listener and format contract probe\r\n",
+        "guest": "m98agent/v1 protocol=1 os=4.10 build=67766446",
+        "transport": "VirtualBox COM1 local named pipe",
+        "pipe": "\\\\.\\pipe\\Win98Modern-Lab"
+      },
+      "scope": "Three static USER32 clipboard imports: own-process listener registration/errors, cross-thread owned window teardown, borrowed/open format enumeration, content round-trip, six queued notifications and empty-state restoration.",
+      "limitations": "Foreign-process HWND registration, destroy/post atomicity, hung viewer chains, forced process exit and complete native clipboard semantics remain unverified; this does not prove selected-application functionality or the other family entries.",
+      "documentation": "docs/CLIPBOARD_CONTRACT_TESTS.md",
+      "full_compatibility_verified": false,
+      "suite": "remote/suites/api-clipboard.json",
+      "suite_sha256": "990f0a1bbf6704826b8246d0c45ab645606e83ac10115db87944054fe7bfc042"
     }
   ]
 }

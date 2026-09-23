@@ -42,6 +42,9 @@ if ($LASTEXITCODE -ne 0) { throw 'm98wrap.dll PE98 validation failed' }
 & (Join-Path $projectRoot 'tools/build-fls-rundown-race.ps1')
 & (Join-Path $projectRoot 'tools/build-fls-integration.ps1')
 & (Join-Path $projectRoot 'tools/build-thread-lifecycle.ps1')
+& (Join-Path $projectRoot 'tools/build-clipboard.ps1')
+Copy-Item -LiteralPath (Join-Path $buildDir 'clipboard/M98USER.DLL') `
+  -Destination (Join-Path $buildDir 'M98USER.DLL') -Force
 # Put the exact shipping wrapper beside each integration probe. The executable
 # directory precedes the working directory in the loader search order, so a
 # leftover local DLL must not silently substitute for the artifact being tested.

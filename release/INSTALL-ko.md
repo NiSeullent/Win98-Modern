@@ -1,6 +1,6 @@
 # Windows 98 SE용 설치 안내
 
-이 ZIP에는 실험용 KernelEx API 라이브러리 `m98wrap.dll`, `m98shell.dll`, `m98adv.dll`, KernelEx용 결합 테마 후보 `UXTHEME.DLL`, 안전 범위를 제한한 전환 도구 `KSWITCH.EXE`, 앱 로컬용 `dbghelp.dll`, `dwmapi.dll`, `bcrypt.dll`이 들어 있습니다.
+이 ZIP에는 실험용 KernelEx API 라이브러리 `m98wrap.dll`, `M98USER.DLL`, `m98shell.dll`, `m98adv.dll`, KernelEx용 결합 테마 후보 `UXTHEME.DLL`, 안전 범위를 제한한 전환 도구 `KSWITCH.EXE`, 앱 로컬용 `dbghelp.dll`, `dwmapi.dll`, `bcrypt.dll`이 들어 있습니다.
 Windows 98 SE용 KernelEx API 확장 시험을 위한 파일이며 최신 프로그램의 실행을
 보장하지 않습니다. 설치는 Windows 98 SE **32비트 게스트**에서 수동으로 합니다.
 이 미리보기의 `m98wrap.dll`에는 KERNEL32 이름 89개가 등록돼 있습니다. 이는
@@ -109,7 +109,20 @@ Windows 98 SE용 KernelEx API 확장 시험을 위한 파일이며 최신 프로
 
 4. 변경한 `core.ini`를 백업하고 **정상 종료 후 콜드 부팅**합니다. `RegGetValueA/W`의 직접 호출과 정적 ADVAPI32 import 시험은 Windows 98 SE 시험 게스트에서 통과했습니다. 전체 ADVAPI32 호환성이나 앱 실행 성공을 뜻하지는 않습니다.
 
-## 6. KernelEx 테마 KnownDLL 후보 시험하기 (선택, 실험용)
+## 6. USER32 클립보드 기능 연결하기 (선택)
+
+1. 설치된 `C:\WINDOWS\KernelEx\CORE.INI`의 원본을 호스트에 복사해 SHA-256과 함께 보관합니다. 이미 `m98usr1` 공급자가 있으면 기존 설정과 DLL을 먼저 식별합니다.
+2. ZIP의 `M98USER.DLL`을 게스트의 KernelEx 폴더에 **`M98USR1.DLL`** 이름으로 복사합니다. 이 파일명은 시험한 설정의 DOS 8.3 라이브러리 이름과 일치합니다.
+3. 원본 설정 파일의 복사본을 호스트에서 아래 도구로 수정합니다. 새 출력 파일 이름을 사용합니다. 도구가 `[DCFG1]`의 `contents`에 `m98usr1`을 추가하고 `[DCFG1.names.98]`, `[DCFG1.names.Me]`, `[WINXP.names]`에 USER32 API 3개를 각각 연결합니다. 기존 KERNEL32 등 다른 연결은 유지됩니다.
+
+   ```powershell
+   python remote/patch_core_family.py CORE-BEFORE.INI CORE-CLIPBOARD.INI --library m98usr1 --family clipboard-listener-formats --register-provider
+   ```
+
+4. 출력에서 `USER32.AddClipboardFormatListener`, `USER32.RemoveClipboardFormatListener`, `USER32.GetUpdatedClipboardFormats`가 세 프로필에 각각 한 번씩 있는지 확인합니다. 변경한 설정을 게스트에 옮기고 정상 종료 후 콜드 부팅합니다.
+5. `guest-tests/clipboard_import_probe.exe`로 정적 연결을 검사합니다. `guest-tests/clipboard_static_suite.exe --require-api --bounded-provider`는 클립보드 내용을 바꾸지 않는 전체 계약 시험입니다. 데이터 변경 시험은 **원래 클립보드가 비어 있는 시험용 게스트에서만** `--guest-mutate`를 추가해 실행하며, 성공 시 빈 상태로 복구합니다. 지원 범위는 `docs/CLIPBOARD_PORT.md`를 참조하세요.
+
+## 7. KernelEx 테마 KnownDLL 후보 시험하기 (선택, 실험용)
 
 `UXTHEME.DLL`은 원본 KernelEx 함수 이름 48개를 보존하고 여섯 함수를 더한 결합 후보입니다. KernelEx는 UXTHEME import를 자체 KnownDLL로 연결하므로, 프로그램 폴더에 같은 이름의 DLL을 복사하는 방식으로는 이 후보가 선택되지 않았습니다. 원본 파일을 덮어쓰지 않고 별도 파일명으로 시험합니다.
 
@@ -120,15 +133,15 @@ Windows 98 SE용 KernelEx API 확장 시험을 위한 파일이며 최신 프로
 
 시험 게스트에서 결합 후보가 `DrawThemeTextEx` 정적 import를 통과하고, 테마 글꼴 여섯 사례의 정적 import 시험도 통과했습니다. Notepad++ 8.9.8은 이후에도 다른 KERNEL32 import 누락으로 중단됐습니다. 이 DLL은 Windows XP/Vista 테마 서비스를 구현하지 않으며 앱 전체 구동을 보장하지 않습니다.
 
-## 7. 앱 로컬 DLL 사용하기 (선택)
+## 8. 앱 로컬 DLL 사용하기 (선택)
 
 필요한 앱에 한해 `dbghelp.dll`, `dwmapi.dll`, `bcrypt.dll`을 실행 파일과 **같은 폴더**에 복사합니다. 예를 들어 Notepad++를 시험한다면 `notepad++.exe` 옆에 둡니다. 같은 이름의 파일이 이미 있으면 먼저 백업합니다. `C:\WINDOWS\SYSTEM`이나 KernelEx 폴더에는 복사하지 마세요. `dbghelp.dll`은 Windows 98의 `IMAGEHLP.DLL`에 있는 `ImageNtHeader`를 연결하고, `dwmapi.dll`은 합성 데스크톱 기능이 없음을 오류 코드로 알려줍니다. `bcrypt.dll`은 SHA-256·MD5·HMAC 해시 기능 일부를 제공합니다.
 
 ## 되돌리기
 
 1. KnownDLL 후보를 전환했다면 `KSWITCH.EXE inspect`로 `VALUE=UXTNEW.DLL`을 확인한 뒤 `KSWITCH.EXE restore`를 실행합니다. `VALUE=UXTHEME.DLL`이 다시 표시되는지 확인하고 **정상 종료 후 콜드 부팅**합니다. 그 뒤에만 후보 `UXTNEW.DLL`을 제거합니다. 값이 예상과 다르면 기록한 스냅샷과 백업을 사용합니다.
-2. `core.ini`의 `[DCFG1]` `contents=` 줄에서 추가한 `m98wrap`, `m98shell`, `m98adv` 항목과 3·4·5단계의 로캘·Shell·ADVAPI 연결 줄만 제거합니다. 설치 뒤 다른 수정이 없었다면 백업해 둔 원본 `COREBAK.INI`를 `core.ini`로 복원해도 됩니다.
-3. KernelEx 폴더에 복사한 `M98WRAP.DLL`, `M98SHELL.DLL`, `M98ADV.DLL`을 제거하거나 이전 DLL을 백업했다면 복원합니다.
+2. `core.ini`의 `[DCFG1]` `contents=` 줄에서 추가한 `m98wrap`, `m98shell`, `m98adv`, `m98usr1` 항목과 3~6단계에서 추가한 연결 줄만 제거합니다. 설치 뒤 다른 수정이 없었다면 백업해 둔 원본 `COREBAK.INI`를 `core.ini`로 복원해도 됩니다.
+3. KernelEx 폴더에 복사한 `M98WRAP.DLL`, `M98SHELL.DLL`, `M98ADV.DLL`, `M98USR1.DLL`을 제거하거나 이전 DLL을 백업했다면 복원합니다.
 4. 프로그램 폴더에 복사한 `DBGHELP.DLL`, `DWMAPI.DLL`, `BCRYPT.DLL`도 제거하거나 이전 파일을 복원합니다.
 5. 게스트를 콜드 부팅합니다. 설정 편집에 문제가 생기면 백업한 원본 `core.ini`를 복원합니다.
 
@@ -138,6 +151,6 @@ Windows 98 SE용 KernelEx API 확장 시험을 위한 파일이며 최신 프로
 
 ## 이번 API 묶음 검증
 
-M98WRP19 기준으로 SList 7개, 스레드풀 work/callback 12개, InitOnce 4개, NLS 2개, FLS·스레드·파이버 13개의 제한된 계약 시험이 실제 설치된 Win98에서 정적 import로 통과했습니다. KERNEL32 표의 89개 등록 이름 전체가 완전 호환이라는 뜻은 아닙니다. 통합 회귀 시험 10개가 통과했으며 시스템 MSVCRT의 스레드 종료 콜백도 확인했습니다. Notepad++ 8.9.8은 현재 USER32.RemoveClipboardFormatListener 누락에서 멈춥니다.
+M98WRP19 기준으로 SList 7개, 스레드풀 work/callback 12개, InitOnce 4개, NLS 2개, FLS·스레드·파이버 13개의 제한된 계약 시험이 실제 설치된 Win98에서 정적 import로 통과했습니다. KERNEL32 표의 89개 등록 이름 전체가 완전 호환이라는 뜻은 아닙니다. 통합 회귀 시험 10개와 USER32 클립보드 시험 6개가 통과했습니다. Notepad++ 8.9.8은 다음 `GDI32.GdiAlphaBlend` 누락에서 멈춥니다.
 
 FLS/lifecycle 13개는 공통 백엔드에 함께 연결해야 합니다. 예제 `integration/core.ini`와 `porting/runtime-routes.json`의 해당 기능 묶음을 기존 설정에 병합하고 정상 종료 후 다시 부팅합니다. `CreateThread`와 종료 함수 일부만 이전 공급자에 남기면 콜백 처리가 누락될 수 있습니다. 역방향 파이버 변환, raw/강제 종료, 일부 플래그와 내부 스레드풀 종료 정리는 아직 미완료입니다. 정리 콜백이 일시 중단된 파이버를 삭제하려는 요청은 ERROR_BUSY로 거부합니다.

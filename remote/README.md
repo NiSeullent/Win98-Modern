@@ -91,7 +91,7 @@ and the direct cases only; it does not establish application startup.
 
 ## Lifecycle family regression bundle
 
-After installing the matching provider and all six groups in
+After installing the matching provider and the six KERNEL32 groups in
 `porting/runtime-routes.json`, cold boot, start `C:\M98LAB\M98AG2.EXE`, and
 wait for the visible agent-ready line. Then run:
 
@@ -106,3 +106,19 @@ the selected on-disk agent image; launching that image is a separate bootstrap
 step. The default path for older suites remains `M98AGENT.EXE`. The suite does
 not edit CORE.INI or perform provider upgrades. It records the current boot's
 hardware acceleration evidence.
+
+## Preparing separate provider routes
+
+`porting/runtime-routes.json` version 2 records the target DLL and provider table
+index for each reviewed family. `patch_core_family.py --family all` keeps the
+existing KERNEL32 union; use `--target-dll USER32.DLL` for a reviewed USER32 union.
+An individual family chooses its declared DLL automatically. A conflicting
+`--target-dll` is rejected, as are mixed table indices, malformed/conflicting
+routes, duplicate profiles and missing profiles. Unrelated CORE bytes survive.
+
+The provider must already occur once in DCFG1 `contents`, unless
+`--register-provider` explicitly appends a new library. This prepares a new
+output file only. Copy and verify the matching versioned DLL before installing
+the prepared CORE.INI, retain the original bytes for recovery, then cold boot
+and validate static imports. The helper does not prove that a DLL implements
+the selected API contracts; promotion still requires review and guest evidence.

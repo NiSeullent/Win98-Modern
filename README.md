@@ -5,6 +5,7 @@
 ## 현재 구현
 
 - `KERNEL32.DLL`의 89개 API 이름을 KernelEx용 DLL에 제공: 문자열 비교·매핑, CPU 그룹/NUMA 조회, 패키지 식별 조회, 날짜·시간·로캘 정보, 펌웨어/DEP 상태, 64비트 틱, 정밀 시각 호환 호출, 임계 구역·SRW 잠금·조건 변수·InitOnce 4종, 스레드풀 work·callback 12종, SList 7종, FLS·스레드·파이버 수명 관리 13종, 파일·프로세스 정보 조회, 앱 재시작 설정 조회 등. 함수마다 구현 범위와 게스트 검증 수준이 다릅니다.
+- 별도 KernelEx USER32 라이브러리 `M98USER.DLL`에 클립보드 알림·형식 조회 API 3개를 추가했습니다. 설치된 Windows 98에서 정적 import를 포함한 시험 6개가 통과했습니다. 등록 창의 수명, 여러 변경 알림, 데이터 형식, 원래 클립보드 복구 범위와 남은 제약은 [클립보드 이식 기록](docs/CLIPBOARD_PORT.md)에 있습니다.
 - Wine의 Unicode 대문자 매핑표와 문자열 비교 알고리즘, ReactOS의 임계 구역 인수 검사 로직을 선별 이식했습니다. 함수별 출처와 라이선스는 [THIRD_PARTY.md](THIRD_PARTY.md)에 있습니다.
 - 호스트에서 32비트 DLL과 Windows 98 호환 시험 프로그램을 빌드하고 실행할 수 있습니다. 앱 로컬 `dbghelp.dll`, `dwmapi.dll`, `bcrypt.dll` 브리지도 포함합니다.
 - KernelEx Shell API 라이브러리에 `SHCreateItemFromParsingName`, `SHParseDisplayName`, 일부 파일 선택 동작의 `SHOpenFolderAndSelectItems`를 구현했습니다. 세 함수의 정적 import 시험과 직접 호출 시험이 Windows 98 게스트를 통과했습니다.
@@ -26,7 +27,7 @@ cd build
 
 빌드 결과는 `build/m98wrap.dll`, `build/smoke.exe`, `build/import_probe.exe`, `build/memprobe.exe`, `build/memstress.exe`, `build/cpuapp.exe`와 `build/app-profiles.ini`입니다. DLL과 CPU 런처의 import는 Windows 98에 존재하는 `KERNEL32.DLL` 함수로 제한했습니다. 빌드 중 [PE98 정적 검사](tests/check_pe98.py)가 DLL의 32비트 형식, 로더 버전, 의존 DLL, 가져오기 함수, KernelEx 진입점을 확인합니다. `smoke.exe`는 API 테이블과 주요 동작을 검사하고, `import_probe.exe`는 최신 API 두 개를 KERNEL32에서 **정적으로 import**해 KernelEx 경로를 검사합니다. 두 시험은 직접 설치한 Windows 98 SE 게스트에서 각각 PASS를 확인했습니다. `memstress.exe`는 여러 프로세스의 페이지 읽기·쓰기를 측정하지만 [물리 RAM 4GB 인증 시험](memory/README.md)은 아닙니다. Windows 98 게스트에서의 실제 결과는 [VM 기록](vm/README.md)을 참조하세요.
 
-추가 앱 로컬 DLL `build/dbghelp.dll`, `build/dwmapi.dll`, `build/bcrypt.dll`은 해당 앱의 폴더에서만 시험합니다. Windows 98 게스트에서 BCRYPT와 DWMAPI 직접 호출 시험을 통과했습니다. `build/m98shell.dll`의 세 Shell 함수도 게스트 직접 호출과 정적 import 시험을 통과했습니다. 시험용 UXTHEME KnownDLL의 시스템 글꼴 함수와 `GetTimeFormatEx`, `GetProductInfo`, `GetDateFormatEx`, `GetFinalPathNameByHandleW`, `FindFirstStreamW`, `GetLocaleInfoEx`, 재시작 관련 API 3개, `RegGetValueW`는 게스트 정적 import 시험을 통과했습니다. Notepad++ 8.9.8 로더의 다음 누락 함수는 `USER32.DLL!RemoveClipboardFormatListener`입니다. InitOnce 4종·스레드풀 work/callback 12종·SList 7종·NLS 2종·FLS/lifecycle 13종의 최신 정적 호출 시험과 MSVCRT 종료 콜백·89-entry 표본 시험도 가속 Win98 게스트에서 통과했습니다. 통합 회귀 시험 묶음 10개가 통과했으며, DLL 내부의 원본 API 호출과 앱/CRT의 새 API 연결을 따로 확인했습니다. 이 앱은 아직 실행되지 않았습니다.
+추가 앱 로컬 DLL `build/dbghelp.dll`, `build/dwmapi.dll`, `build/bcrypt.dll`은 해당 앱의 폴더에서만 시험합니다. Windows 98 게스트에서 BCRYPT와 DWMAPI 직접 호출 시험을 통과했습니다. `build/m98shell.dll`의 세 Shell 함수도 게스트 직접 호출과 정적 import 시험을 통과했습니다. 시험용 UXTHEME KnownDLL의 시스템 글꼴 함수와 `GetTimeFormatEx`, `GetProductInfo`, `GetDateFormatEx`, `GetFinalPathNameByHandleW`, `FindFirstStreamW`, `GetLocaleInfoEx`, 재시작 관련 API 3개, `RegGetValueW`는 게스트 정적 import 시험을 통과했습니다. InitOnce 4종·스레드풀 work/callback 12종·SList 7종·NLS 2종·FLS/lifecycle 13종의 최신 정적 호출 시험과 MSVCRT 종료 콜백·89-entry 표본 시험도 가속 Win98 게스트에서 통과했습니다. 통합 회귀 시험 묶음 10개와 USER32 클립보드 시험 6개가 통과했습니다. Notepad++ 8.9.8 로더의 다음 누락 함수는 이제 `GDI32.DLL!GdiAlphaBlend`입니다. 이 앱은 아직 실행되지 않았습니다.
 
 API 이식은 [전체 목록과 기능 묶음 작업 방식](docs/API_PORTING_CAMPAIGN.md)을 따릅니다. SDK 후보 151,330개를 모두 유지하고 Wine·ReactOS·One-Core·KernelEx 및 VxKex 참조 메타데이터를 함께 색인합니다. `porting/groups.json`의 공통 기반 의존성과 기능 묶음으로 작업을 배정합니다. 앱의 PE import와 실행 오류는 이 작업의 회귀 시험에 사용합니다. `unknown_or_native`는 Windows 98 기본 API일 수도 있으므로 미지원 판정이 아닙니다.
 

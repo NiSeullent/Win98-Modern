@@ -27,6 +27,14 @@ function Check-PE([string]$checker, [string]$artifact) {
 # The PE gates inspect machine type, loader version, imports, and exports.
 # Never pick files by glob: build/ can also contain private test media.
 Check-PE 'tests/check_pe98.py' 'build/m98wrap.dll'
+& python (Require-File 'tests/clipboard_check_pe98.py') `
+  (Require-File 'build/clipboard/CLIPFIX.DLL') `
+  (Require-File 'build/clipboard/M98USER.DLL')
+if ($LASTEXITCODE -ne 0) { throw 'Clipboard provider/probe PE98 validation failed' }
+if ((Get-FileHash -LiteralPath (Require-File 'build/M98USER.DLL') -Algorithm SHA256).Hash -ne
+    (Get-FileHash -LiteralPath (Require-File 'build/clipboard/M98USER.DLL') -Algorithm SHA256).Hash) {
+  throw 'Clipboard provider differs from the tested shipping DLL'
+}
 # These static import gates use the exact isolated test artifacts compiled by
 # release/build-dlls.ps1; verify they match the packaged wrapper DLL.
 foreach ($candidate in @('build/finalpath/m98wrap.dll', 'build/stream/m98wrap.dll',
@@ -136,6 +144,22 @@ if ($includeShell) {
 }
 
 $inputs = [ordered]@{
+  'M98USER.DLL' = 'build/M98USER.DLL'
+  'src/m98_clipboard.c' = 'src/m98_clipboard.c'
+  'src/m98_clipboard.h' = 'src/m98_clipboard.h'
+  'src/m98user.c' = 'src/m98user.c'
+  'tests/clipboard_fixture.c' = 'tests/clipboard_fixture.c'
+  'tests/clipboard_smoke.c' = 'tests/clipboard_smoke.c'
+  'tests/clipboard_import_probe.c' = 'tests/clipboard_import_probe.c'
+  'tests/clipboard_check_pe98.py' = 'tests/clipboard_check_pe98.py'
+  'tools/build-clipboard.ps1' = 'tools/build-clipboard.ps1'
+  'tools/build-clipboard-tests.ps1' = 'tools/build-clipboard-tests.ps1'
+  'docs/CLIPBOARD_PORT.md' = 'docs/CLIPBOARD_PORT.md'
+  'docs/CLIPBOARD_CONTRACT_TESTS.md' = 'docs/CLIPBOARD_CONTRACT_TESTS.md'
+  'guest-tests/CLIPFIX.DLL' = 'build/clipboard/CLIPFIX.DLL'
+  'guest-tests/clipboard_smoke.exe' = 'build/clipboard-tests/clipboard_smoke.exe'
+  'guest-tests/clipboard_import_probe.exe' = 'build/clipboard-tests/clipboard_import_probe.exe'
+  'guest-tests/clipboard_static_suite.exe' = 'build/clipboard-tests/clipboard_static_suite.exe'
   'porting/runtime-routes.json' = 'porting/runtime-routes.json'
   'integration/core.ini' = 'integration/core.ini'
   'remote/patch_core_family.py' = 'remote/patch_core_family.py'
