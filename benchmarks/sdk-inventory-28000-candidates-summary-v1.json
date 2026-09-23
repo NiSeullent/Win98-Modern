@@ -1,0 +1,43 @@
+{
+  "counting_unit": "named x86 import-library code export or declared COM/WinRT method; overloads separate",
+  "counts": {
+    "com_idl_method_candidate": 77016,
+    "total_candidates": 151330,
+    "win32_api_set_alias": 3934,
+    "win32_named_export_candidate": 30277,
+    "winrt_idl_method_candidate": 76,
+    "winrt_metadata_method_candidate": 40027
+  },
+  "input_tree_sha256": "7576ed1802901edd16a096165a32e3dd9ef771a8910672085f0ae305288be78d",
+  "inventory_sha256": "e95ee97b426941d3deb1d6f3f34a4f460c012f8a5623b1dc0a7e53f445b033c0",
+  "limitations": [
+    "SDK 10.0.28000.2705 source coverage and denominator policy remain unvalidated.",
+    "Short COFF import objects exclude static members and may include undocumented exports or aliases.",
+    "IDL scan includes UUID-bearing UM interface definitions only; WinRT-style IDL can overlap WinMD.",
+    "Header call-token matches are lexical evidence, not validated declarations.",
+    "WinRT scan includes public Windows.* runtime type methods in aggregate Windows.winmd.",
+    "Minimum OS and feature dependencies are unknown; no guest behavior has been tested.",
+    "These counts are neither a complete Windows API denominator nor a compatibility numerator."
+  ],
+  "schema": "w98mod.sdk-candidate-summary.v1",
+  "sdk_version": "10.0.28000.2705",
+  "source_counts": {
+    "archive_members": 121319,
+    "data_or_const_import_members": 293,
+    "named_code_import_members": 97850,
+    "named_export_candidates_with_header_call_token": 21445,
+    "non_short_import_members": 12039,
+    "ordinal_import_members": 11137,
+    "public_winrt_methods": 40027,
+    "public_winrt_types": 7128,
+    "short_import_members": 109280,
+    "um_idl_files": 544,
+    "um_shared_header_files": 1800,
+    "uuid_idl_interface_definitions": 5989,
+    "winmd_files": 1,
+    "x86_um_import_libraries": 453
+  },
+  "status": "provisional 10.0.28000.2705 SDK candidate pass; denominator policy pending",
+  "target_sdk_version": "10.0.28000.2705",
+  "winmd_sha256": "f8f32012964adb9130dd4d66fdd651daddb6cbbb9fe59e70ba6637e16e3c99ad"
+}

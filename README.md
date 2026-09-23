@@ -46,4 +46,4 @@ Microsoft ISO와 설치 키는 저장소에 포함하지 않습니다.
 
 ## 장기 호환성 목표
 
-현재 완료 목표는 **Windows API 전체 표면의 100% 호환성**과 Chromium 150, Supermium, VLC, Notepad++, VS Code 필수 앱의 실제 구동입니다. 측정 기준과 앱별 검증 범위는 [대상 앱과 API 기준](docs/TARGET_APPS.md)에 기록합니다. 최신 DLL의 37개 래퍼는 Windows 98 게스트 직접 호출 시험을 통과했습니다. 설치된 KernelEx의 정적 KERNEL32 import 경로는 이전 29개 빌드에서만 확인됐습니다. [SDK 10.0.26100 잠정 목록](docs/SDK_INVENTORY.md)은 후보 151,105건의 분류일 뿐 고정 목표 SDK 10.0.28000.2705의 분모나 호환성 점수가 아닙니다. [PE 가져오기 측정 도구](docs/PE_IMPORT_COVERAGE.md)는 앱별 누락 API를 찾는 보조 지표입니다.
+현재 완료 목표는 **Windows API 전체 표면의 100% 호환성**과 Chromium 150, Supermium, VLC, Notepad++, VS Code 필수 앱의 실제 구동입니다. 측정 기준과 앱별 검증 범위는 [대상 앱과 API 기준](docs/TARGET_APPS.md)에 기록합니다. 최신 DLL의 37개 래퍼는 Windows 98 게스트 직접 호출 시험을 통과했습니다. 설치된 KernelEx의 정적 KERNEL32 import 경로는 이전 29개 빌드에서만 확인됐습니다. [고정 SDK 10.0.28000.2705 목록](docs/SDK_INVENTORY.md)은 후보 레코드 151,330건의 재현 가능한 집계이며, 중복·데스크톱 적용 범위를 판정하기 전이므로 최종 API 분모나 호환성 점수가 아닙니다. [PE 가져오기 측정 도구](docs/PE_IMPORT_COVERAGE.md)는 앱별 누락 API를 찾는 보조 지표입니다.
