@@ -1,0 +1,43 @@
+{
+  "counting_unit": "named x86 import-library code export or declared COM/WinRT method; overloads separate",
+  "counts": {
+    "com_idl_method_candidate": 77029,
+    "total_candidates": 151105,
+    "win32_api_set_alias": 3929,
+    "win32_named_export_candidate": 30230,
+    "winrt_idl_method_candidate": 76,
+    "winrt_metadata_method_candidate": 39841
+  },
+  "input_tree_sha256": "ee0df2fdf99d8c9c61c3e7837f2a4b5ce9047d1f405aa72575ab9d4a22673d01",
+  "inventory_sha256": "42e3215f1d1e666439ca293f33b4263a16a55668a3ed6df4f921b248f34570df",
+  "limitations": [
+    "SDK 10.0.26100.0 is older than frozen target 10.0.28000.2705.",
+    "Short COFF import objects exclude static members and may include undocumented exports or aliases.",
+    "IDL scan includes UUID-bearing UM interface definitions only; WinRT-style IDL can overlap WinMD.",
+    "Header call-token matches are lexical evidence, not validated declarations.",
+    "WinRT scan includes public Windows.* runtime type methods in aggregate Windows.winmd.",
+    "Minimum OS and feature dependencies are unknown; no guest behavior has been tested.",
+    "These counts are neither a complete Windows API denominator nor a compatibility numerator."
+  ],
+  "schema": "w98mod.sdk-candidate-summary.v1",
+  "sdk_version": "10.0.26100.0",
+  "source_counts": {
+    "archive_members": 121200,
+    "data_or_const_import_members": 294,
+    "named_code_import_members": 97742,
+    "named_export_candidates_with_header_call_token": 21437,
+    "non_short_import_members": 12037,
+    "ordinal_import_members": 11127,
+    "public_winrt_methods": 39841,
+    "public_winrt_types": 7086,
+    "short_import_members": 109163,
+    "um_idl_files": 544,
+    "um_shared_header_files": 1798,
+    "uuid_idl_interface_definitions": 5985,
+    "winmd_files": 1,
+    "x86_um_import_libraries": 453
+  },
+  "status": "provisional 26100 SDK source subset; not the full 28000 target denominator",
+  "target_sdk_version": "10.0.28000.2705",
+  "winmd_sha256": "e2dee80d011cb9fc1276a0bd9f244f7a58d5ca72fe906a56e90d61c68cf8601a"
+}

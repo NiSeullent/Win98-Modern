@@ -1,0 +1,9 @@
+# Licenses, release, GitHub, and site
+
+The project uses GPL-2.0-only for its own code and KernelEx ABI adaptation. Wine-derived code/data retain LGPL-2.1-or-later notices; ReactOS provenance and the KernelEx submodule are listed in `THIRD_PARTY.md`. Review that file and exact source headers for every new port. The LGPL 2.1/GPL 2 combination is described in the GNU license compatibility guidance; this is not permission to copy arbitrary One-Core API files without per-file review.
+
+`tools/package-release.ps1` creates an allowlisted local preview ZIP with project DLLs, source/build recipe, license notices, checksums, and Korean installation/rollback instructions. Rebuild and revalidate it after source changes. Do not include the Windows ISO/key, KernelEx installer, Microsoft Unicode package, test applications, VM disks, or unreviewed third-party binaries. Treat release checksums and source commit IDs as versioned evidence.
+
+`site/` is the official-page source. It must distinguish a downloadable verified release from a development preview and link only to real repository/release URLs. Provide tested install steps, prerequisites, architecture limits, license notices, checksums, and current support status. Update it after new guest evidence; avoid claiming 100% API compatibility, all five apps running, PAE access to all usable CSM-system RAM, or working modern drivers prematurely.
+
+When the user has authorized publication, inspect the staged Git tree and ignored-file rules for secrets and proprietary payloads, validate licenses, run relevant build/tests, then commit and push under the authenticated account. Verify the public repository and page from their actual URLs. A local site folder, unpushed Git commit, or unpublished ZIP does not satisfy public sharing. Keep public in-progress releases clearly labeled; the full project goal remains active until all user requirements are verified.

@@ -1,0 +1,4 @@
+LIBRARY DWMAPI.DLL
+EXPORTS
+    DwmGetColorizationColor=m98_DwmGetColorizationColor@8
+    DwmSetWindowAttribute=m98_DwmSetWindowAttribute@16

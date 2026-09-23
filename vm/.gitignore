@@ -1,0 +1,22 @@
+# Original installation media, virtual disks, and runtime artifacts.
+*.iso
+*.img
+*.ima
+*.raw
+*.qcow2
+*.vdi
+*.vhd
+*.vmdk
+*.sav
+*.log
+*.pid
+*.png
+*.ppm
+*.bmp
+*.key
+*.secret
+*.partial
+*.part
+*.tmp
+share/
+accel/

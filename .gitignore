@@ -1,0 +1,14 @@
+build/
+__pycache__/
+*.pyc
+vm/media/
+vm/disks/
+vm/screenshots/
+vm/logs/
+vm/*.key
+benchmarks/media/
+*.iso
+*.img
+*.qcow2
+*.vdi
+*.vmdk

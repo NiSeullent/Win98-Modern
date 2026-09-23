@@ -1,0 +1,19 @@
+# Compatibility status
+
+| API group | Implemented behavior | Known limit |
+| --- | --- | --- |
+| `CompareStringOrdinal` | Explicit and NUL-terminated UTF-16 lengths; ordinal compare and Wine/KernelEx case map | Case table reflects the pinned Wine/KernelEx snapshot, not current Unicode |
+| CPU group and NUMA queries | Single processor, group 0, NUMA node 0; available-memory query uses `GlobalMemoryStatus` | Only valid for Win98's single-CPU model; no SMP support. Memory value is what Win98 sees, not installed RAM. Invalid group/node requests fail. |
+| `GetProcessGroupAffinity` | Reports group 0 for a queryable process handle and implements the required-size query | Win98 has one processor group. An invalid or inaccessible process handle fails through `GetExitCodeProcess`. |
+| `GetCurrentPackage*`, `GetPackageFamilyName`, `GetPackageFullName`, `GetPackageId` | Returns `APPMODEL_ERROR_NO_PACKAGE` for unpackaged processes after checking required length pointers; process-handle forms reject null and unqueryable handles | Package app deployment or activation is absent. `GetPackagePath` is a different API taking a `PACKAGE_ID`, so this no-package shortcut does not apply to it. |
+| `GetFirmwareType`, `GetSystemDEPPolicy` | Reports legacy BIOS boot and system DEP disabled | Describes the Win98 guest's boot interface and OS policy, not the physical host's firmware or CPU feature set. |
+| `GetTickCount64` | Serializes calls and extends `GetTickCount` across a wrap while loaded | Cannot recover wraps before initial DLL load; long gaps spanning multiple wraps remain unknowable |
+| `GetSystemTimePreciseAsFileTime` | Returns UTC time from legacy `GetSystemTimeAsFileTime` | Clock resolution is that of Win98 and does not meet the modern API's sub-microsecond precision contract |
+| `InitializeCriticalSectionEx` | Creates a Win98 critical section; rejects unsupported flags | `CRITICAL_SECTION_NO_DEBUG_INFO` is accepted but treated as advisory; no NT debug-info layout |
+| `InitializeSRWLock`, shared/exclusive acquire and release, and both try-acquire calls | A pointer-sized, process-local reader/writer lock built from Win98 interlocked operations; queued writers block new readers | Contended calls sleep for a tick rather than using the NT wait mechanism. Locking is nonrecursive, acquisition order is not guaranteed, and the compact state allows at most 32,767 simultaneous readers and 65,535 waiting writers. |
+| `InitOnceExecuteOnce` | Runs one callback at a time, caches its aligned context after success, and retries after callback failure | Synchronous form only. A context with either low bit set is rejected; contending callers sleep for a tick. `InitOnceBeginInitialize` and `InitOnceComplete` are not provided. |
+| `GetFileInformationByHandleEx` | `FileBasicInfo` and `FileStandardInfo` from `GetFileInformationByHandle` | Change time and allocation size are approximations; `DeletePending` is always `FALSE`, including handles pending deletion; valid but unimplemented query classes return `ERROR_NOT_SUPPORTED`, while invalid or set-only classes return `ERROR_INVALID_PARAMETER` |
+
+Each entry is a single function family, not a claim that a later Windows app will run. PE loader behavior, CRT versions, other imports, NT kernel semantics, graphics, and runtime dependencies remain separate compatibility work.
+
+KernelEx already supplies `IsWow64Process` and `GetNativeSystemInfo`; this library does not duplicate them. `GetLogicalProcessorInformation` is also absent here because a truthful implementation needs correctly sized processor, package, NUMA, and cache records, which Win98 does not expose through one legacy API.

@@ -1,0 +1,3 @@
+[submodule "third_party/KernelEx"]
+	path = third_party/KernelEx
+	url = https://github.com/metaxor/KernelEx.git
