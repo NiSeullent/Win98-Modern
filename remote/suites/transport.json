@@ -1,0 +1,14 @@
+{
+  "schema": "m98.remote-suite.v1",
+  "files": [
+    {"source": "build/remote_fixture.exe", "guest_path": "C:\\M98LAB\\remote_fixture.exe"}
+  ],
+  "tests": [
+    {"id": "stdout-stderr-exit", "command": "C:\\M98LAB\\remote_fixture.exe fail", "exit_code": 7,
+     "contains": ["STDOUT: remote fixture", "STDERR: remote fixture"]},
+    {"id": "bounded-child-timeout", "command": "C:\\M98LAB\\remote_fixture.exe sleep", "timeout_ms": 500,
+     "exit_code": 1460, "timed_out": true},
+    {"id": "bounded-output-capture", "command": "C:\\M98LAB\\remote_fixture.exe flood", "output_truncated": true,
+     "contains": ["STDOUT: remote fixture", "STDERR: remote fixture"]}
+  ]
+}

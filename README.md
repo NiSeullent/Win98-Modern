@@ -1,6 +1,6 @@
 # Windows 98 Shizuku's Second Edition — Modernization Lab
 
-한국어 Windows 98 SE를 직접 설치해 검증하는 **실험용** 프로젝트입니다. 새 DOS 기반 후보인 ShizukuDOS와 Windows 98용 KernelEx API 라이브러리(`m98wrap.dll`)를 개발하고, Wine·ReactOS의 일부 사용자 모드 구현을 Win9x 환경에 맞게 이식합니다. Windows 11 앱 실행은 이 단계의 목표나 검증 결과가 아닙니다.
+한국어 Windows 98 SE를 직접 설치해 검증하는 **실험용** 프로젝트입니다. 새 DOS 기반 후보인 ShizukuDOS와 Windows 98용 KernelEx API 라이브러리(`m98wrap.dll`)를 개발하고, Wine·ReactOS의 일부 사용자 모드 구현을 Win9x 환경에 맞게 이식합니다. 최종 목표는 아래의 전체 API 호환성과 필수 앱의 실제 구동이며, 아직 달성하지 않았습니다.
 
 ## 현재 구현
 
@@ -25,6 +25,11 @@ cd build
 추가 앱 로컬 DLL `build/dbghelp.dll`, `build/dwmapi.dll`, `build/bcrypt.dll`은 해당 앱의 폴더에서만 시험합니다. Windows 98 게스트에서 BCRYPT와 DWMAPI 직접 호출 시험을 통과했습니다. Notepad++ 8.9.8은 다음 단계인 `SHELL32.DLL`의 `SHCreateItemFromParsingName` 누락에서 중단됐습니다.
 
 다음 이식 대상을 찾을 때는 `python tools/scan_imports.py 앱.exe`로 PE import를 확인합니다. `unknown_or_native`는 Windows 98 기본 API일 수도 있으므로 미지원 판정이 아닙니다.
+
+[원격 시험 도구](remote/README.md)는 COM1 기반 명령 실행, 검증 후 파일 교체,
+명시적 시험 묶음과 GUI 창 진단을 제공합니다. 호스트 시험은 통과했지만 COM1
+드라이버 설치 후 게스트 부팅 오류를 조사 중이므로 게스트 원격 통신은 아직
+검증되지 않았습니다. 현재 공개 다운로드의 안정성 증거와 개발 코드를 구분합니다.
 
 ## KernelEx 연결
 

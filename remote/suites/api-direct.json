@@ -1,0 +1,22 @@
+{
+  "schema": "m98.remote-suite.v1",
+  "files": [
+    {"source": "build/m98wrap.dll", "guest_path": "C:\\M98LAB\\m98wrap.dll"},
+    {"source": "build/smoke.exe", "guest_path": "C:\\M98LAB\\smoke.exe"},
+    {"source": "build/bcrypt.dll", "guest_path": "C:\\M98LAB\\bcrypt.dll"},
+    {"source": "build/bcrypt_smoke.exe", "guest_path": "C:\\M98LAB\\bcrypt_smoke.exe"},
+    {"source": "build/dbghelp.dll", "guest_path": "C:\\M98LAB\\dbghelp.dll"},
+    {"source": "build/dbghelp_smoke.exe", "guest_path": "C:\\M98LAB\\dbghelp_smoke.exe"},
+    {"source": "build/dwmapi.dll", "guest_path": "C:\\M98LAB\\dwmapi.dll"},
+    {"source": "build/dwmapi_smoke.exe", "guest_path": "C:\\M98LAB\\dwmapi_smoke.exe"},
+    {"source": "build/m98shell.dll", "guest_path": "C:\\M98LAB\\m98shell.dll"},
+    {"source": "build/m98shell_smoke.exe", "guest_path": "C:\\M98LAB\\m98shell_smoke.exe"}
+  ],
+  "tests": [
+    {"id": "kernel32-direct", "command": "C:\\M98LAB\\smoke.exe", "contains": ["PASS:"]},
+    {"id": "bcrypt-direct", "command": "C:\\M98LAB\\bcrypt_smoke.exe", "contains": ["PASS:", "pseudo-handles"]},
+    {"id": "dbghelp-direct", "command": "C:\\M98LAB\\dbghelp_smoke.exe", "contains": ["PASS:"]},
+    {"id": "dwmapi-direct", "command": "C:\\M98LAB\\dwmapi_smoke.exe", "contains": ["PASS:"]},
+    {"id": "shell-direct", "command": "C:\\M98LAB\\m98shell_smoke.exe", "contains": ["PASS:"]}
+  ]
+}
