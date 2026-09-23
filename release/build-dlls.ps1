@@ -38,6 +38,14 @@ if ($LASTEXITCODE -ne 0) { throw 'dwmapi.dll build failed' }
 & python (Join-Path $projectRoot 'tests/check_dwmapi_pe98.py') (Join-Path $buildDir 'dwmapi.dll')
 if ($LASTEXITCODE -ne 0) { throw 'dwmapi.dll PE98 validation failed' }
 
+& $compiler @flags '-o' (Join-Path $buildDir 'bcrypt.dll') `
+  (Join-Path $projectRoot 'src/bcrypt_shim.c') `
+  (Join-Path $projectRoot 'src/bcrypt_shim.def') '-lkernel32'
+if ($LASTEXITCODE -ne 0) { throw 'bcrypt.dll build failed' }
+& python (Join-Path $projectRoot 'tests/check_bcrypt_pe98.py') (Join-Path $buildDir 'bcrypt.dll')
+if ($LASTEXITCODE -ne 0) { throw 'bcrypt.dll PE98 validation failed' }
+
 Write-Host (Join-Path $buildDir 'm98wrap.dll')
 Write-Host (Join-Path $buildDir 'dbghelp.dll')
 Write-Host (Join-Path $buildDir 'dwmapi.dll')
+Write-Host (Join-Path $buildDir 'bcrypt.dll')

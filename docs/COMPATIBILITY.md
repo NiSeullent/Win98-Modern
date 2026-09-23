@@ -16,4 +16,6 @@
 
 Each entry is a single function family, not a claim that a later Windows app will run. PE loader behavior, CRT versions, other imports, NT kernel semantics, graphics, and runtime dependencies remain separate compatibility work.
 
+App-local `DBGHELP.DLL` bridges `ImageNtHeader` to native Win98 `IMAGEHLP.DLL`. App-local `DWMAPI.DLL` reports disabled desktop composition; it now contains base relocations so it can load alongside other shim DLLs. App-local `BCRYPT.DLL` provides the seven imported hash functions used by Notepad++ for SHA-256, MD5, and HMAC, with Win98 guest direct-call evidence. These libraries do not provide the rest of their respective modern DLL surfaces. Notepad++ 8.9.8 still stops at a missing `SHELL32.DLL` function; see `docs/TARGET_APPS.md`.
+
 KernelEx already supplies `IsWow64Process` and `GetNativeSystemInfo`; this library does not duplicate them. `GetLogicalProcessorInformation` is also absent here because a truthful implementation needs correctly sized processor, package, NUMA, and cache records, which Win98 does not expose through one legacy API.

@@ -29,11 +29,15 @@ function Check-PE([string]$checker, [string]$artifact) {
 Check-PE 'tests/check_pe98.py' 'build/m98wrap.dll'
 $includeDbgHelp = Test-Path -LiteralPath (Join-Path $buildDir 'dbghelp.dll') -PathType Leaf
 $includeDwmApi = Test-Path -LiteralPath (Join-Path $buildDir 'dwmapi.dll') -PathType Leaf
+$includeBCrypt = Test-Path -LiteralPath (Join-Path $buildDir 'bcrypt.dll') -PathType Leaf
 if ($includeDbgHelp) {
   Check-PE 'tests/check_dbghelp_pe98.py' 'build/dbghelp.dll'
 }
 if ($includeDwmApi) {
   Check-PE 'tests/check_dwmapi_pe98.py' 'build/dwmapi.dll'
+}
+if ($includeBCrypt) {
+  Check-PE 'tests/check_bcrypt_pe98.py' 'build/bcrypt.dll'
 }
 
 $inputs = [ordered]@{
@@ -51,9 +55,12 @@ $inputs = [ordered]@{
   'src/dbghelp_shim.def'          = 'src/dbghelp_shim.def'
   'src/dwmapi_shim.c'             = 'src/dwmapi_shim.c'
   'src/dwmapi_shim.def'           = 'src/dwmapi_shim.def'
+  'src/bcrypt_shim.c'             = 'src/bcrypt_shim.c'
+  'src/bcrypt_shim.def'           = 'src/bcrypt_shim.def'
   'tests/check_pe98.py'           = 'tests/check_pe98.py'
   'tests/check_dbghelp_pe98.py'   = 'tests/check_dbghelp_pe98.py'
   'tests/check_dwmapi_pe98.py'    = 'tests/check_dwmapi_pe98.py'
+  'tests/check_bcrypt_pe98.py'    = 'tests/check_bcrypt_pe98.py'
   'tests/requirements.txt'        = 'tests/requirements.txt'
   'skills/win98-modern-lab/SKILL.md' = 'skills/win98-modern-lab/SKILL.md'
   'skills/win98-modern-lab/agents/openai.yaml' = 'skills/win98-modern-lab/agents/openai.yaml'
@@ -67,6 +74,9 @@ if ($includeDbgHelp) {
 }
 if ($includeDwmApi) {
   $inputs['dwmapi.dll'] = 'build/dwmapi.dll'
+}
+if ($includeBCrypt) {
+  $inputs['bcrypt.dll'] = 'build/bcrypt.dll'
 }
 
 $resolved = [ordered]@{}
@@ -126,3 +136,4 @@ Write-Host "SHA-256: $zipDigest"
 Write-Host "Checksum file: $hashPath"
 Write-Host "DBGHELP.DLL included: $includeDbgHelp"
 Write-Host "DWMAPI.DLL included: $includeDwmApi"
+Write-Host "BCRYPT.DLL included: $includeBCrypt"

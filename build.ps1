@@ -19,8 +19,14 @@ if ($LASTEXITCODE -ne 0) { throw 'dbghelp_smoke.exe build failed' }
 if ($LASTEXITCODE -ne 0) { throw 'dwmapi.dll build failed' }
 & python (Join-Path $projectRoot 'tests/check_dwmapi_pe98.py') (Join-Path $buildDir 'dwmapi.dll')
 if ($LASTEXITCODE -ne 0) { throw 'dwmapi.dll Windows 98 loader check failed' }
+& $compiler @flags '-o' (Join-Path $buildDir 'bcrypt.dll') (Join-Path $projectRoot 'src/bcrypt_shim.c') (Join-Path $projectRoot 'src/bcrypt_shim.def') '-lkernel32'
+if ($LASTEXITCODE -ne 0) { throw 'bcrypt.dll build failed' }
+& python (Join-Path $projectRoot 'tests/check_bcrypt_pe98.py') (Join-Path $buildDir 'bcrypt.dll')
+if ($LASTEXITCODE -ne 0) { throw 'bcrypt.dll Windows 98 loader check failed' }
 & $compiler '-std=c11' '-Os' '-Wall' '-Wextra' '-Werror' '-fno-builtin' '-nostdlib' '-Wl,--entry,_mainCRTStartup' '-Wl,--subsystem,console:4.10' '-Wl,--disable-dynamicbase' '-Wl,--disable-nxcompat' '-Wl,--disable-tsaware' '-o' (Join-Path $buildDir 'dwmapi_smoke.exe') (Join-Path $projectRoot 'tests/dwmapi_smoke.c') '-lkernel32'
 if ($LASTEXITCODE -ne 0) { throw 'dwmapi_smoke.exe build failed' }
+& $compiler '-std=c11' '-Os' '-Wall' '-Wextra' '-Werror' '-fno-builtin' '-nostdlib' '-Wl,--entry,_mainCRTStartup' '-Wl,--subsystem,console:4.10' '-Wl,--disable-dynamicbase' '-Wl,--disable-nxcompat' '-Wl,--disable-tsaware' '-o' (Join-Path $buildDir 'bcrypt_smoke.exe') (Join-Path $projectRoot 'tests/bcrypt_smoke.c') '-lkernel32'
+if ($LASTEXITCODE -ne 0) { throw 'bcrypt_smoke.exe build failed' }
 & $compiler '-std=c11' '-Os' '-Wall' '-Wextra' '-Werror' '-fno-builtin' '-nostdlib' '-Wl,--entry,_mainCRTStartup' '-Wl,--subsystem,console:4.10' '-Wl,--disable-dynamicbase' '-Wl,--disable-nxcompat' '-Wl,--disable-tsaware' '-o' (Join-Path $buildDir 'smoke.exe') (Join-Path $projectRoot 'tests/smoke.c') '-lkernel32'
 if ($LASTEXITCODE -ne 0) { throw 'smoke.exe build failed' }
 & $compiler '-std=c11' '-Os' '-Wall' '-Wextra' '-Werror' '-fno-builtin' '-nostdlib' '-Wl,--entry,_mainCRTStartup' '-Wl,--subsystem,console:4.10' '-Wl,--disable-dynamicbase' '-Wl,--disable-nxcompat' '-Wl,--disable-tsaware' '-o' (Join-Path $buildDir 'memprobe.exe') (Join-Path $projectRoot 'memory/probe.c') '-lkernel32'

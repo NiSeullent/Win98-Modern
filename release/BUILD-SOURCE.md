@@ -2,7 +2,7 @@
 
 This ZIP includes the corresponding C source, export definition, build script,
 PE validation scripts, and license notices for `m98wrap.dll`, `dbghelp.dll`,
-and `dwmapi.dll`. It does not include Windows, KernelEx, Microsoft Unicode Layer,
+`dwmapi.dll`, and `bcrypt.dll`. It does not include Windows, KernelEx, Microsoft Unicode Layer,
 or any target application.
 
 The `skills/win98-modern-lab/` folder is a reusable Codex workflow for the

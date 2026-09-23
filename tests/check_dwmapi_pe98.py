@@ -24,6 +24,8 @@ def check(path: Path) -> list[str]:
         issues.append("expected Windows GUI subsystem 4.10")
     if header.DllCharacteristics & (0x0040 | 0x0100):
         issues.append("ASLR/NX image flags are unsupported by Windows 98")
+    if pe.FILE_HEADER.Characteristics & 0x0001 or not header.DATA_DIRECTORY[5].VirtualAddress:
+        issues.append("DLL must have base relocations for app-local load order")
     for index, label in ((9, "TLS"), (13, "delay imports"), (14, "CLR")):
         if header.DATA_DIRECTORY[index].VirtualAddress:
             issues.append(f"unexpected {label} directory")

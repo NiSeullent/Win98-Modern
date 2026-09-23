@@ -6,7 +6,7 @@
 
 - `KERNEL32.DLL`의 37개 API 이름을 KernelEx용 DLL에 제공: 문자열 비교, CPU 그룹/NUMA 조회, 패키지 식별 조회, 펌웨어/DEP 상태, 64비트 틱, 정밀 시각 호환 호출, 임계 구역·SRW 잠금·일회성 초기화, 파일 정보 조회 등.
 - Wine의 Unicode 대문자 매핑표와 문자열 비교 알고리즘, ReactOS의 임계 구역 인수 검사 로직을 선별 이식했습니다. 함수별 출처와 라이선스는 [THIRD_PARTY.md](THIRD_PARTY.md)에 있습니다.
-- 호스트에서 32비트 DLL과 Windows 98 호환 시험 프로그램을 빌드하고 실행할 수 있습니다. 앱 로컬 `dbghelp.dll`과 `dwmapi.dll` 브리지도 포함합니다.
+- 호스트에서 32비트 DLL과 Windows 98 호환 시험 프로그램을 빌드하고 실행할 수 있습니다. 앱 로컬 `dbghelp.dll`, `dwmapi.dll`, `bcrypt.dll` 브리지도 포함합니다.
 
 일부 API는 **부분 구현**입니다. `GetFileInformationByHandleEx`는 Basic/Standard 정보만 제공하며 변경 시각·실제 할당 크기를 추정하고 삭제 대기 상태를 알 수 없습니다. `GetTickCount64`는 DLL 로드 후의 32비트 틱 롤오버를 추적하지만, 49.7일 이상 켜진 시스템에 처음 로드될 때 이전 롤오버 횟수는 알 수 없습니다. `GetSystemTimePreciseAsFileTime`은 Windows 98의 시계 정밀도만 제공합니다. 자세한 상태는 [호환성 현황](docs/COMPATIBILITY.md)에 있습니다.
 
@@ -22,7 +22,7 @@ cd build
 
 빌드 결과는 `build/m98wrap.dll`, `build/smoke.exe`, `build/import_probe.exe`, `build/memprobe.exe`, `build/memstress.exe`, `build/cpuapp.exe`와 `build/app-profiles.ini`입니다. DLL과 CPU 런처의 import는 Windows 98에 존재하는 `KERNEL32.DLL` 함수로 제한했습니다. 빌드 중 [PE98 정적 검사](tests/check_pe98.py)가 DLL의 32비트 형식, 로더 버전, 의존 DLL, 가져오기 함수, KernelEx 진입점을 확인합니다. `smoke.exe`는 API 테이블과 주요 동작을 검사하고, `import_probe.exe`는 최신 API 두 개를 KERNEL32에서 **정적으로 import**해 KernelEx 경로를 검사합니다. 두 시험은 직접 설치한 Windows 98 SE 게스트에서 각각 PASS를 확인했습니다. `memstress.exe`는 여러 프로세스의 페이지 읽기·쓰기를 측정하지만 [물리 RAM 4GB 인증 시험](memory/README.md)은 아닙니다. Windows 98 게스트에서의 실제 결과는 [VM 기록](vm/README.md)을 참조하세요.
 
-추가 앱 로컬 DLL `build/dbghelp.dll`과 `build/dwmapi.dll`은 해당 앱의 폴더에서만 시험합니다. Notepad++ 8.9.8은 두 DLL을 제공한 뒤에도 실행 파일 포맷 오류로 중단됐습니다.
+추가 앱 로컬 DLL `build/dbghelp.dll`, `build/dwmapi.dll`, `build/bcrypt.dll`은 해당 앱의 폴더에서만 시험합니다. Windows 98 게스트에서 BCRYPT와 DWMAPI 직접 호출 시험을 통과했습니다. Notepad++ 8.9.8은 다음 단계인 `SHELL32.DLL`의 `SHCreateItemFromParsingName` 누락에서 중단됐습니다.
 
 다음 이식 대상을 찾을 때는 `python tools/scan_imports.py 앱.exe`로 PE import를 확인합니다. `unknown_or_native`는 Windows 98 기본 API일 수도 있으므로 미지원 판정이 아닙니다.
 

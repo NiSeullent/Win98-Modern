@@ -19,6 +19,12 @@
 #define DWM_E_COMPOSITIONDISABLED ((HRESULT)0x80263001L)
 #endif
 
+/* DllMain records its module handle in image data. Besides being useful for
+ * diagnostics, this makes the PE contain a base relocation: several app-local
+ * shims otherwise share MinGW's 0x10000000 preferred base, and Win98 refuses
+ * to load a later DLL with an empty relocation directory. */
+static volatile HINSTANCE module_instance;
+
 HRESULT WINAPI m98_DwmGetColorizationColor(DWORD *color, BOOL *opaque_blend)
 {
     /* Output values are defined only on success. There is no Win98 glass
@@ -39,8 +45,8 @@ HRESULT WINAPI m98_DwmSetWindowAttribute(HWND window, DWORD attribute,
 
 BOOL WINAPI DllMain(HINSTANCE instance, DWORD reason, LPVOID reserved)
 {
-    (void)instance;
-    (void)reason;
     (void)reserved;
+    if (reason == DLL_PROCESS_ATTACH) module_instance = instance;
+    else if (reason == DLL_PROCESS_DETACH) module_instance = NULL;
     return TRUE;
 }

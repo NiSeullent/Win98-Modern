@@ -1,0 +1,9 @@
+LIBRARY BCRYPT.DLL
+EXPORTS
+    BCryptGetProperty=m98_BCryptGetProperty
+    BCryptFinishHash=m98_BCryptFinishHash
+    BCryptOpenAlgorithmProvider=m98_BCryptOpenAlgorithmProvider
+    BCryptCloseAlgorithmProvider=m98_BCryptCloseAlgorithmProvider
+    BCryptCreateHash=m98_BCryptCreateHash
+    BCryptHashData=m98_BCryptHashData
+    BCryptDestroyHash=m98_BCryptDestroyHash
