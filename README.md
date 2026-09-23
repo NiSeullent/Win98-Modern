@@ -15,6 +15,10 @@
 
 일부 API는 **부분 구현**입니다. `GetFileInformationByHandleEx`는 Basic/Standard 정보만 제공하며 변경 시각·실제 할당 크기를 추정하고 삭제 대기 상태를 알 수 없습니다. `GetTickCount64`는 DLL 로드 후의 32비트 틱 롤오버를 추적하지만, 49.7일 이상 켜진 시스템에 처음 로드될 때 이전 롤오버 횟수는 알 수 없습니다. `GetSystemTimePreciseAsFileTime`은 Windows 98의 시계 정밀도만 제공합니다. 자세한 상태는 [호환성 현황](docs/COMPATIBILITY.md)에 있습니다.
 
+## 실험용 패치 다운로드
+
+[0.1.6-preview 프리릴리스](https://github.com/NiSeullent/Win98-Modern/releases/tag/v0.1.6-preview)는 기존 Windows 98 SE 설치본에 적용할 DLL과 전체 빌드 소스를 제공합니다. 압축 파일 SHA-256은 `48c8ca7a9764d55f1f35a5462269162370657613011cd5bb17385e76cefac393`이며, 공개 다운로드를 다시 받아 검증했습니다. [설치·복구 순서](release/INSTALL-ko.md)와 [검증 범위](docs/RELEASE_0_1_6_CHECKPOINT.md)를 먼저 확인하세요. Windows 설치 이미지나 완성된 운영체제 prebuilt는 포함하지 않습니다.
+
 ## 빌드와 시험
 
 Windows 호스트의 32비트 LLVM MinGW(`i686-w64-mingw32-gcc`)와 Python이 필요합니다. 최초 한 번 `python -m pip install -r tests/requirements.txt`로 PE 검증 의존성을 설치합니다.

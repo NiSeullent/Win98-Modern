@@ -19,6 +19,17 @@ project DLL identity, and makes family route installation DLL-specific.
   mutation. Full log: `build/release-source-check-016-build.log`.
 - This is a local patch/source preview. It is not a Windows installation image.
 
+## GitHub publication
+
+- Source commit: `9d3204ac6ce6f50193ee5c758d6eff4db2bbdc78` on `main`.
+- Published as the `v0.1.6-preview` GitHub prerelease:
+  `https://github.com/NiSeullent/Win98-Modern/releases/tag/v0.1.6-preview`.
+- Both the ZIP and its `.sha256` file were uploaded. GitHub reported the ZIP
+  digest as `sha256:48c8ca7a9764d55f1f35a5462269162370657613011cd5bb17385e76cefac393`.
+  An unauthenticated download returned 827,162 bytes with that same SHA-256.
+- The public archive is a patch/source preview for an existing Windows 98 SE
+  installation. It is not the requested complete prebuilt operating system.
+
 ## Directly installed Windows 98 SE
 
 The guest `Win98Modern-Accel-128` was cold-booted after installing the new
