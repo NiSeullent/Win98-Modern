@@ -50,6 +50,17 @@ snapshot. Rebuild after any source-table or inventory changes. Full generated
 data stays under `build/`; source code, recipes and compact evidence can be
 published independently of licensed Windows media and SDK header text.
 
+The 2026-09-24 snapshot retains 385,945 catalogue records, including 151,330
+SDK candidates, and assigns them to 8,003 functional or default batches.
+There are 133 current project export declarations. The evidence registry links
+46 candidate identities to limited installed-Win98 static-import contract
+tests, including three GDI32 drawing aliases; it reports no whole-API
+compatibility percentage. The pinned KernelEx source declaration manifest has
+1,060 unique DLL/name identities, including 31 `WINSPOOL.DRV` declarations
+previously missed by a `.DLL`-only parser. The separate
+`docs/KERNELEX_STUB_AUDIT.md` classifies source bodies and explains why a
+declaration or a returned success code cannot stand in for behavior.
+
 ## Batch execution
 
 `porting/groups.json` defines shared foundations and initial functional groups.
@@ -147,8 +158,12 @@ the exact provider, test and source hashes. Matching snapshots are labeled
 receipt historical. Other focused tests remain in family documents until
 entered in the registry, and unlinked rows are `unassessed`. A declaration match, source availability, native
 export, stub, forwarder, host PASS or successful DLL load is not full API
-compatibility. The current catalogue links 41 focused guest contract subsets,
-including the three routed USER32 names in its 45-row clipboard batch. It
+compatibility. The current catalogue links 46 focused guest contract subsets,
+including the three routed USER32 names in its 45-row clipboard batch and
+three GDI32 names tested in the 0.1.7 checkpoint. COMCTL32 ordinal #345 and
+#381 link to the limited 0.1.8 static-import contract; the corresponding two
+named declarations remain `unassessed`. The #345 interactive UI branch and
+the PNG resource path under static import also remain unverified. It
 reports no compatibility percentage.
 
 Further evidence linkage must pin implementation, provider and test hashes,

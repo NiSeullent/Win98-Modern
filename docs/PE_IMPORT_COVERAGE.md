@@ -14,13 +14,13 @@
 
 원본 `KERNEL32.DLL` PE 내보내기 표에서 `DeleteCriticalSection`, `EnterCriticalSection`, `GetExitCodeProcess`, `GetFileInformationByHandle`, `GetLastError`, `GetSystemTimeAsFileTime`, `GetTickCount`, `GlobalMemoryStatus`, `InitializeCriticalSection`, `LeaveCriticalSection`, `SetLastError` **11개 전부 확인**했다. 이는 `tests/check_pe98.py`의 현재 KERNEL32 허용 목록에 해당한다. CAB 파일 기록 6,223개가 가리키는 고유 파일 6,048개 가운데 6,047개가 추출되었다. 남은 `GM16.DLS`는 PE DLL/EXE가 아닌 [DLS 사운드 파일](https://learn.microsoft.com/en-us/windows-hardware/drivers/audio/dls-download-support)이므로 이 PE API 목록에 들어가지 않는다. 다중 CAB 추출에 사용한 `cabextract`는 이 파일의 압축 오류로 종료 코드 1을 반환했으므로, 누락 파일 검사는 별도로 수행했다. [libmspack/cabextract](https://github.com/kyz/libmspack/tree/master/cabextract)
 
-KernelEx의 [고정 소스 선언 목록](../benchmarks/kernelex-source-declarations-v1.json)은 커밋 [`31cdfc3560fc116637ee8ed7be31b12f3aacf5d1`](https://github.com/metaxor/KernelEx/tree/31cdfc3560fc116637ee8ed7be31b12f3aacf5d1)의 `kexbases`·`kexbasen` API 표 25개 파일에서 추출한 1,029개 선언이다. `CORE.INI`의 기본 `DCFG1`은 `std,kexbases,kexbasen`을 나열하지만 Windows 98용 override에서 일부 이름을 `none` 또는 `std`로 바꾼다. 따라서 이 목록은 **소스상 후보 이름의 상한**이며 설치·활성화·호출 동작의 증거가 아니다. 보고서는 원본 PE와 KernelEx 소스의 일치를 별도 열에 둔다.
+KernelEx의 [고정 소스 선언 목록](../benchmarks/kernelex-source-declarations-v1.json)은 커밋 [`31cdfc3560fc116637ee8ed7be31b12f3aacf5d1`](https://github.com/metaxor/KernelEx/tree/31cdfc3560fc116637ee8ed7be31b12f3aacf5d1)의 `kexbases`·`kexbasen` API 표 25개 파일에서 추출한 1,097개 선언 중 고유 DLL·이름/서수 식별자 1,060개를 담는다. `CORE.INI`의 기본 `DCFG1`은 `std,kexbases,kexbasen`을 나열하지만 Windows 98용 override에서 일부 이름을 `none` 또는 `std`로 바꾼다. 따라서 이 목록은 **소스상 후보 이름의 상한**이며 설치·활성화·호출 동작의 증거가 아니다. 보고서는 원본 PE와 KernelEx 소스의 일치를 별도 열에 둔다.
 
 ## 입력 준비
 
 1. 재현용 미디어는 무시된 `benchmarks/media/`에 둔다. Python 의존성은 `pip install -r tools/requirements-test-media.txt`로 설치한다. `python tools/extract_win98_iso_cabs.py --iso vm/Win98-SE-ko-OEM.iso --manifest benchmarks/win98se-ko-oem-native-exports-v1.json --out-dir benchmarks/media/win98-iso-cabs`로 CAB 76개를 ISO에서 복사하고 해시를 검증한다. WSL/Linux의 `cabextract` 1.11에서 `benchmarks/media/win98-iso-cabs`로 이동한 뒤 `mkdir -p ../win98-iso-extracted`를 실행하고 `cabextract -q -d ../win98-iso-extracted WIN98_22.CAB`, `cabextract -q -d ../win98-iso-extracted MINI.CAB`, `cabextract -q -d ../win98-iso-extracted CHL99.CAB`를 차례로 실행한다. 첫 명령의 `GM16.DLS` 오류는 예상된다. 그 뒤 `python tools/build_win98_iso_baseline.py --iso vm/Win98-SE-ko-OEM.iso --cab-dir benchmarks/media/win98-iso-cabs --extracted-dir benchmarks/media/win98-iso-extracted --out benchmarks/win98se-ko-oem-native-exports-v1.json`을 실행한다. 스크립트는 모든 CAB를 ISO와 다시 대조하고 고유 파일의 누락 목록을 검사한다. 추출 파일 바이트 자체의 재추출 비교는 하지 않으므로 추출 과정의 출처도 보존한다.
 2. `python tools/build_kernelex_source_manifest.py --source-root third_party/KernelEx --out benchmarks/kernelex-source-declarations-v1.json`으로 KernelEx 소스 목록을 다시 만든다. 실제 게스트를 측정할 때에는 설치된 KernelEx 빌드와 활성 구성 모드를 따로 확인한다. `kexbases`와 `kexbasen` 소스를 무조건 결합한 값을 게스트 제공 API로 취급할 수 없다.
-3. `--pe`는 PE 내보내기를 읽고, `--source`는 KernelEx의 `DECL_TAB`/`DECL_API`(이름·서수), 프로젝트의 `M98_API`, `.def` 같은 **소스 선언**을 읽는다. `DLL=파일` 표기는 DLL 이름을 명시적으로 지정한다. 다른 ISO 또는 설치 게스트 DLL로 `manifest` 명령을 사용할 수도 있다.
+3. `--pe`는 PE 내보내기를 읽고, `--source`는 KernelEx의 `DECL_TAB`/`DECL_API`(이름·서수), 프로젝트의 `M98_API`·`M98_NAMED`·`M98_ORD`와 `.def` 같은 **소스 선언**을 읽는다. `DLL=파일` 표기는 DLL 이름을 명시적으로 지정한다. 다른 ISO 또는 설치 게스트 DLL로 `manifest` 명령을 사용할 수도 있다.
 
 ```powershell
 python tools/measure_pe_coverage.py manifest `
@@ -42,7 +42,7 @@ python tools/measure_pe_coverage.py manifest `
 }
 ```
 
-래퍼는 `--wrapper-source src/m98wrap.c`로 KernelEx에 등록하는 논리 API 이름을 읽거나, `--wrapper-pe DLL=실제.dll`로 일반 PE 내보내기 이름을 읽는다. `M98WRAP.DLL` 아티팩트에서 보이는 `get_api_table` 한 항목이 등록된 모든 `KERNEL32.DLL` 함수를 뜻하지는 않으므로, 이 프로젝트의 KernelEx API 테이블은 소스 입력을 써야 한다.
+래퍼는 `--wrapper-source src/m98wrap.c`와 `--wrapper-source src/m98ctl.c`처럼 각 provider 소스를 지정해 KernelEx에 등록하는 논리 API 이름·서수를 읽거나, `--wrapper-pe DLL=실제.dll`로 일반 PE 내보내기 이름을 읽는다. 고정 보고서 생성기는 프로젝트 provider/API 표와 shim `.def` 파일 10개를 명시적으로 입력한다. `M98WRAP.DLL` 아티팩트에서 보이는 `get_api_table` 한 항목이 등록된 모든 `KERNEL32.DLL` 함수를 뜻하지는 않으므로, 이 프로젝트의 KernelEx API 테이블은 소스 입력을 써야 한다.
 
 ## 앱별 실행
 
@@ -53,6 +53,7 @@ python tools/measure_pe_coverage.py report `
   --baseline 'benchmarks\win98se-ko-oem-native-exports-v1.json' `
   --kernelex-source-manifest 'benchmarks\kernelex-source-declarations-v1.json' `
   --wrapper-source 'src\m98wrap.c' `
+  --wrapper-source 'src\m98ctl.c' `
   --app-file 'Chromium 150=C:\targets\chromium-150\chrome.exe' `
   --app-file 'Chromium 150=C:\targets\chromium-150\chrome.dll' `
   --app-file 'Supermium=C:\targets\supermium\chrome.exe' `
@@ -77,12 +78,12 @@ python tools/measure_pe_coverage.py report `
 
 | 선택 앱 | 일반 + 지연 | 원본 ISO | 앱 동봉 DLL | KernelEx 소스 | 프로젝트 소스 | 미해결 | 이름 일치 |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| Chromium 150 (3개 파일) | 967 + 903 | 1,251 | 19 | 143 | 13 | 444 | 1,426/1,870 (76.26%) |
-| Supermium 144 R5 (3개 파일) | 977 + 862 | 656 | 897 | 44 | 0 | 242 | 1,597/1,839 (86.84%) |
+| Chromium 150 (3개 파일) | 967 + 903 | 1,251 | 19 | 143 | 74 | 383 | 1,487/1,870 (79.52%) |
+| Supermium 144 R5 (3개 파일) | 977 + 862 | 656 | 897 | 44 | 10 | 232 | 1,607/1,839 (87.38%) |
 | VLC 3.0.24 (3개 파일) | 657 + 0 | 505 | 138 | 14 | 0 | 0 | 657/657 (100.00%) |
-| Notepad++ 8.9.8 (1개 파일) | 614 + 0 | 537 | 0 | 14 | 4 | 59 | 555/614 (90.39%) |
+| Notepad++ 8.9.8 (1개 파일) | 614 + 0 | 537 | 0 | 14 | 63 | 0 | 614/614 (100.00%) |
 
-가져오기 **출현 횟수**를 가중한 합계는 4,235/4,980 (85.04%)다. VLC의 100%도 정적 이름 일치만 뜻한다. Chromium에서 남은 `KERNEL32.DLL` 항목이 81개이고, Supermium의 자체 래퍼가 해결해 준 항목이 897개여서 이름 목록의 우선순위를 정하는 데 쓸 수 있다. 이 수치는 선택한 파일과 소스 후보를 사용한 예비 조사이며, Windows 98 게스트 앱 실행 결과가 아니다.
+가져오기 **출현 횟수**를 가중한 합계는 4,365/4,980 (87.6506%)다. `프로젝트 소스` 147회는 **선언 이름**의 일치다. Notepad++의 `COMCTL32.DLL` 서수 `#345`·`#381`도 해당 provider 표에 있으므로 더는 미해결로 분류하지 않는다. VLC와 Notepad++의 100%도 정적 이름 일치만 뜻한다. Notepad++는 게스트에서 편집·기존 파일 저장이 확인됐으나 정상 종료에서 오류가 남아 있어 앱 완전 동작 판정이 아니다. Chromium에는 `KERNEL32.DLL`의 미해결 **일반 가져오기 85회**가 남고, Supermium의 자체 래퍼가 이름을 제공한 항목은 897회다. 이 수치는 선택한 파일과 소스 후보를 사용한 조사이며, Windows API 전체 호환률이나 앱 실행률이 아니다.
 
 ## Windows API 전체 100% 목표와의 관계
 
@@ -92,4 +93,4 @@ python tools/measure_pe_coverage.py report `
 
 ## 검사
 
-`python -B -m unittest discover -s tools/tests -p 'test_measure_pe_coverage.py' -v`는 작은 합성 PE32로 일반/지연/서수 가져오기, PE 내보내기, 원본·앱 동봉 PE·KernelEx 선언·프로젝트 래퍼·미해결 집계, 가져오기 0개의 `N/A` 처리, PE32+ 거부를 확인한다. 현재 6개 시험이 통과했다. 합성 시험은 실제 앱의 호환성 증거가 아니다. 실제 VS Code 1.138.0 `Code.exe`도 `machine 0x8664`, thunk 폭 8로 검사기가 명시적으로 거부함을 확인했다.
+`python -B -m unittest discover -s tools/tests -p 'test_measure_pe_coverage.py' -v`는 작은 합성 PE32로 일반/지연/서수 가져오기, PE 내보내기, 원본·앱 동봉 PE·KernelEx 선언·프로젝트 래퍼·미해결 집계, 가져오기 0개의 `N/A` 처리, PE32+ 거부를 확인한다. 타입이 지정된 provider 이름·서수 배열이 실제 대상 DLL 표에 결합되는지도 검사한다. 현재 9개 시험이 통과했다. 합성 시험은 실제 앱의 호환성 증거가 아니다. 실제 VS Code 1.138.0 `Code.exe`도 `machine 0x8664`, thunk 폭 8로 검사기가 명시적으로 거부함을 확인했다.

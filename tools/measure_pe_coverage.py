@@ -223,24 +223,56 @@ def def_exports(path: Path, override_dll: str | None) -> dict[str, set[str]]:
 def c_table_exports(path: Path, override_dll: str | None) -> dict[str, set[str]]:
     source = strip_c_comments(path.read_text(encoding="utf-8", errors="replace"))
     result: dict[str, set[str]] = {}
+    # KernelEx providers bind typed named and ordinal arrays through an
+    # m98_api_table. Only that binding identifies the target DLL; a macro or
+    # array elsewhere in the file does not declare a route for this report.
     arrays = {
-        match.group(1): match.group(2)
+        match.group("name"): (match.group("type"), match.group("body"))
         for match in re.finditer(
-            r"\b([A-Za-z_]\w*)\s*\[\s*\]\s*=\s*\{(.*?)\}\s*;",
-            source,
-            re.S,
+            r"\bm98_(?P<type>named|ordinal)_api\s+"
+            r"(?P<name>[A-Za-z_]\w*)\s*\[\s*\]\s*=\s*"
+            r"\{(?P<body>.*?)\}\s*;", source, re.S,
         )
     }
-    for match in re.finditer(
-        r'\{\s*"([^"\r\n]+\.DLL)"\s*,\s*([A-Za-z_]\w*)\s*,',
-        source,
-        re.I,
+    bindings: dict[tuple[str, str], set[str]] = {}
+    for table in re.finditer(
+        r"\bm98_api_table\s+[A-Za-z_]\w*\s*\[\s*\]\s*=\s*"
+        r"\{(?P<body>.*?)\}\s*;", source, re.S,
     ):
-        dll, array = match.groups()
-        if array in arrays:
-            names = re.findall(r'M98_API\s*\(\s*"([^"\r\n]+)"', arrays[array])
-            add_symbols(result, override_dll or dll, names)
-    tables = re.findall(r'DECL_TAB\s*\(\s*"([^"\r\n]+\.DLL)"', source, re.I)
+        for entry in re.finditer(
+            r'\{\s*"(?P<dll>[A-Za-z0-9_]+\.(?:DLL|DRV|OCX|CPL|ACM|AX|EXE))"'
+            r"\s*,\s*(?P<named>[A-Za-z_]\w*|0|NULL)\s*,\s*[^,{}]*,"
+            r"\s*(?P<ordinal>[A-Za-z_]\w*|0|NULL)\s*,\s*[^,{}]*\}",
+            table.group("body"), re.I | re.S,
+        ):
+            dll = normalize_dll(override_dll or entry.group("dll"))
+            for category in ("named", "ordinal"):
+                name = entry.group(category)
+                if name not in {"0", "NULL"} and name in arrays:
+                    if arrays[name][0] != category:
+                        raise CoverageError(f"{path}: {name} bound as wrong API array type")
+                    bindings.setdefault((category, name), set()).add(dll)
+    for (category, name), dlls in bindings.items():
+        if len(dlls) != 1:
+            raise CoverageError(f"{path}: {name} bound to multiple target DLLs")
+        body = arrays[name][1]
+        if category == "named":
+            symbols = re.findall(
+                r'\b(?:M98_API|M98_NAMED)\s*\(\s*"([^"\r\n]+)"\s*,', body)
+            symbols.extend(re.findall(
+                r'\{\s*"([^"\r\n]+)"\s*,\s*(?:\([^()]*\)\s*)?'
+                r'[A-Za-z_]\w*\s*\}', body))
+        else:
+            symbols = [f"#{int(number)}" for number in re.findall(
+                r"\bM98_ORD\s*\(\s*([0-9]+)\s*,", body)]
+        add_symbols(result, next(iter(dlls)), symbols)
+    # KernelEx also exposes WINSPOOL.DRV. A DECL_TAB names a PE module,
+    # whose extension need not be .DLL (other common loadable PE modules are
+    # .OCX/.CPL/.ACM/.AX, and an .EXE can export symbols as well).
+    tables = re.findall(
+        r'DECL_TAB\s*\(\s*"([^"\r\n]+\.(?:DLL|DRV|OCX|CPL|ACM|AX|EXE))"',
+        source, re.I,
+    )
     if tables:
         if len(set(map(normalize_dll, tables))) != 1 and not override_dll:
             raise CoverageError(f"{path}: multiple DECL_TAB DLLs; split the source")

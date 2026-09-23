@@ -54,7 +54,7 @@ def main() -> int:
     args.out.write_text(json.dumps(manifest, indent=2, ensure_ascii=False) + "\n",
                         encoding="utf-8")
     print(f"{args.out}: {len(manifest['source_files'])} source files, "
-          f"{len(manifest['dlls'])} DLL names, "
+          f"{len(manifest['dlls'])} module names, "
           f"{sum(map(len, manifest['dlls'].values()))} declarations")
     return 0
 

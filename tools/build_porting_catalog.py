@@ -18,7 +18,7 @@ import zipfile
 from collections import Counter, defaultdict
 from pathlib import Path
 
-from measure_pe_coverage import c_table_exports, def_exports, load_manifest, normalize_dll
+from measure_pe_coverage import load_manifest, normalize_dll
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -104,36 +104,37 @@ def validate_upstream(manifest, manifest_path, upstream_path, summary, rows, roo
             raise ValueError("source revision does not match source manifest")
 
 
-def read_project(root):
-    """Read target DLL tables, including both M98_API and literal entry syntax."""
+def read_project(root, upstream):
+    """Use the checked source index for every project declaration identity.
+
+    The caller validates the upstream checksum and source hashes first. We
+    repeat the project path/hash gate here so direct callers cannot silently
+    turn a stale or invented row into a declared-in-project catalogue entry.
+    """
     output = defaultdict(list)
     inputs = {}
     for path in sorted((root / "src").glob("*")):
         if path.suffix not in {".c", ".def"}:
             continue
-        content = path.read_text(encoding="utf-8-sig")
-        # Preserve source line numbers while excluding commented-out declarations.
-        parsed_content = re.sub(r'"(?:\\.|[^"\\])*"|/\*.*?\*/|//[^\n]*',
-            lambda m: m.group() if m.group().startswith('"') else "\n" * m.group().count("\n"),
-            content, flags=re.S)
-        file_hash = digest(path)
-        source_path = path.relative_to(root).as_posix()
-        inputs[source_path] = file_hash
-        exports = def_exports(path, None) if path.suffix == ".def" else c_table_exports(path, None)
-        if path.suffix == ".c":
-            arrays = dict(re.findall(r"\b(\w+)\s*\[\s*\]\s*=\s*\{(.*?)\}\s*;", parsed_content, re.S))
-            for dll, array in re.findall(r'\{\s*"([^"\r\n]+\.DLL)"\s*,\s*(\w+)\s*,', parsed_content, re.I):
-                for name in re.findall(r'\{\s*"([^"\r\n]+)"\s*,', arrays.get(array, "")):
-                    exports.setdefault(normalize_dll(dll), set()).add(name)
-        for dll, names in sorted(exports.items()):
-            for name in sorted(names):
-                matching_lines = [n for n, line in enumerate((parsed_content if path.suffix == ".c" else content).splitlines(), 1)
-                                  if (f'"{name}"' in line if path.suffix == ".c" else
-                                      re.match(r"^\s*" + re.escape(name) + r"(?:\s|=|$)", line))]
-                output[api_key(dll, name)].append({
-                    "source_path": source_path, "lines": matching_lines,
-                    "source_file_sha256": file_hash, "kind": "project_export_declaration",
-                })
+        inputs[path.relative_to(root).as_posix()] = digest(path)
+    src_root = (root / "src").resolve()
+    for item in upstream:
+        if item["source"] != "project":
+            continue
+        source_path = item["source_path"]
+        path = (root / source_path).resolve()
+        if (not path.is_relative_to(src_root) or
+                source_path not in inputs or
+                inputs[source_path] != item["source_file_sha256"] or
+                not isinstance(item["line"], int) or item["line"] < 1):
+            raise ValueError("project declaration path, hash or line mismatch")
+        output[api_key(item["dll"], item["name"])].append({
+            "source_path": source_path, "lines": [item["line"]],
+            "source_file_sha256": item["source_file_sha256"],
+            "kind": "project_export_declaration", "source_kind": item["kind"],
+            "declaration_type": item["declaration_type"],
+            "ordinal": item["ordinal"], "target": item["target"],
+        })
     return output, inputs
 
 
@@ -355,7 +356,7 @@ def main():
     validate_groups(groups)
     native_path = ROOT / "benchmarks/win98se-ko-oem-native-exports-v1.json"
     native, _ = load_manifest(native_path)
-    project, project_inputs = read_project(ROOT)
+    project, project_inputs = read_project(ROOT, upstream)
     rows = merge_records(sdk["records"], upstream, native, project, groups)
     evidence = read_json(args.evidence)
     attach_evidence(rows, evidence, ROOT)

@@ -1185,6 +1185,166 @@
       "full_compatibility_verified": false,
       "suite": "remote/suites/api-clipboard.json",
       "suite_sha256": "990f0a1bbf6704826b8246d0c45ab645606e83ac10115db87944054fe7bfc042"
+    },
+    {
+      "id": "guest-m98gdi3-alpha-raster-2026-09-24",
+      "family": "gdi-alpha-raster",
+      "apis": [
+        {
+          "dll": "GDI32.DLL",
+          "name": "GdiAlphaBlend"
+        },
+        {
+          "dll": "GDI32.DLL",
+          "name": "GdiTransparentBlt"
+        },
+        {
+          "dll": "GDI32.DLL",
+          "name": "GdiGradientFill"
+        }
+      ],
+      "evidence_kind": "guest_static_import_contract_subset",
+      "environment": {
+        "os": "Directly installed Korean Windows 98 SE",
+        "vm": "Win98Modern-Accel-128",
+        "acceleration": "VirtualBox NEM hardware virtualization; current boot checked by vm/run.ps1"
+      },
+      "provider": {
+        "path": "build/gdi-alpha/M98GDI.DLL",
+        "guest_path": "C:\\WINDOWS\\KernelEx\\M98GDI3.DLL",
+        "sha256": "d61826f03a21e04ba5a983ee99db8a9cfff3ce33aee7832e10086f7581bc5ac2"
+      },
+      "backend": {
+        "guest_path": "C:\\WINDOWS\\KernelEx\\MSIMG32.DLL",
+        "sha256": "e2a644c38cd814a63239b0376cb9921d824c492b8816781ae7f3e8724efabee5",
+        "role": "installed KernelEx 4.5.2 auxiliary implementation, not redistributed"
+      },
+      "core_ini_sha256": "5c53c4d431d33b5a31dc5e5eacee9ed4ec9cddb3273979cdabbb3e1c33a49616",
+      "test": {
+        "path": "build/gdi-alpha/gdi_alpha_static_contract.exe",
+        "sha256": "295bbb2e2c0ac718fc5a15cd493b036362f36e1c0db2c90c066db93f255db1f4"
+      },
+      "source_hashes": {
+        "src/m98_gdi_alpha.c": "9a82c25b016dbbb68b6350e52f3505cc68d00adec38f3aaa98f32ad3b87533ed",
+        "src/m98_gdi_alpha.h": "280d708b3781c83a4743d8d34e8471da79639b236abde6c893344341b2e58e0f",
+        "src/m98gdi.c": "20b5c816452b4eb977f287f09210291b58349319653f13a5c89a2ed3bc79957a"
+      },
+      "receipt": {
+        "command": "C:\\M98LAB\\GDIASC.EXE",
+        "cwd": "C:\\M98LAB",
+        "timeout_ms": 30000,
+        "exit_code": 0,
+        "timed_out": false,
+        "output_truncated": false,
+        "output_bytes": 2046,
+        "output_sha256": "b331b321dbb9a72c65b30ddff4427e57d5411ca3cbcb51020b3b4bb543170688",
+        "output": "mode=static-GDI32\r\ncase=alpha_opaque result=0x00000001 gle=0x4938a001 pixel0x00000000=0x00ff0000 pixel0x00000001=0x11223344\r\ncase=alpha_constant_128 result=0x00000001 gle=0x00000057 pixel0x00000000=0x0080007f pixel0x00000001=0x11223344\r\ncase=alpha_constant_0 result=0x00000001 gle=0x4938a006 pixel0x00000000=0x000000ff pixel0x00000001=0x11223344\r\ncase=alpha_per_pixel_128 result=0x00000001 gle=0x00000057 pixel0x00000000=0x8080007f pixel0x00000001=0x11223344\r\ncase=alpha_invalid_dest result=0x00000000 gle=0x00000006 pixel0x00000000=0x000000ff pixel0x00000001=0x11223344\r\ncase=alpha_negative_width result=0x00000000 gle=0x00000057 pixel0x00000000=0x000000ff pixel0x00000001=0x11223344\r\ncase=transparent_key result=0x00000001 gle=0x4938b001 pixel0x00000000=0x000000ff pixel0x00000001=0x00ff0000 pixel0x00000002=0x000000ff pixel0x00000003=0x000000ff\r\ncase=transparent_stretch result=0x00000001 gle=0x00000057 pixel0x00000000=0x000000ff pixel0x00000001=0x000000ff pixel0x00000002=0x00ff0000 pixel0x00000003=0x00ff0000\r\ncase=transparent_invalid_dest result=0x00000000 gle=0x00000006 pixel0x00000000=0x000000ff pixel0x00000001=0x000000ff pixel0x00000002=0x00ff0000 pixel0x00000003=0x00ff0000\r\ncase=gradient_horizontal result=0x00000001 gle=0x4938c001 pixel0x00000000=0x00ff0000 pixel0x00000001=0x00bf003f pixel0x00000002=0x007f007f pixel0x00000003=0x003f00bf\r\ncase=gradient_vertical result=0x00000001 gle=0x4938c002 pixel0x00000000=0x00ff0000 pixel0x00000001=0x00ff0000 pixel0x00000002=0x00ff0000 pixel0x00000003=0x00ff0000\r\ncase=gradient_triangle result=0x00000001 gle=0x4938c003 pixel0x00000000=0x00ff0000 pixel0x00000001=0x00bf3f00 pixel0x00000002=0x007f7f00 pixel0x00000003=0x003fbf00\r\ncase=gradient_bad_index result=0x00000000 gle=0x4938c004 pixel0x00000000=0x00ff0000 pixel0x00000001=0x00bf3f00 pixel0x00000002=0x007f7f00 pixel0x00000003=0x003fbf00\r\ncase=gradient_bad_mode result=0x00000000 gle=0x00000057 pixel0x00000000=0x00ff0000 pixel0x00000001=0x00bf3f00 pixel0x00000002=0x007f7f00 pixel0x00000003=0x003fbf00\r\ninternal_failures=0x00000000\r\n",
+        "guest": "m98agent/v1 protocol=1 os=4.10 build=67766446",
+        "transport": "VirtualBox COM1 local named pipe",
+        "pipe": "\\\\.\\pipe\\Win98Modern-Lab"
+      },
+      "scope": "Fourteen bounded alpha, transparent-key/stretch and gradient pixel/error cases through real GDI32 static imports with a pixel-area work budget; separate three-import probe also passed",
+      "limitations": "Only the pinned installed KernelEx auxiliary backend was tested. Alias contracts are partial: color/alpha clipping, all ROPs, overlapping source/destination, invalid-pointer exceptions, all gradient edge cases and application functions are not proven. Notepad++ still raises Exception On WM_CREATE.",
+      "documentation": "docs/GDI_ALPHA_PORT.md",
+      "full_compatibility_verified": false
+    },
+    {
+      "id": "guest-m98ctl3-comctl32-ordinals-2026-09-24",
+      "family": "comctl32-ordinals",
+      "apis": [
+        {
+          "dll": "COMCTL32.DLL",
+          "name": "#345"
+        },
+        {
+          "dll": "COMCTL32.DLL",
+          "name": "#381"
+        }
+      ],
+      "evidence_kind": "guest_static_import_contract_subset",
+      "environment": {
+        "os": "Directly installed Korean Windows 98 SE",
+        "vm": "Win98Modern-Accel-128",
+        "acceleration": "VirtualBox NEM hardware virtualization; current boot checked by vm/run.ps1"
+      },
+      "provider": {
+        "path": "build/comctl-png/M98CTLP.DLL",
+        "guest_path": "C:\\WINDOWS\\KernelEx\\M98CTL3.DLL",
+        "sha256": "aafd97b71ff63c9f9cedffa4705713243d5708f22ff6ffaf04c732261ca0e3f8"
+      },
+      "core_ini_sha256": "eeaa555431c3d31d997afa0d0dee1abcd667c4afcbce2dcabcf56df3317cabea",
+      "test": {
+        "path": "build/comctl-ord/comctl_ordinal_import_probe.exe",
+        "sha256": "f87aac5f24818e82b6f814c98d5f21038163c28e4b3af68808d233b9a1a1b1a4"
+      },
+      "source_hashes": {
+        "src/m98ctl.c": "f5df048efde1a2fb656bc29ca612531e88d36ed73e27050805f821cf93211e76",
+        "src/m98_comctl_ordinals.c": "bf658d65bfff9d0457542aa3bf6a0c2283cd4f9ce7026390748e4e14aef74e54",
+        "src/m98_comctl_ordinals.h": "095aaff381b350777deb6c31892f922c98847c0324aedd8c33eb0cb8173192a4",
+        "src/m98_icon_choice.c": "762496dd5c1caf051177209826f6c310c8c9060a340f084a85c6bcd243fd6379",
+        "src/m98_icon_choice.h": "3a6cf528f61b0b7768f13f776402ba3ef8c6a730b0a25432e2068049a3ec2534",
+        "src/m98_icon_png.c": "8cfa049010ec91b3e3f3c0c554669baca5f2bff2eb7d60e672cdfa2cfd6bb75e",
+        "src/m98_icon_png.h": "8e79cc346473b16090540f00f3bf372392122cfa1b7a327b93cf9c10b230438d",
+        "src/vendor/lodepng/lodepng.c": "613334e07b8d6342885a35e04b06ac27336ddc797570e56af275fac7d047cdb0",
+        "src/vendor/lodepng/lodepng.h": "08b1664d3db5c0a5e71b73cfc3b1bd117e421f6669c496d55ce8cf2ece2e03e5",
+        "tests/comctl_ordinal_import_probe.c": "184ccb35616b59a05805be18fd247b56dac8a52cebd65fc86bcbf8edd12ec9a7",
+        "tests/comctl_ordinal_imports.def": "45735c98207c769077e908aca1a9312f7983d117c5e1707d2df54c049262750b",
+        "tests/comctl_png_host.c": "5f298966f69f4ebfc9173c4760ad6e86aa15457db7b0c98debbca7c4dac4c0a4",
+        "tests/comctl_png_depth_host.c": "74066f4d881e8a340f0420c2591d8c42f02e983fa6e648833dd6d3503f7b28a1",
+        "tests/comctl_png_npp501_host.c": "407a21b5cded9902c276ef67dfd2efea0bf35ff84e169f7bc4e4dbee90af1a85"
+      },
+      "supporting_artifacts": [
+        {
+          "path": "build/comctl-png/core-ctl3-readback.ini",
+          "sha256": "eeaa555431c3d31d997afa0d0dee1abcd667c4afcbce2dcabcf56df3317cabea"
+        },
+        {
+          "path": "build/comctl-png/comctl_png_host.exe",
+          "sha256": "b767337dd18ecabadc080828cf10722d7e081864eb311101a3931058e803d425"
+        },
+        {
+          "path": "build/comctl-png/comctl_png_depth_host.exe",
+          "sha256": "07fe5673aa3b36bec8e28b2513af012b337d0aaf9c3441f7103d74458448237e"
+        },
+        {
+          "path": "build/comctl-png/comctl_png_npp501_host.exe",
+          "sha256": "0a5a452f05e2e50b5089a9283ec2318a2c50c6dcd93e904a5fd7287dc809fd6e"
+        },
+        {
+          "path": "build/comctl-png/guest-v3-static.json",
+          "sha256": "fce443dd28016f45effa105beab6a3f858e53aec30db942ddc4c28d25dd75790"
+        },
+        {
+          "path": "build/comctl-png/guest-v3-direct.json",
+          "sha256": "72fa9a9de1bc754becc675bea35d0ef40dc68ced800cc6a045d755b8182d5483"
+        },
+        {
+          "path": "build/comctl-png/guest-v3-npp501-direct.json",
+          "sha256": "f8f4c88029b6612e2c1d3ed3aa3be72a45991c68523ab97456f1101bcb9827fe"
+        },
+        {
+          "path": "build/comctl-png/guest-v3-depth-direct.json",
+          "sha256": "83536adc1ecc0bee4aa88ffbd2ad6cc2ff2fe0ffc9a5c6c4b10d255082b402f0"
+        }
+      ],
+      "receipt": {
+        "command": "C:\\M98LAB\\CTLIMP2.EXE",
+        "cwd": "C:\\M98LAB",
+        "timeout_ms": 30000,
+        "exit_code": 0,
+        "timed_out": false,
+        "output_truncated": false,
+        "output_bytes": 60,
+        "output_sha256": "9a697ebcb0f33c912874e0aa1d0d0e2f824340e6a0cb814b0ffcf7b2aa53fd62",
+        "output": "PASS: static COMCTL32 #345/#381 imports and #381 icon call\r\n",
+        "guest": "m98agent/v1 protocol=1 os=4.10 build=67766446",
+        "transport": "VirtualBox COM1 local named pipe",
+        "pipe": "\\\\.\\pipe\\Win98Modern-Lab"
+      },
+      "scope": "Genuine COMCTL32 ordinal-only static imports: both IAT slots resolved through M98CTL3, #345 NULL configuration returned E_INVALIDARG, and #381 loaded a 16-pixel stock icon. Separate direct provider-table guest receipts cover #381 PNG sizes 16/32/40/48, the pinned Notepad++ icon 501 at 16 pixels, and same-size source choice on a 4-bpp display.",
+      "limitations": "Only the listed contract cases passed. The #345 MessageBox UI path was not interactively tested. PNG-resource paths were tested by direct provider calls, not through a genuine COMCTL32 static import. Other icon forms, malformed resources, display depths, high-DPI behavior, complete application operation and whole-API compatibility remain unverified.",
+      "documentation": "docs/RELEASE_0_1_8_CHECKPOINT.md",
+      "full_compatibility_verified": false
     }
   ]
 }

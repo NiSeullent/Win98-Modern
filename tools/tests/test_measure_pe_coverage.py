@@ -194,6 +194,52 @@ class PEImportCoverageTests(unittest.TestCase):
                 {"SHELL32.DLL": {"SHCreateShellItem", "#680"}},
             )
 
+    def test_kernelex_driver_module_declarations(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            source = Path(temp) / "spool.c"
+            source.write_text(
+                'DECL_API("GetDefaultPrinterW", shim),\n'
+                'DECL_API(7, shim),\n'
+                'DECL_TAB("WINSPOOL.DRV", names, ordinals);\n',
+                encoding="utf-8",
+            )
+            self.assertEqual(
+                coverage.source_exports([str(source)]),
+                {"WINSPOOL.DRV": {"GetDefaultPrinterW", "#7"}},
+            )
+
+    def test_project_named_and_ordinal_arrays_use_bound_target_dll(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            source = Path(temp) / "provider.c"
+            source.write_text(
+                'static const m98_named_api names[] = {\n'
+                '  M98_NAMED("TaskDialogIndirect", impl),\n'
+                '  { "LiteralEntry", (unsigned long)impl }\n};\n'
+                'static const m98_ordinal_api numbers[] = {\n'
+                '  M98_ORD(345, impl), M98_ORD(381, impl)\n};\n'
+                'static const m98_named_api elsewhere[] = {\n'
+                '  M98_API("UnboundEntry", impl)\n};\n'
+                'static const m98_api_table tables[] = {\n'
+                '  { "COMCTL32.DLL", names, 2, numbers, 2 },\n'
+                '  { 0, 0, 0, 0, 0 }\n};\n', encoding="utf-8")
+            self.assertEqual(
+                coverage.source_exports([str(source)]),
+                {"COMCTL32.DLL": {"TaskDialogIndirect", "LiteralEntry",
+                                   "#345", "#381"}},
+            )
+
+    def test_project_array_type_mismatch_is_rejected(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            source = Path(temp) / "provider.c"
+            source.write_text(
+                'static const m98_ordinal_api numbers[] = { M98_ORD(381, impl) };\n'
+                'static const m98_api_table tables[] = {\n'
+                '  { "COMCTL32.DLL", numbers, 1, 0, 0 }\n};\n',
+                encoding="utf-8")
+            with self.assertRaisesRegex(coverage.CoverageError,
+                                        "wrong API array type"):
+                coverage.source_exports([str(source)])
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -110,6 +110,27 @@ class DefAndMacroTests(unittest.TestCase):
         self.assertIsNone(reason)
         self.assertEqual(row["key"], "USER32.DLL!AddClipboardFormatListener")
 
+    def test_project_named_and_ordinal_macro_identity(self):
+        named, reason = index.parse_macro_line(
+            'M98_NAMED("LoadIconWithScaleDown", m98_LoadIconWithScaleDown)',
+            "project", "working-tree@d", "src/m98ctl.c", 9, "e" * 64,
+            "COMCTL32.DLL")
+        self.assertIsNone(reason)
+        self.assertEqual((named["key"], named["ordinal"], named["declaration_type"]),
+                         ("COMCTL32.DLL!LoadIconWithScaleDown", None, "M98_NAMED"))
+        ordinal, reason = index.parse_macro_line(
+            'M98_ORD(381, m98_LoadIconWithScaleDown)', "project",
+            "working-tree@d", "src/m98ctl.c", 14, "e" * 64,
+            "COMCTL32.DLL")
+        self.assertIsNone(reason)
+        self.assertEqual((ordinal["key"], ordinal["name"], ordinal["ordinal"],
+                          ordinal["target"], ordinal["declaration_type"]),
+                         ("COMCTL32.DLL!#381", "#381", 381,
+                          "m98_LoadIconWithScaleDown", "M98_ORD"))
+        self.assertEqual(index.parse_macro_line(
+            'M98_ORD("381", bad)', "project", "x", "src/x.c", 1, "e" * 64,
+            "COMCTL32.DLL")[1], "invalid_project_macro_argument")
+
     def test_macro_comments_and_conditions(self):
         text = "#if 0\n/* DECL_API(\"Bad\", Bad_new), */\nDECL_API(\"Good\", Good_new),\n#endif\n"
         lines = list(index.c_macro_lines(text))
@@ -151,16 +172,102 @@ class IntegrityTests(unittest.TestCase):
             root = Path(temporary)
             (root / "src").mkdir()
             (root / "src/providers.c").write_text(
-                'static x kernel[] = {\nM98_API("KernelOnly", k),\nM98_API("Shared", k2)\n};\n'
-                'static x user[] = {\nM98_API("Clipboard", u),\nM98_API("Shared", u2)\n};\n'
-                'static y tables[] = { {"KERNEL32.DLL", kernel, 2}, {"USER32.DLL", user, 2} };\n'
+                'static const m98_named_api kernel[] = {\nM98_API("KernelOnly", k),\nM98_API("Shared", k2)\n};\n'
+                'static const m98_named_api user[] = {\nM98_API("Clipboard", u),\nM98_API("Shared", u2)\n};\n'
+                'static const m98_api_table tables[] = {\n'
+                '  {"KERNEL32.DLL", kernel, 2, 0, 0},\n'
+                '  {"USER32.DLL", user, 2, 0, 0}\n};\n'
                 'M98_API("Unattached", bad)\n', encoding="utf-8")
             self.commit_repo(root)
             rows, unresolved, _ = index.project_macro_rows(root)
             self.assertEqual({r["key"] for r in rows},
-                             {"KERNEL32.DLL!KernelOnly", "USER32.DLL!Clipboard"})
-            self.assertEqual(len(unresolved), 3)
-            self.assertTrue(all(r["reason"] == "unresolved_project_table_target" for r in unresolved))
+                             {"KERNEL32.DLL!KernelOnly", "KERNEL32.DLL!Shared",
+                              "USER32.DLL!Clipboard", "USER32.DLL!Shared"})
+            self.assertEqual([r["reason"] for r in unresolved],
+                             ["unresolved_project_table_target"])
+
+    def test_project_comctl_provider_links_named_and_ordinal_arrays(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            (root / "src").mkdir()
+            source = (
+                '#define M98_NAMED(name, impl) {name, impl}\n'
+                'static const m98_named_api named[] = {\n'
+                '  M98_NAMED("LoadIconWithScaleDown", m98_LoadIconWithScaleDown),\n'
+                '  M98_NAMED("TaskDialogIndirect", m98_TaskDialogIndirect)\n};\n'
+                'static const m98_ordinal_api ordinal[] = {\n'
+                '  M98_ORD(345, m98_TaskDialogIndirect),\n'
+                '  M98_ORD(381, m98_LoadIconWithScaleDown)\n};\n'
+                'static const m98_api_table tables[] = {\n'
+                '  {"COMCTL32.DLL", named, 2, ordinal, 2},\n'
+                '  {0, 0, 0, 0, 0}\n};\n'
+            )
+            (root / "src/m98ctl.c").write_text(source, encoding="utf-8")
+            self.commit_repo(root)
+            rows, unresolved, _ = index.project_macro_rows(root)
+            self.assertFalse(unresolved)
+            self.assertEqual([(r["key"], r["line"], r["ordinal"]) for r in rows], [
+                ("COMCTL32.DLL!LoadIconWithScaleDown", 3, None),
+                ("COMCTL32.DLL!TaskDialogIndirect", 4, None),
+                ("COMCTL32.DLL!#345", 7, 345),
+                ("COMCTL32.DLL!#381", 8, 381),
+            ])
+            self.assertTrue(all(r["source_path"] == "src/m98ctl.c" and
+                                r["source_file_sha256"] == hashlib.sha256(
+                                    (root / "src/m98ctl.c").read_bytes()).hexdigest()
+                                for r in rows))
+
+    def test_project_table_ambiguity_and_unattached_rows_are_reported(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            (root / "src").mkdir()
+            (root / "src/providers.c").write_text(
+                'static const m98_named_api shared[] = {\n'
+                ' M98_NAMED("Shared", m98_Shared)\n};\n'
+                'static const m98_ordinal_api unbound[] = {\n'
+                ' M98_ORD(345, m98_Unbound)\n};\n'
+                'static const m98_api_table tables[] = {\n'
+                ' {"KERNEL32.DLL", shared, 1, 0, 0},\n'
+                ' {"USER32.DLL", shared, 1, 0, 0}\n};\n'
+                'M98_NAMED("Outside", m98_Outside);\n', encoding="utf-8")
+            self.commit_repo(root)
+            rows, unresolved, _ = index.project_macro_rows(root)
+            self.assertFalse(rows)
+            self.assertEqual([(r["line"], r["reason"]) for r in unresolved], [
+                (2, "ambiguous_project_table_target"),
+                (5, "unresolved_project_table_target"),
+                (11, "unresolved_project_table_target"),
+            ])
+
+    def test_project_literal_table_entries_and_def_exports_are_retained(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            (root / "src").mkdir()
+            (root / "src/provider.c").write_text(
+                'static const m98_named_api entries[] = {\n'
+                ' { "RegGetValueA", (unsigned long)m98_RegGetValueA },\n'
+                ' { "RegGetValueW", (unsigned long)m98_RegGetValueW }\n};\n'
+                'static const m98_api_table api_tables[] = {\n'
+                ' { "ADVAPI32.DLL", entries, 2, 0, 0 }\n};\n',
+                encoding="utf-8")
+            (root / "src/shim.def").write_text(
+                'LIBRARY DWMAPI.DLL\nEXPORTS\n'
+                ' DwmSetWindowAttribute=m98_DwmSetWindowAttribute\n',
+                encoding="utf-8")
+            self.commit_repo(root)
+            rows, unresolved, _ = index.project_macro_rows(root)
+            self.assertFalse(unresolved)
+            self.assertEqual({r["key"] for r in rows}, {
+                "ADVAPI32.DLL!RegGetValueA", "ADVAPI32.DLL!RegGetValueW",
+                "DWMAPI.DLL!DwmSetWindowAttribute",
+            })
+            self.assertEqual([r["declaration_type"] for r in rows],
+                             ["m98_named_api_literal", "m98_named_api_literal", "def"])
+            self.assertEqual([(r["source_path"], r["line"]) for r in rows],
+                             [("src/provider.c", 2), ("src/provider.c", 3),
+                              ("src/shim.def", 3)])
+            self.assertEqual(rows[-1]["source_file_sha256"], hashlib.sha256(
+                (root / "src/shim.def").read_bytes()).hexdigest())
 
     def test_vxkex_is_export_metadata_only(self):
         with tempfile.TemporaryDirectory() as temporary:
@@ -218,6 +325,55 @@ class IntegrityTests(unittest.TestCase):
             self.assertEqual([row["name"] for row in rows], ["Original"])
             self.assertEqual(rows[0]["source_file_sha256"],
                              hashlib.sha256(pinned).hexdigest())
+
+    def test_kernelex_uses_pinned_decl_tab_identity_for_winspool_drv(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            local = root / "third_party" / "KernelEx"
+            module = local / "apilibs" / "kexbasen" / "winspool"
+            module.mkdir(parents=True)
+            apilist = module / "_winspool_apilist.c"
+            pinned = (
+                b'static const apilib_named_api names[] = {\n'
+                b'  DECL_API("AddJobW", AddJobW_fwd),\n'
+                b'  DECL_API("GetDefaultPrinterW", GetDefaultPrinterW_new),\n'
+                b'};\n'
+                b'const apilib_api_table table = '
+                b'DECL_TAB("WINSPOOL.DRV", names, 0);\n'
+            )
+            apilist.write_bytes(pinned)
+            revision = self.commit_repo(local)
+            # The working copy must not be allowed to change the pinned identity.
+            apilist.write_bytes(pinned.replace(b"WINSPOOL.DRV", b"WINSPOOL.DLL"))
+            rows, unresolved = index.local_macro_rows(
+                {"id": "kernelex", "revision": revision,
+                 "local_root": "third_party/KernelEx"}, root)
+            self.assertFalse(unresolved)
+            self.assertEqual([row["key"] for row in rows],
+                             ["WINSPOOL.DRV!AddJobW",
+                              "WINSPOOL.DRV!GetDefaultPrinterW"])
+            self.assertEqual([row["kind"] for row in rows],
+                             ["forward", "export_declaration"])
+            self.assertTrue(all(row["source_file_sha256"] ==
+                                hashlib.sha256(pinned).hexdigest() for row in rows))
+
+    def test_kernelex_conflicting_decl_tab_names_stay_unresolved(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            local = root / "third_party" / "KernelEx"
+            module = local / "apilibs" / "kexbasen" / "winspool"
+            module.mkdir(parents=True)
+            (module / "_winspool_apilist.c").write_text(
+                'DECL_API("GetDefaultPrinterW", GetDefaultPrinterW_new),\n'
+                'DECL_TAB("WINSPOOL.DRV", names, 0);\n'
+                'DECL_TAB("WINSPOOL.DLL", other, 0);\n', encoding="utf-8")
+            revision = self.commit_repo(local)
+            rows, unresolved = index.local_macro_rows(
+                {"id": "kernelex", "revision": revision,
+                 "local_root": "third_party/KernelEx"}, root)
+            self.assertFalse(rows)
+            self.assertEqual([item["reason"] for item in unresolved],
+                             ["ambiguous_kernelex_table_dll"])
 
     def test_archive_hash_mismatch_rejected(self):
         with tempfile.TemporaryDirectory() as temporary:

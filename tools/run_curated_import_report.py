@@ -51,6 +51,21 @@ PEERS = {
     ],
 }
 
+# These are the project routes indexed by tools/index_api_sources.py. Keep
+# their source bytes pinned in the report rather than scanning unrelated src.
+WRAPPER_SOURCES = (
+    "src/m98wrap.c",
+    "src/m98advapi.c",
+    "src/m98shell.c",
+    "src/m98gdi.c",
+    "src/m98user.c",
+    "src/m98ctl.c",
+    "src/bcrypt_shim.def",
+    "src/dbghelp_shim.def",
+    "src/dwmapi_shim.def",
+    "src/uxtheme_shim.def",
+)
+
 
 def run() -> int:
     argparse.ArgumentParser(
@@ -61,8 +76,9 @@ def run() -> int:
         "--baseline", str(ROOT / "benchmarks/win98se-ko-oem-native-exports-v1.json"),
         "--kernelex-source-manifest",
         str(ROOT / "benchmarks/kernelex-source-declarations-v1.json"),
-        "--wrapper-source", str(ROOT / "src/m98wrap.c"),
     ]
+    for source in WRAPPER_SOURCES:
+        args += ["--wrapper-source", str(ROOT / source)]
     for app, paths in TARGETS.items():
         for path in paths:
             args += ["--app-file", f"{app}={MEDIA / path}"]

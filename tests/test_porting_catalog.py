@@ -2,6 +2,7 @@
 import importlib.util
 import json
 from pathlib import Path
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -9,6 +10,7 @@ import unittest
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 import build_porting_catalog as catalog
+import index_api_sources as source_index
 
 
 class CatalogueTests(unittest.TestCase):
@@ -86,17 +88,49 @@ class CatalogueTests(unittest.TestCase):
         row={"category":"win32_api_set_alias","dll":"api-ms-user.dll","name":"OpenClipboard"}
         self.assertEqual(catalog.assign_batch(row,self.groups)["id"],"api-set-routing")
 
-    def test_project_literal_and_macro_tables(self):
+    def test_project_literal_macro_ordinal_and_def_use_verified_index(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             (root / "src").mkdir()
-            (root / "src/literal.c").write_text('static x apis[] = { { "RegGetValueA", (unsigned long)implementation } };\nstatic y tables[] = { { "ADVAPI32.DLL", apis, 1 } };\n')
-            (root / "src/macro.c").write_text('static x apis[] = { M98_API("InitOnceComplete", impl) };\nstatic y tables[] = { { "KERNEL32.DLL", apis, 1 } };\n')
+            (root / "src/literal.c").write_text(
+                'static const m98_named_api apis[] = {\n'
+                ' { "RegGetValueA", (unsigned long)implementation }\n};\n'
+                'static const m98_api_table tables[] = {\n'
+                ' { "ADVAPI32.DLL", apis, 1, 0, 0 }\n};\n')
+            (root / "src/macro.c").write_text(
+                'static const m98_named_api named[] = {\n'
+                ' M98_NAMED("LoadIconWithScaleDown", impl)\n};\n'
+                'static const m98_ordinal_api ordinals[] = {\n'
+                ' M98_ORD(381, impl)\n};\n'
+                'static const m98_api_table tables[] = {\n'
+                ' { "COMCTL32.DLL", named, 1, ordinals, 1 }\n};\n')
             (root / "src/dwm.def").write_text('LIBRARY DWMAPI.DLL\nEXPORTS\n DwmFlush=impl\n')
-            parsed, hashes = catalog.read_project(root)
-            self.assertEqual(set(parsed), {("ADVAPI32.DLL","RegGetValueA"), ("KERNEL32.DLL","InitOnceComplete"), ("DWMAPI.DLL","DwmFlush")})
+            subprocess.run(["git", "-C", str(root), "init", "-q"], check=True)
+            subprocess.run(["git", "-C", str(root), "add", "src"], check=True)
+            subprocess.run(["git", "-C", str(root), "-c", "user.name=Test",
+                            "-c", "user.email=test@example.invalid", "commit", "-qm", "pin"], check=True)
+            indexed, unresolved, _ = source_index.project_macro_rows(root)
+            self.assertFalse(unresolved)
+            parsed, hashes = catalog.read_project(root, indexed)
+            self.assertEqual(set(parsed), {
+                ("ADVAPI32.DLL", "RegGetValueA"),
+                ("COMCTL32.DLL", "LoadIconWithScaleDown"),
+                ("COMCTL32.DLL", "#381"),
+                ("DWMAPI.DLL", "DwmFlush"),
+            })
             self.assertEqual(len(hashes), 3)
             self.assertTrue(all(v[0]["lines"] for v in parsed.values()))
+            ordinal = parsed[("COMCTL32.DLL", "#381")][0]
+            self.assertEqual((ordinal["ordinal"], ordinal["declaration_type"],
+                              ordinal["lines"], ordinal["source_kind"]),
+                             (381, "M98_ORD", [5], "export_declaration"))
+            rows = catalog.merge_records([], indexed, {}, parsed, self.groups)
+            self.assertTrue(all(row["implementation_status"] == "declared_in_project"
+                                for row in rows))
+            self.assertTrue(all(row["behavioral_coverage"] == "unassessed" for row in rows))
+            (root / "src/macro.c").write_text("changed source")
+            with self.assertRaisesRegex(ValueError, "project declaration path, hash"):
+                catalog.read_project(root, indexed)
 
     def test_dependency_cycles_and_missing_ids_rejected(self):
         catalog.validate_groups(self.groups)

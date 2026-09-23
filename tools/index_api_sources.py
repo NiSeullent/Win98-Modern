@@ -18,16 +18,28 @@ import re
 import subprocess
 import tarfile
 
-from measure_pe_coverage import c_table_exports
-
-
 ROOT = Path(__file__).resolve().parents[1]
 SCHEMA = "w98mod.upstream-exports.v1"
 SPEC_HEAD = re.compile(r"^\s*(?P<ordinal>@|\d+|0x[0-9a-fA-F]+)\s+"
                        r"(?P<type>[A-Za-z][A-Za-z0-9_]*)\s+(?P<body>.+?)\s*$")
 SPEC_SYMBOL = re.compile(r"^(?P<name>[^\s(]+)(?:\s*\([^)]*\))?(?:\s+(?P<tail>.*))?$")
-MACRO = re.compile(r'\b(?P<macro>DECL_API|M98_API)\s*\(\s*(?:"(?P<name>[^\"]+)"|(?P<number>\d+))\s*,\s*'
+MACRO = re.compile(r'\b(?P<macro>DECL_API|M98_API|M98_NAMED|M98_ORD)\s*\(\s*(?:"(?P<name>[^\"]+)"|(?P<number>\d+))\s*,\s*'
                    r'(?P<target>[A-Za-z_][A-Za-z0-9_]*)\s*\)')
+PROJECT_MACRO_CALL = re.compile(r'\b(?:M98_API|M98_NAMED|M98_ORD)\s*\(')
+PROJECT_API_ARRAY = re.compile(
+    r'\bm98_(?P<type>named|ordinal)_api\s+(?P<name>[A-Za-z_]\w*)\s*\[\s*\]\s*=\s*'
+    r'\{(?P<body>.*?)\}\s*;', re.S)
+PROJECT_TABLE_ARRAY = re.compile(
+    r'\bm98_api_table\s+[A-Za-z_]\w*\s*\[\s*\]\s*=\s*\{(?P<body>.*?)\}\s*;',
+    re.S)
+PROJECT_TABLE_ENTRY = re.compile(
+    r'\{\s*"(?P<dll>[A-Za-z0-9_]+\.(?:DLL|DRV|OCX|CPL|ACM|AX|EXE))"\s*,\s*'
+    r'(?P<named>[A-Za-z_]\w*|0|NULL)\s*,\s*[^,{}]*,\s*'
+    r'(?P<ordinal>[A-Za-z_]\w*|0|NULL)\s*,\s*[^,{}]*\}', re.I | re.S)
+PROJECT_NAMED_LITERAL = re.compile(
+    r'\{\s*"(?P<name>[^"\r\n]+)"\s*,\s*(?:\([^()]*\)\s*)?'
+    r'(?P<target>[A-Za-z_]\w*)\s*\}', re.S)
+DECL_TAB = re.compile(r'\bDECL_TAB\s*\(\s*"(?P<dll>[A-Za-z0-9_]+\.(?:DLL|DRV))"', re.I)
 DEF_ENTRY = re.compile(r"^(?P<name>[^\s=]+)(?:\s*=\s*(?P<target>[^\s]+))?"
                        r"(?:\s+@\s*(?P<ordinal>\d+))?(?:\s+(?P<flags>.*))?$")
 LINKER_EXPORT = re.compile(r'^#\s*pragma\s+comment\s*\(\s*linker\s*,\s*'
@@ -222,18 +234,24 @@ def parse_def_text(data: str, source: str, revision: str, path: str,
 
 
 def parse_macro_line(raw: str, source: str, revision: str, path: str,
-                     line: int, file_sha: str,
-                     project_dll: str | None = None) -> tuple[dict | None, str | None]:
+                    line: int, file_sha: str,
+                    project_dll: str | None = None,
+                    kernelex_dll: str | None = None) -> tuple[dict | None, str | None]:
     content = raw.strip()
-    if content.startswith(("#", "//", "/*", "*")) or not re.search(r"\b(DECL_API|M98_API)\s*\(", content):
+    if content.startswith(("#", "//", "/*", "*")) or not re.search(
+            r"\b(DECL_API|M98_API|M98_NAMED|M98_ORD)\s*\(", content):
         return None, None
     match = MACRO.search(content)
     if not match:
         return None, "unrecognized_api_macro"
-    if (source == "kernelex" and match.group("macro") != "DECL_API") or (
-            source == "project" and match.group("macro") != "M98_API"):
+    macro = match.group("macro")
+    if (source == "kernelex" and macro != "DECL_API") or (
+            source == "project" and macro not in {"M98_API", "M98_NAMED", "M98_ORD"}):
         return None, "unexpected_api_macro"
     numeric = match.group("number")
+    if source == "project" and ((macro == "M98_NAMED" and numeric) or
+                                (macro == "M98_ORD" and not numeric)):
+        return None, "invalid_project_macro_argument"
     name, target = match.group("name") or f"#{numeric}", match.group("target")
     if "*/" in name or not name.strip() or any(c.isspace() for c in name):
         return None, "noncanonical_api_name"
@@ -242,13 +260,15 @@ def parse_macro_line(raw: str, source: str, revision: str, path: str,
             return None, "unresolved_project_table_target"
         dll = module_name(project_dll)
     else:
-        dll = module_name(PurePosixPath(path).parent.name)
+        # KernelEx's table declaration is authoritative. The source folder is
+        # only a fallback for old/malformed tables; winspool targets .DRV.
+        dll = module_name(PurePosixPath(path).parent.name, kernelex_dll)
     kind = "forward" if target.lower().endswith("_fwd") else (
         "stub" if target.lower().endswith("_stub") else "export_declaration")
     return base_row(source, revision, dll, name, kind, target,
                     int(numeric) if numeric else None,
                     path, line, file_sha, flags=[],
-                    declaration_type=match.group("macro"), raw=content), None
+                    declaration_type=macro, raw=content), None
 
 
 def record_unresolved(source: str, path: str, line: int, raw: str,
@@ -394,8 +414,17 @@ def local_macro_rows(source: dict, root: Path) -> tuple[list[dict], list[dict]]:
         raw_data = git_blob_bytes(local, source["revision"], git_path)
         sha = sha256_bytes(raw_data)
         relative = (local / Path(*pure.parts)).relative_to(root).as_posix()
-        for line, raw, conditions in c_macro_lines(raw_data.decode("utf-8-sig", "replace")):
-            row, reason = parse_macro_line(raw, source["id"], source["revision"], relative, line, sha)
+        lines = list(c_macro_lines(raw_data.decode("utf-8-sig", "replace")))
+        table_dlls = {match.group("dll").upper() for _, content, _ in lines
+                      if (match := DECL_TAB.search(content))}
+        if len(table_dlls) > 1:
+            unresolved.append(record_unresolved(source["id"], relative, 0, "",
+                                                 "ambiguous_kernelex_table_dll"))
+            continue
+        table_dll = next(iter(table_dlls), None)
+        for line, raw, conditions in lines:
+            row, reason = parse_macro_line(raw, source["id"], source["revision"], relative, line, sha,
+                                           kernelex_dll=table_dll)
             if row:
                 row["condition_flags"].extend(conditions)
                 rows.append(row)
@@ -457,29 +486,110 @@ def vxkex_metadata_rows(source: dict, root: Path,
 
 
 def project_macro_rows(root: Path) -> tuple[list[dict], list[dict], str]:
+    """Index project table macros, literal named entries, and .def exports.
+
+    These are working-tree declarations, not implementation evidence. The
+    historical function name is retained for callers of this index module.
+    """
     revision = "working-tree@" + git_head(root)
     rows: list[dict] = []
     unresolved: list[dict] = []
     for path in sorted((root / "src").glob("*.c")):
         raw_data = path.read_bytes()
-        if b"M98_API(" not in raw_data:
+        if not (re.search(rb"\bM98_(?:API|NAMED|ORD)\s*\(", raw_data) or
+                b"m98_named_api" in raw_data):
             continue
         sha = sha256_bytes(raw_data)
         relative = path.relative_to(root).as_posix()
-        # Target comes from the actual API table, never the implementation's
-        # filename or a KERNEL32 default. Keep ambiguous mappings visible.
-        exports = c_table_exports(path, None)
-        for line, raw, conditions in c_macro_lines(raw_data.decode("utf-8-sig", "replace")):
-            match = MACRO.search(raw)
-            name = match.group("name") if match else None
-            targets = [dll for dll, names in exports.items() if name in names]
-            row, reason = parse_macro_line(raw, "project", revision, relative, line, sha,
-                                           targets[0] if len(targets) == 1 else None)
-            if row:
-                row["condition_flags"].extend(conditions)
+        # Keep original line numbers while stripping comments and recording
+        # conditional compilation context. Macro definitions are not exports.
+        decoded = raw_data.decode("utf-8-sig", "replace")
+        clean_lines = [""] * len(decoded.splitlines())
+        conditions_by_line: dict[int, list[str]] = {}
+        for line, content, conditions in c_macro_lines(decoded):
+            clean_lines[line - 1] = content
+            conditions_by_line[line] = conditions
+        clean = "\n".join(clean_lines)
+        array_matches = list(PROJECT_API_ARRAY.finditer(clean))
+        arrays = [(match.start("body"), match.end("body"),
+                   match.group("type"), match.group("name"))
+                  for match in array_matches]
+        # The target DLL comes only from a real m98_api_table initializer.
+        # Bind its named and ordinal array references separately, so the same
+        # API name in two arrays cannot silently select the wrong DLL.
+        bindings: dict[tuple[str, str], set[str]] = {}
+        for table in PROJECT_TABLE_ARRAY.finditer(clean):
+            for entry in PROJECT_TABLE_ENTRY.finditer(table.group("body")):
+                dll = module_name(entry.group("dll"))
+                for category in ("named", "ordinal"):
+                    array_name = entry.group(category)
+                    if array_name not in {"0", "NULL"}:
+                        bindings.setdefault((category, array_name), set()).add(dll)
+        for array in array_matches:
+            if array.group("type") != "named":
+                continue
+            targets = bindings.get(("named", array.group("name")), set())
+            for literal in PROJECT_NAMED_LITERAL.finditer(array.group("body")):
+                line = clean.count("\n", 0, array.start("body") + literal.start()) + 1
+                raw = literal.group(0)
+                if len(targets) > 1:
+                    unresolved.append(record_unresolved(
+                        "project", relative, line, raw, "ambiguous_project_table_target"))
+                    continue
+                if not targets:
+                    unresolved.append(record_unresolved(
+                        "project", relative, line, raw, "unresolved_project_table_target"))
+                    continue
+                target = literal.group("target")
+                kind = "forward" if target.lower().endswith("_fwd") else (
+                    "stub" if target.lower().endswith("_stub") else "export_declaration")
+                row = base_row("project", revision, next(iter(targets)),
+                               literal.group("name"), kind, target, None,
+                               relative, line, sha,
+                               declaration_type="m98_named_api_literal", raw=raw)
+                row["condition_flags"].extend(conditions_by_line[line])
                 rows.append(row)
-            elif reason:
-                unresolved.append(record_unresolved("project", relative, line, raw, reason))
+        offset = 0
+        for line, content in enumerate(clean_lines, 1):
+            if not content.startswith("#"):
+                for call in PROJECT_MACRO_CALL.finditer(content):
+                    position = offset + call.start()
+                    owners = [(category, array_name) for start, end, category, array_name
+                              in arrays if start <= position < end]
+                    macro = MACRO.match(content, call.start())
+                    if not macro:
+                        reason = "unrecognized_api_macro"
+                    elif len(owners) != 1:
+                        reason = ("ambiguous_project_array_declaration" if owners else
+                                  "unresolved_project_table_target")
+                    else:
+                        category, array_name = owners[0]
+                        expected = "ordinal" if macro.group("macro") == "M98_ORD" else "named"
+                        if category != expected:
+                            reason = "project_macro_wrong_array_type"
+                        else:
+                            targets = bindings.get((category, array_name), set())
+                            if len(targets) > 1:
+                                reason = "ambiguous_project_table_target"
+                            elif not targets:
+                                reason = "unresolved_project_table_target"
+                            else:
+                                row, reason = parse_macro_line(
+                                    macro.group(0), "project", revision, relative, line,
+                                    sha, next(iter(targets)))
+                                if row:
+                                    row["condition_flags"].extend(conditions_by_line[line])
+                                    rows.append(row)
+                                    continue
+                    unresolved.append(record_unresolved(
+                        "project", relative, line, content, reason))
+            offset += len(content) + 1
+    for path in sorted((root / "src").glob("*.def")):
+        data = path.read_bytes()
+        relative = path.relative_to(root).as_posix()
+        found, missed = index_text(data, "project", revision, relative)
+        rows.extend(found)
+        unresolved.extend(missed)
     return rows, unresolved, revision
 
 

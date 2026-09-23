@@ -4,13 +4,31 @@
   "baseline_manifest": "C:\\Users\\NSLT\\Documents\\Win98-Modern\\benchmarks\\win98se-ko-oem-native-exports-v1.json",
   "baseline_manifest_sha256": "d0e4f23d8df4f6e3536495621cc50a55df0d257f9b604bbc59028e038ee5b023",
   "kernelex_source_manifest": "C:\\Users\\NSLT\\Documents\\Win98-Modern\\benchmarks\\kernelex-source-declarations-v1.json",
-  "kernelex_source_manifest_sha256": "f573b07e6af9f0a1a14e5d5417bed3bd036a2f6ef28de0d24f4e5bac5e73a9ba",
+  "kernelex_source_manifest_sha256": "4d0e78d7aa6132cdcc35456cd26038ecc75df1c0232730efa2cdbb01455486f7",
   "kernelex_source_provenance": "KernelEx source DECL_API/DECL_TAB declarations from kexbases and kexbasen at git commit 31cdfc3560fc116637ee8ed7be31b12f3aacf5d1; candidate names only",
   "wrapper_source_inputs": [
-    "C:\\Users\\NSLT\\Documents\\Win98-Modern\\src\\m98wrap.c"
+    "C:\\Users\\NSLT\\Documents\\Win98-Modern\\src\\m98wrap.c",
+    "C:\\Users\\NSLT\\Documents\\Win98-Modern\\src\\m98advapi.c",
+    "C:\\Users\\NSLT\\Documents\\Win98-Modern\\src\\m98shell.c",
+    "C:\\Users\\NSLT\\Documents\\Win98-Modern\\src\\m98gdi.c",
+    "C:\\Users\\NSLT\\Documents\\Win98-Modern\\src\\m98user.c",
+    "C:\\Users\\NSLT\\Documents\\Win98-Modern\\src\\m98ctl.c",
+    "C:\\Users\\NSLT\\Documents\\Win98-Modern\\src\\bcrypt_shim.def",
+    "C:\\Users\\NSLT\\Documents\\Win98-Modern\\src\\dbghelp_shim.def",
+    "C:\\Users\\NSLT\\Documents\\Win98-Modern\\src\\dwmapi_shim.def",
+    "C:\\Users\\NSLT\\Documents\\Win98-Modern\\src\\uxtheme_shim.def"
   ],
   "wrapper_source_file_sha256": {
-    "C:\\Users\\NSLT\\Documents\\Win98-Modern\\src\\m98wrap.c": "3052032cef77fdfe6f72d575a261e635cf94f3a840fcf5cce1150cb9db04044e"
+    "C:\\Users\\NSLT\\Documents\\Win98-Modern\\src\\m98wrap.c": "c17dd0f10407ddd2f4fb8a3f045d2939729c174558d4b5d37e1dcf16df0fdf1a",
+    "C:\\Users\\NSLT\\Documents\\Win98-Modern\\src\\m98advapi.c": "47f4dfb08af0e590c1c4478f790c5f72dfa4fbaa6737b1edfeb1e6436eeed788",
+    "C:\\Users\\NSLT\\Documents\\Win98-Modern\\src\\m98shell.c": "4f000360388f5d191d7be2b2adec320ff0d2ba58673faea87e7811b5098f3ee7",
+    "C:\\Users\\NSLT\\Documents\\Win98-Modern\\src\\m98gdi.c": "20b5c816452b4eb977f287f09210291b58349319653f13a5c89a2ed3bc79957a",
+    "C:\\Users\\NSLT\\Documents\\Win98-Modern\\src\\m98user.c": "14373e0c5e53f220a2336724ce8d518d52842c62b769a49a513103a09401f48d",
+    "C:\\Users\\NSLT\\Documents\\Win98-Modern\\src\\m98ctl.c": "f5df048efde1a2fb656bc29ca612531e88d36ed73e27050805f821cf93211e76",
+    "C:\\Users\\NSLT\\Documents\\Win98-Modern\\src\\bcrypt_shim.def": "caa958b3909db670fe79d69e2696940b0c4f19e05a82002846970c46867be8c8",
+    "C:\\Users\\NSLT\\Documents\\Win98-Modern\\src\\dbghelp_shim.def": "7356272c853e122422cb4e61df9444517ec6a8a8673a4c6294464e1abba0d8c4",
+    "C:\\Users\\NSLT\\Documents\\Win98-Modern\\src\\dwmapi_shim.def": "f1c805a02536a9e50ddd86d4a466d9c862d9fbffd0e6c161d3eed04980034d4e",
+    "C:\\Users\\NSLT\\Documents\\Win98-Modern\\src\\uxtheme_shim.def": "e620b3251793b9c7aaaf846d711c7dd85eb9cd416da11a2ffd486ef9ba6e5f88"
   },
   "wrapper_pe_inputs": [],
   "wrapper_pe_file_sha256": {},
@@ -20,13 +38,13 @@
       "total": 4980,
       "load": 3215,
       "baseline": 2949,
-      "unresolved": 745,
+      "wrapper_source": 147,
+      "unresolved": 615,
       "kernelex_source": 215,
-      "wrapper_source": 17,
       "delay": 1765
     },
-    "matched": 4235,
-    "matched_percent": 85.0402,
+    "matched": 4365,
+    "matched_percent": 87.6506,
     "baseline_or_artifact_percent": 59.2169,
     "unresolved": [
       {
@@ -112,18 +130,6 @@
         "symbol": "RegDeleteKeyExW",
         "kind": "delay",
         "count": 2
-      },
-      {
-        "dll": "ADVAPI32.DLL",
-        "symbol": "RegGetValueW",
-        "kind": "delay",
-        "count": 2
-      },
-      {
-        "dll": "ADVAPI32.DLL",
-        "symbol": "RegGetValueW",
-        "kind": "load",
-        "count": 1
       },
       {
         "dll": "ADVAPI32.DLL",
@@ -270,48 +276,6 @@
         "count": 1
       },
       {
-        "dll": "BCRYPT.DLL",
-        "symbol": "BCryptCloseAlgorithmProvider",
-        "kind": "load",
-        "count": 1
-      },
-      {
-        "dll": "BCRYPT.DLL",
-        "symbol": "BCryptCreateHash",
-        "kind": "load",
-        "count": 1
-      },
-      {
-        "dll": "BCRYPT.DLL",
-        "symbol": "BCryptDestroyHash",
-        "kind": "load",
-        "count": 1
-      },
-      {
-        "dll": "BCRYPT.DLL",
-        "symbol": "BCryptFinishHash",
-        "kind": "load",
-        "count": 1
-      },
-      {
-        "dll": "BCRYPT.DLL",
-        "symbol": "BCryptGetProperty",
-        "kind": "load",
-        "count": 1
-      },
-      {
-        "dll": "BCRYPT.DLL",
-        "symbol": "BCryptHashData",
-        "kind": "load",
-        "count": 1
-      },
-      {
-        "dll": "BCRYPT.DLL",
-        "symbol": "BCryptOpenAlgorithmProvider",
-        "kind": "load",
-        "count": 1
-      },
-      {
         "dll": "BCRYPTPRIMITIVES.DLL",
         "symbol": "ProcessPrng",
         "kind": "delay",
@@ -390,18 +354,6 @@
         "count": 2
       },
       {
-        "dll": "COMCTL32.DLL",
-        "symbol": "#345",
-        "kind": "load",
-        "count": 1
-      },
-      {
-        "dll": "COMCTL32.DLL",
-        "symbol": "#381",
-        "kind": "load",
-        "count": 1
-      },
-      {
         "dll": "CREDUI.DLL",
         "symbol": "CredUIPromptForCredentialsW",
         "kind": "delay",
@@ -442,12 +394,6 @@
         "symbol": "#101",
         "kind": "delay",
         "count": 2
-      },
-      {
-        "dll": "DBGHELP.DLL",
-        "symbol": "ImageNtHeader",
-        "kind": "load",
-        "count": 1
       },
       {
         "dll": "DBGHELP.DLL",
@@ -547,12 +493,6 @@
       },
       {
         "dll": "DWMAPI.DLL",
-        "symbol": "DwmGetColorizationColor",
-        "kind": "load",
-        "count": 1
-      },
-      {
-        "dll": "DWMAPI.DLL",
         "symbol": "DwmGetCompositionTimingInfo",
         "kind": "delay",
         "count": 2
@@ -562,18 +502,6 @@
         "symbol": "DwmGetWindowAttribute",
         "kind": "delay",
         "count": 2
-      },
-      {
-        "dll": "DWMAPI.DLL",
-        "symbol": "DwmSetWindowAttribute",
-        "kind": "delay",
-        "count": 2
-      },
-      {
-        "dll": "DWMAPI.DLL",
-        "symbol": "DwmSetWindowAttribute",
-        "kind": "load",
-        "count": 1
       },
       {
         "dll": "DWRITE.DLL",
@@ -697,18 +625,6 @@
       },
       {
         "dll": "KERNEL32.DLL",
-        "symbol": "AcquireSRWLockExclusive",
-        "kind": "load",
-        "count": 4
-      },
-      {
-        "dll": "KERNEL32.DLL",
-        "symbol": "AcquireSRWLockShared",
-        "kind": "load",
-        "count": 1
-      },
-      {
-        "dll": "KERNEL32.DLL",
         "symbol": "AddVectoredExceptionHandler",
         "kind": "load",
         "count": 2
@@ -727,31 +643,7 @@
       },
       {
         "dll": "KERNEL32.DLL",
-        "symbol": "CloseThreadpoolWork",
-        "kind": "load",
-        "count": 1
-      },
-      {
-        "dll": "KERNEL32.DLL",
-        "symbol": "CompareStringEx",
-        "kind": "load",
-        "count": 1
-      },
-      {
-        "dll": "KERNEL32.DLL",
         "symbol": "ConvertFiberToThread",
-        "kind": "load",
-        "count": 1
-      },
-      {
-        "dll": "KERNEL32.DLL",
-        "symbol": "ConvertThreadToFiberEx",
-        "kind": "load",
-        "count": 1
-      },
-      {
-        "dll": "KERNEL32.DLL",
-        "symbol": "CreateThreadpoolWork",
         "kind": "load",
         "count": 1
       },
@@ -781,48 +673,6 @@
       },
       {
         "dll": "KERNEL32.DLL",
-        "symbol": "FindFirstStreamW",
-        "kind": "load",
-        "count": 1
-      },
-      {
-        "dll": "KERNEL32.DLL",
-        "symbol": "FlsAlloc",
-        "kind": "load",
-        "count": 4
-      },
-      {
-        "dll": "KERNEL32.DLL",
-        "symbol": "FlsFree",
-        "kind": "load",
-        "count": 4
-      },
-      {
-        "dll": "KERNEL32.DLL",
-        "symbol": "FlsGetValue",
-        "kind": "load",
-        "count": 4
-      },
-      {
-        "dll": "KERNEL32.DLL",
-        "symbol": "FlsSetValue",
-        "kind": "load",
-        "count": 4
-      },
-      {
-        "dll": "KERNEL32.DLL",
-        "symbol": "FreeLibraryWhenCallbackReturns",
-        "kind": "load",
-        "count": 1
-      },
-      {
-        "dll": "KERNEL32.DLL",
-        "symbol": "GetApplicationRestartSettings",
-        "kind": "load",
-        "count": 1
-      },
-      {
-        "dll": "KERNEL32.DLL",
         "symbol": "GetConsoleDisplayMode",
         "kind": "load",
         "count": 1
@@ -835,33 +685,15 @@
       },
       {
         "dll": "KERNEL32.DLL",
-        "symbol": "GetDateFormatEx",
-        "kind": "load",
-        "count": 2
-      },
-      {
-        "dll": "KERNEL32.DLL",
         "symbol": "GetDynamicTimeZoneInformation",
         "kind": "load",
         "count": 1
       },
       {
         "dll": "KERNEL32.DLL",
-        "symbol": "GetFinalPathNameByHandleW",
-        "kind": "load",
-        "count": 2
-      },
-      {
-        "dll": "KERNEL32.DLL",
         "symbol": "GetGeoInfoW",
         "kind": "load",
         "count": 1
-      },
-      {
-        "dll": "KERNEL32.DLL",
-        "symbol": "GetLocaleInfoEx",
-        "kind": "load",
-        "count": 2
       },
       {
         "dll": "KERNEL32.DLL",
@@ -925,12 +757,6 @@
       },
       {
         "dll": "KERNEL32.DLL",
-        "symbol": "GetProductInfo",
-        "kind": "load",
-        "count": 4
-      },
-      {
-        "dll": "KERNEL32.DLL",
         "symbol": "GetThreadGroupAffinity",
         "kind": "load",
         "count": 1
@@ -940,12 +766,6 @@
         "symbol": "GetThreadPreferredUILanguages",
         "kind": "load",
         "count": 1
-      },
-      {
-        "dll": "KERNEL32.DLL",
-        "symbol": "GetTimeFormatEx",
-        "kind": "load",
-        "count": 2
       },
       {
         "dll": "KERNEL32.DLL",
@@ -961,37 +781,7 @@
       },
       {
         "dll": "KERNEL32.DLL",
-        "symbol": "InitOnceBeginInitialize",
-        "kind": "load",
-        "count": 2
-      },
-      {
-        "dll": "KERNEL32.DLL",
-        "symbol": "InitOnceComplete",
-        "kind": "load",
-        "count": 2
-      },
-      {
-        "dll": "KERNEL32.DLL",
-        "symbol": "InitOnceExecuteOnce",
-        "kind": "load",
-        "count": 3
-      },
-      {
-        "dll": "KERNEL32.DLL",
-        "symbol": "InitializeConditionVariable",
-        "kind": "load",
-        "count": 2
-      },
-      {
-        "dll": "KERNEL32.DLL",
         "symbol": "InitializeProcThreadAttributeList",
-        "kind": "load",
-        "count": 2
-      },
-      {
-        "dll": "KERNEL32.DLL",
-        "symbol": "InitializeSRWLock",
         "kind": "load",
         "count": 2
       },
@@ -1057,12 +847,6 @@
       },
       {
         "dll": "KERNEL32.DLL",
-        "symbol": "LCMapStringEx",
-        "kind": "load",
-        "count": 2
-      },
-      {
-        "dll": "KERNEL32.DLL",
         "symbol": "LocaleNameToLCID",
         "kind": "load",
         "count": 1
@@ -1093,18 +877,6 @@
       },
       {
         "dll": "KERNEL32.DLL",
-        "symbol": "QueryFullProcessImageNameA",
-        "kind": "load",
-        "count": 1
-      },
-      {
-        "dll": "KERNEL32.DLL",
-        "symbol": "QueryFullProcessImageNameW",
-        "kind": "load",
-        "count": 2
-      },
-      {
-        "dll": "KERNEL32.DLL",
         "symbol": "QueryProcessCycleTime",
         "kind": "load",
         "count": 1
@@ -1114,24 +886,6 @@
         "symbol": "QueryThreadCycleTime",
         "kind": "load",
         "count": 3
-      },
-      {
-        "dll": "KERNEL32.DLL",
-        "symbol": "RegisterApplicationRestart",
-        "kind": "load",
-        "count": 1
-      },
-      {
-        "dll": "KERNEL32.DLL",
-        "symbol": "ReleaseSRWLockExclusive",
-        "kind": "load",
-        "count": 4
-      },
-      {
-        "dll": "KERNEL32.DLL",
-        "symbol": "ReleaseSRWLockShared",
-        "kind": "load",
-        "count": 1
       },
       {
         "dll": "KERNEL32.DLL",
@@ -1189,43 +943,7 @@
       },
       {
         "dll": "KERNEL32.DLL",
-        "symbol": "SleepConditionVariableSRW",
-        "kind": "load",
-        "count": 4
-      },
-      {
-        "dll": "KERNEL32.DLL",
-        "symbol": "SubmitThreadpoolWork",
-        "kind": "load",
-        "count": 1
-      },
-      {
-        "dll": "KERNEL32.DLL",
-        "symbol": "TryAcquireSRWLockExclusive",
-        "kind": "load",
-        "count": 4
-      },
-      {
-        "dll": "KERNEL32.DLL",
-        "symbol": "UnregisterApplicationRestart",
-        "kind": "load",
-        "count": 1
-      },
-      {
-        "dll": "KERNEL32.DLL",
         "symbol": "UpdateProcThreadAttribute",
-        "kind": "load",
-        "count": 2
-      },
-      {
-        "dll": "KERNEL32.DLL",
-        "symbol": "WakeAllConditionVariable",
-        "kind": "load",
-        "count": 4
-      },
-      {
-        "dll": "KERNEL32.DLL",
-        "symbol": "WakeConditionVariable",
         "kind": "load",
         "count": 2
       },
@@ -1783,18 +1501,6 @@
       },
       {
         "dll": "SHELL32.DLL",
-        "symbol": "SHCreateItemFromParsingName",
-        "kind": "delay",
-        "count": 2
-      },
-      {
-        "dll": "SHELL32.DLL",
-        "symbol": "SHCreateItemFromParsingName",
-        "kind": "load",
-        "count": 1
-      },
-      {
-        "dll": "SHELL32.DLL",
         "symbol": "SHGetKnownFolderPath",
         "kind": "delay",
         "count": 6
@@ -1891,18 +1597,6 @@
       },
       {
         "dll": "USER32.DLL",
-        "symbol": "AddClipboardFormatListener",
-        "kind": "delay",
-        "count": 2
-      },
-      {
-        "dll": "USER32.DLL",
-        "symbol": "AddClipboardFormatListener",
-        "kind": "load",
-        "count": 1
-      },
-      {
-        "dll": "USER32.DLL",
         "symbol": "CloseTouchInputHandle",
         "kind": "delay",
         "count": 2
@@ -1987,18 +1681,6 @@
       },
       {
         "dll": "USER32.DLL",
-        "symbol": "RemoveClipboardFormatListener",
-        "kind": "delay",
-        "count": 2
-      },
-      {
-        "dll": "USER32.DLL",
-        "symbol": "RemoveClipboardFormatListener",
-        "kind": "load",
-        "count": 1
-      },
-      {
-        "dll": "USER32.DLL",
         "symbol": "SetProcessDPIAware",
         "kind": "delay",
         "count": 2
@@ -2074,132 +1756,6 @@
         "symbol": "#47",
         "kind": "delay",
         "count": 2
-      },
-      {
-        "dll": "UXTHEME.DLL",
-        "symbol": "BeginBufferedAnimation",
-        "kind": "load",
-        "count": 1
-      },
-      {
-        "dll": "UXTHEME.DLL",
-        "symbol": "BufferedPaintRenderAnimation",
-        "kind": "load",
-        "count": 1
-      },
-      {
-        "dll": "UXTHEME.DLL",
-        "symbol": "BufferedPaintStopAllAnimations",
-        "kind": "load",
-        "count": 1
-      },
-      {
-        "dll": "UXTHEME.DLL",
-        "symbol": "CloseThemeData",
-        "kind": "delay",
-        "count": 2
-      },
-      {
-        "dll": "UXTHEME.DLL",
-        "symbol": "CloseThemeData",
-        "kind": "load",
-        "count": 1
-      },
-      {
-        "dll": "UXTHEME.DLL",
-        "symbol": "DrawThemeBackground",
-        "kind": "delay",
-        "count": 2
-      },
-      {
-        "dll": "UXTHEME.DLL",
-        "symbol": "DrawThemeBackground",
-        "kind": "load",
-        "count": 1
-      },
-      {
-        "dll": "UXTHEME.DLL",
-        "symbol": "DrawThemeParentBackground",
-        "kind": "load",
-        "count": 1
-      },
-      {
-        "dll": "UXTHEME.DLL",
-        "symbol": "DrawThemeTextEx",
-        "kind": "load",
-        "count": 1
-      },
-      {
-        "dll": "UXTHEME.DLL",
-        "symbol": "EnableThemeDialogTexture",
-        "kind": "load",
-        "count": 1
-      },
-      {
-        "dll": "UXTHEME.DLL",
-        "symbol": "EndBufferedAnimation",
-        "kind": "load",
-        "count": 1
-      },
-      {
-        "dll": "UXTHEME.DLL",
-        "symbol": "GetThemeBackgroundContentRect",
-        "kind": "delay",
-        "count": 2
-      },
-      {
-        "dll": "UXTHEME.DLL",
-        "symbol": "GetThemeBackgroundContentRect",
-        "kind": "load",
-        "count": 1
-      },
-      {
-        "dll": "UXTHEME.DLL",
-        "symbol": "GetThemeColor",
-        "kind": "load",
-        "count": 1
-      },
-      {
-        "dll": "UXTHEME.DLL",
-        "symbol": "GetThemeFont",
-        "kind": "load",
-        "count": 1
-      },
-      {
-        "dll": "UXTHEME.DLL",
-        "symbol": "GetThemePartSize",
-        "kind": "delay",
-        "count": 2
-      },
-      {
-        "dll": "UXTHEME.DLL",
-        "symbol": "GetThemePartSize",
-        "kind": "load",
-        "count": 1
-      },
-      {
-        "dll": "UXTHEME.DLL",
-        "symbol": "GetThemeTransitionDuration",
-        "kind": "load",
-        "count": 1
-      },
-      {
-        "dll": "UXTHEME.DLL",
-        "symbol": "OpenThemeData",
-        "kind": "delay",
-        "count": 2
-      },
-      {
-        "dll": "UXTHEME.DLL",
-        "symbol": "OpenThemeData",
-        "kind": "load",
-        "count": 1
-      },
-      {
-        "dll": "UXTHEME.DLL",
-        "symbol": "SetWindowTheme",
-        "kind": "load",
-        "count": 1
       },
       {
         "dll": "WEVTAPI.DLL",
@@ -2529,13 +2085,13 @@
         "total": 1870,
         "load": 967,
         "baseline": 1251,
-        "unresolved": 444,
+        "wrapper_source": 74,
+        "unresolved": 383,
         "kernelex_source": 143,
-        "wrapper_source": 13,
         "delay": 903
       },
-      "matched": 1426,
-      "matched_percent": 76.2567,
+      "matched": 1487,
+      "matched_percent": 79.5187,
       "baseline_or_artifact_percent": 66.8984,
       "unresolved": [
         {
@@ -2619,12 +2175,6 @@
         {
           "dll": "ADVAPI32.DLL",
           "symbol": "RegDeleteKeyExW",
-          "kind": "delay",
-          "count": 1
-        },
-        {
-          "dll": "ADVAPI32.DLL",
-          "symbol": "RegGetValueW",
           "kind": "delay",
           "count": 1
         },
@@ -2995,12 +2545,6 @@
           "count": 1
         },
         {
-          "dll": "DWMAPI.DLL",
-          "symbol": "DwmSetWindowAttribute",
-          "kind": "delay",
-          "count": 1
-        },
-        {
           "dll": "DWRITE.DLL",
           "symbol": "DWriteCreateFactory",
           "kind": "load",
@@ -3116,18 +2660,6 @@
         },
         {
           "dll": "KERNEL32.DLL",
-          "symbol": "AcquireSRWLockExclusive",
-          "kind": "load",
-          "count": 3
-        },
-        {
-          "dll": "KERNEL32.DLL",
-          "symbol": "AcquireSRWLockShared",
-          "kind": "load",
-          "count": 1
-        },
-        {
-          "dll": "KERNEL32.DLL",
           "symbol": "AddVectoredExceptionHandler",
           "kind": "load",
           "count": 2
@@ -3147,12 +2679,6 @@
         {
           "dll": "KERNEL32.DLL",
           "symbol": "ConvertFiberToThread",
-          "kind": "load",
-          "count": 1
-        },
-        {
-          "dll": "KERNEL32.DLL",
-          "symbol": "ConvertThreadToFiberEx",
           "kind": "load",
           "count": 1
         },
@@ -3182,30 +2708,6 @@
         },
         {
           "dll": "KERNEL32.DLL",
-          "symbol": "FlsAlloc",
-          "kind": "load",
-          "count": 3
-        },
-        {
-          "dll": "KERNEL32.DLL",
-          "symbol": "FlsFree",
-          "kind": "load",
-          "count": 3
-        },
-        {
-          "dll": "KERNEL32.DLL",
-          "symbol": "FlsGetValue",
-          "kind": "load",
-          "count": 3
-        },
-        {
-          "dll": "KERNEL32.DLL",
-          "symbol": "FlsSetValue",
-          "kind": "load",
-          "count": 3
-        },
-        {
-          "dll": "KERNEL32.DLL",
           "symbol": "GetConsoleDisplayMode",
           "kind": "load",
           "count": 1
@@ -3218,31 +2720,13 @@
         },
         {
           "dll": "KERNEL32.DLL",
-          "symbol": "GetDateFormatEx",
-          "kind": "load",
-          "count": 1
-        },
-        {
-          "dll": "KERNEL32.DLL",
           "symbol": "GetDynamicTimeZoneInformation",
           "kind": "load",
           "count": 1
         },
         {
           "dll": "KERNEL32.DLL",
-          "symbol": "GetFinalPathNameByHandleW",
-          "kind": "load",
-          "count": 1
-        },
-        {
-          "dll": "KERNEL32.DLL",
           "symbol": "GetGeoInfoW",
-          "kind": "load",
-          "count": 1
-        },
-        {
-          "dll": "KERNEL32.DLL",
-          "symbol": "GetLocaleInfoEx",
           "kind": "load",
           "count": 1
         },
@@ -3308,12 +2792,6 @@
         },
         {
           "dll": "KERNEL32.DLL",
-          "symbol": "GetProductInfo",
-          "kind": "load",
-          "count": 3
-        },
-        {
-          "dll": "KERNEL32.DLL",
           "symbol": "GetThreadGroupAffinity",
           "kind": "load",
           "count": 1
@@ -3321,12 +2799,6 @@
         {
           "dll": "KERNEL32.DLL",
           "symbol": "GetThreadPreferredUILanguages",
-          "kind": "load",
-          "count": 1
-        },
-        {
-          "dll": "KERNEL32.DLL",
-          "symbol": "GetTimeFormatEx",
           "kind": "load",
           "count": 1
         },
@@ -3344,37 +2816,7 @@
         },
         {
           "dll": "KERNEL32.DLL",
-          "symbol": "InitOnceBeginInitialize",
-          "kind": "load",
-          "count": 1
-        },
-        {
-          "dll": "KERNEL32.DLL",
-          "symbol": "InitOnceComplete",
-          "kind": "load",
-          "count": 1
-        },
-        {
-          "dll": "KERNEL32.DLL",
-          "symbol": "InitOnceExecuteOnce",
-          "kind": "load",
-          "count": 3
-        },
-        {
-          "dll": "KERNEL32.DLL",
-          "symbol": "InitializeConditionVariable",
-          "kind": "load",
-          "count": 2
-        },
-        {
-          "dll": "KERNEL32.DLL",
           "symbol": "InitializeProcThreadAttributeList",
-          "kind": "load",
-          "count": 2
-        },
-        {
-          "dll": "KERNEL32.DLL",
-          "symbol": "InitializeSRWLock",
           "kind": "load",
           "count": 2
         },
@@ -3440,12 +2882,6 @@
         },
         {
           "dll": "KERNEL32.DLL",
-          "symbol": "LCMapStringEx",
-          "kind": "load",
-          "count": 1
-        },
-        {
-          "dll": "KERNEL32.DLL",
           "symbol": "LocaleNameToLCID",
           "kind": "load",
           "count": 1
@@ -3476,18 +2912,6 @@
         },
         {
           "dll": "KERNEL32.DLL",
-          "symbol": "QueryFullProcessImageNameA",
-          "kind": "load",
-          "count": 1
-        },
-        {
-          "dll": "KERNEL32.DLL",
-          "symbol": "QueryFullProcessImageNameW",
-          "kind": "load",
-          "count": 1
-        },
-        {
-          "dll": "KERNEL32.DLL",
           "symbol": "QueryProcessCycleTime",
           "kind": "load",
           "count": 1
@@ -3497,18 +2921,6 @@
           "symbol": "QueryThreadCycleTime",
           "kind": "load",
           "count": 3
-        },
-        {
-          "dll": "KERNEL32.DLL",
-          "symbol": "ReleaseSRWLockExclusive",
-          "kind": "load",
-          "count": 3
-        },
-        {
-          "dll": "KERNEL32.DLL",
-          "symbol": "ReleaseSRWLockShared",
-          "kind": "load",
-          "count": 1
         },
         {
           "dll": "KERNEL32.DLL",
@@ -3566,31 +2978,7 @@
         },
         {
           "dll": "KERNEL32.DLL",
-          "symbol": "SleepConditionVariableSRW",
-          "kind": "load",
-          "count": 3
-        },
-        {
-          "dll": "KERNEL32.DLL",
-          "symbol": "TryAcquireSRWLockExclusive",
-          "kind": "load",
-          "count": 3
-        },
-        {
-          "dll": "KERNEL32.DLL",
           "symbol": "UpdateProcThreadAttribute",
-          "kind": "load",
-          "count": 2
-        },
-        {
-          "dll": "KERNEL32.DLL",
-          "symbol": "WakeAllConditionVariable",
-          "kind": "load",
-          "count": 3
-        },
-        {
-          "dll": "KERNEL32.DLL",
-          "symbol": "WakeConditionVariable",
           "kind": "load",
           "count": 2
         },
@@ -4064,12 +3452,6 @@
         },
         {
           "dll": "SHELL32.DLL",
-          "symbol": "SHCreateItemFromParsingName",
-          "kind": "delay",
-          "count": 1
-        },
-        {
-          "dll": "SHELL32.DLL",
           "symbol": "SHGetKnownFolderPath",
           "kind": "delay",
           "count": 3
@@ -4160,12 +3542,6 @@
         },
         {
           "dll": "USER32.DLL",
-          "symbol": "AddClipboardFormatListener",
-          "kind": "delay",
-          "count": 1
-        },
-        {
-          "dll": "USER32.DLL",
           "symbol": "CloseTouchInputHandle",
           "kind": "delay",
           "count": 1
@@ -4244,12 +3620,6 @@
         },
         {
           "dll": "USER32.DLL",
-          "symbol": "RemoveClipboardFormatListener",
-          "kind": "delay",
-          "count": 1
-        },
-        {
-          "dll": "USER32.DLL",
           "symbol": "SetProcessDPIAware",
           "kind": "delay",
           "count": 1
@@ -4323,36 +3693,6 @@
         {
           "dll": "UXTHEME.DLL",
           "symbol": "#47",
-          "kind": "delay",
-          "count": 1
-        },
-        {
-          "dll": "UXTHEME.DLL",
-          "symbol": "CloseThemeData",
-          "kind": "delay",
-          "count": 1
-        },
-        {
-          "dll": "UXTHEME.DLL",
-          "symbol": "DrawThemeBackground",
-          "kind": "delay",
-          "count": 1
-        },
-        {
-          "dll": "UXTHEME.DLL",
-          "symbol": "GetThemeBackgroundContentRect",
-          "kind": "delay",
-          "count": 1
-        },
-        {
-          "dll": "UXTHEME.DLL",
-          "symbol": "GetThemePartSize",
-          "kind": "delay",
-          "count": 1
-        },
-        {
-          "dll": "UXTHEME.DLL",
-          "symbol": "OpenThemeData",
           "kind": "delay",
           "count": 1
         },
@@ -4648,13 +3988,13 @@
             "total": 367,
             "load": 251,
             "baseline": 253,
-            "unresolved": 71,
+            "wrapper_source": 18,
+            "unresolved": 56,
             "kernelex_source": 35,
-            "wrapper_source": 3,
             "delay": 116
           },
-          "matched": 296,
-          "matched_percent": 80.654,
+          "matched": 311,
+          "matched_percent": 84.7411,
           "baseline_or_artifact_percent": 68.9373,
           "unresolved": [
             {
@@ -4749,12 +4089,6 @@
             },
             {
               "dll": "KERNEL32.DLL",
-              "symbol": "AcquireSRWLockExclusive",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
               "symbol": "AddVectoredExceptionHandler",
               "kind": "load",
               "count": 1
@@ -4767,12 +4101,6 @@
             },
             {
               "dll": "KERNEL32.DLL",
-              "symbol": "ConvertThreadToFiberEx",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
               "symbol": "DeleteProcThreadAttributeList",
               "kind": "load",
               "count": 1
@@ -4780,30 +4108,6 @@
             {
               "dll": "KERNEL32.DLL",
               "symbol": "EnumSystemLocalesEx",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
-              "symbol": "FlsAlloc",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
-              "symbol": "FlsFree",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
-              "symbol": "FlsGetValue",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
-              "symbol": "FlsSetValue",
               "kind": "load",
               "count": 1
             },
@@ -4827,37 +4131,13 @@
             },
             {
               "dll": "KERNEL32.DLL",
-              "symbol": "GetProductInfo",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
               "symbol": "GetUserDefaultLocaleName",
               "kind": "load",
               "count": 1
             },
             {
               "dll": "KERNEL32.DLL",
-              "symbol": "InitOnceExecuteOnce",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
-              "symbol": "InitializeConditionVariable",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
               "symbol": "InitializeProcThreadAttributeList",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
-              "symbol": "InitializeSRWLock",
               "kind": "load",
               "count": 1
             },
@@ -4911,12 +4191,6 @@
             },
             {
               "dll": "KERNEL32.DLL",
-              "symbol": "ReleaseSRWLockExclusive",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
               "symbol": "RemoveVectoredExceptionHandler",
               "kind": "load",
               "count": 1
@@ -4953,31 +4227,7 @@
             },
             {
               "dll": "KERNEL32.DLL",
-              "symbol": "SleepConditionVariableSRW",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
-              "symbol": "TryAcquireSRWLockExclusive",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
               "symbol": "UpdateProcThreadAttribute",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
-              "symbol": "WakeAllConditionVariable",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
-              "symbol": "WakeConditionVariable",
               "kind": "load",
               "count": 1
             },
@@ -5092,14 +4342,14 @@
             "baseline": 834,
             "total": 1273,
             "load": 525,
-            "unresolved": 333,
+            "wrapper_source": 44,
             "kernelex_source": 83,
-            "wrapper_source": 9,
+            "unresolved": 298,
             "app_peer": 14,
             "delay": 748
           },
-          "matched": 940,
-          "matched_percent": 73.8413,
+          "matched": 975,
+          "matched_percent": 76.5907,
           "baseline_or_artifact_percent": 65.5145,
           "unresolved": [
             {
@@ -5183,12 +4433,6 @@
             {
               "dll": "ADVAPI32.DLL",
               "symbol": "RegDeleteKeyExW",
-              "kind": "delay",
-              "count": 1
-            },
-            {
-              "dll": "ADVAPI32.DLL",
-              "symbol": "RegGetValueW",
               "kind": "delay",
               "count": 1
             },
@@ -5553,12 +4797,6 @@
               "count": 1
             },
             {
-              "dll": "DWMAPI.DLL",
-              "symbol": "DwmSetWindowAttribute",
-              "kind": "delay",
-              "count": 1
-            },
-            {
               "dll": "DWRITE.DLL",
               "symbol": "DWriteCreateFactory",
               "kind": "load",
@@ -5674,18 +4912,6 @@
             },
             {
               "dll": "KERNEL32.DLL",
-              "symbol": "AcquireSRWLockExclusive",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
-              "symbol": "AcquireSRWLockShared",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
               "symbol": "CancelIoEx",
               "kind": "load",
               "count": 1
@@ -5722,30 +4948,6 @@
             },
             {
               "dll": "KERNEL32.DLL",
-              "symbol": "FlsAlloc",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
-              "symbol": "FlsFree",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
-              "symbol": "FlsGetValue",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
-              "symbol": "FlsSetValue",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
               "symbol": "GetConsoleDisplayMode",
               "kind": "load",
               "count": 1
@@ -5758,31 +4960,13 @@
             },
             {
               "dll": "KERNEL32.DLL",
-              "symbol": "GetDateFormatEx",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
               "symbol": "GetDynamicTimeZoneInformation",
               "kind": "load",
               "count": 1
             },
             {
               "dll": "KERNEL32.DLL",
-              "symbol": "GetFinalPathNameByHandleW",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
               "symbol": "GetGeoInfoW",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
-              "symbol": "GetLocaleInfoEx",
               "kind": "load",
               "count": 1
             },
@@ -5848,12 +5032,6 @@
             },
             {
               "dll": "KERNEL32.DLL",
-              "symbol": "GetProductInfo",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
               "symbol": "GetThreadGroupAffinity",
               "kind": "load",
               "count": 1
@@ -5861,12 +5039,6 @@
             {
               "dll": "KERNEL32.DLL",
               "symbol": "GetThreadPreferredUILanguages",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
-              "symbol": "GetTimeFormatEx",
               "kind": "load",
               "count": 1
             },
@@ -5884,37 +5056,7 @@
             },
             {
               "dll": "KERNEL32.DLL",
-              "symbol": "InitOnceBeginInitialize",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
-              "symbol": "InitOnceComplete",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
-              "symbol": "InitOnceExecuteOnce",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
-              "symbol": "InitializeConditionVariable",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
               "symbol": "InitializeProcThreadAttributeList",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
-              "symbol": "InitializeSRWLock",
               "kind": "load",
               "count": 1
             },
@@ -5974,12 +5116,6 @@
             },
             {
               "dll": "KERNEL32.DLL",
-              "symbol": "LCMapStringEx",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
               "symbol": "LocaleNameToLCID",
               "kind": "load",
               "count": 1
@@ -6010,18 +5146,6 @@
             },
             {
               "dll": "KERNEL32.DLL",
-              "symbol": "QueryFullProcessImageNameA",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
-              "symbol": "QueryFullProcessImageNameW",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
               "symbol": "QueryProcessCycleTime",
               "kind": "load",
               "count": 1
@@ -6029,18 +5153,6 @@
             {
               "dll": "KERNEL32.DLL",
               "symbol": "QueryThreadCycleTime",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
-              "symbol": "ReleaseSRWLockExclusive",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
-              "symbol": "ReleaseSRWLockShared",
               "kind": "load",
               "count": 1
             },
@@ -6094,31 +5206,7 @@
             },
             {
               "dll": "KERNEL32.DLL",
-              "symbol": "SleepConditionVariableSRW",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
-              "symbol": "TryAcquireSRWLockExclusive",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
               "symbol": "UpdateProcThreadAttribute",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
-              "symbol": "WakeAllConditionVariable",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
-              "symbol": "WakeConditionVariable",
               "kind": "load",
               "count": 1
             },
@@ -6580,12 +5668,6 @@
             },
             {
               "dll": "SHELL32.DLL",
-              "symbol": "SHCreateItemFromParsingName",
-              "kind": "delay",
-              "count": 1
-            },
-            {
-              "dll": "SHELL32.DLL",
               "symbol": "SHGetKnownFolderPath",
               "kind": "delay",
               "count": 1
@@ -6676,12 +5758,6 @@
             },
             {
               "dll": "USER32.DLL",
-              "symbol": "AddClipboardFormatListener",
-              "kind": "delay",
-              "count": 1
-            },
-            {
-              "dll": "USER32.DLL",
               "symbol": "CloseTouchInputHandle",
               "kind": "delay",
               "count": 1
@@ -6760,12 +5836,6 @@
             },
             {
               "dll": "USER32.DLL",
-              "symbol": "RemoveClipboardFormatListener",
-              "kind": "delay",
-              "count": 1
-            },
-            {
-              "dll": "USER32.DLL",
               "symbol": "SetProcessDPIAware",
               "kind": "delay",
               "count": 1
@@ -6839,36 +5909,6 @@
             {
               "dll": "UXTHEME.DLL",
               "symbol": "#47",
-              "kind": "delay",
-              "count": 1
-            },
-            {
-              "dll": "UXTHEME.DLL",
-              "symbol": "CloseThemeData",
-              "kind": "delay",
-              "count": 1
-            },
-            {
-              "dll": "UXTHEME.DLL",
-              "symbol": "DrawThemeBackground",
-              "kind": "delay",
-              "count": 1
-            },
-            {
-              "dll": "UXTHEME.DLL",
-              "symbol": "GetThemeBackgroundContentRect",
-              "kind": "delay",
-              "count": 1
-            },
-            {
-              "dll": "UXTHEME.DLL",
-              "symbol": "GetThemePartSize",
-              "kind": "delay",
-              "count": 1
-            },
-            {
-              "dll": "UXTHEME.DLL",
-              "symbol": "OpenThemeData",
               "kind": "delay",
               "count": 1
             },
@@ -7106,16 +6146,16 @@
           "file": "C:\\Users\\NSLT\\Documents\\Win98-Modern\\benchmarks\\media\\chromium-150-r1639845\\chrome-win\\chrome_elf.dll",
           "sha256": "0b60d467754f859de9c688485139a6c48466ebbad2c72fb5ce636b293812338f",
           "counts": {
-            "unresolved": 40,
+            "wrapper_source": 12,
             "total": 230,
             "load": 191,
+            "unresolved": 29,
             "baseline": 164,
             "kernelex_source": 25,
-            "wrapper_source": 1,
             "delay": 39
           },
-          "matched": 190,
-          "matched_percent": 82.6087,
+          "matched": 201,
+          "matched_percent": 87.3913,
           "baseline_or_artifact_percent": 71.3043,
           "unresolved": [
             {
@@ -7192,55 +6232,13 @@
             },
             {
               "dll": "KERNEL32.DLL",
-              "symbol": "AcquireSRWLockExclusive",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
               "symbol": "AddVectoredExceptionHandler",
               "kind": "load",
               "count": 1
             },
             {
               "dll": "KERNEL32.DLL",
-              "symbol": "FlsAlloc",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
-              "symbol": "FlsFree",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
-              "symbol": "FlsGetValue",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
-              "symbol": "FlsSetValue",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
               "symbol": "GetLogicalProcessorInformation",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
-              "symbol": "GetProductInfo",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
-              "symbol": "InitOnceExecuteOnce",
               "kind": "load",
               "count": 1
             },
@@ -7276,12 +6274,6 @@
             },
             {
               "dll": "KERNEL32.DLL",
-              "symbol": "ReleaseSRWLockExclusive",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
               "symbol": "RemoveVectoredExceptionHandler",
               "kind": "load",
               "count": 1
@@ -7295,24 +6287,6 @@
             {
               "dll": "KERNEL32.DLL",
               "symbol": "SetThreadInformation",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
-              "symbol": "SleepConditionVariableSRW",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
-              "symbol": "TryAcquireSRWLockExclusive",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
-              "symbol": "WakeAllConditionVariable",
               "kind": "load",
               "count": 1
             },
@@ -7376,11 +6350,12 @@
         "load": 977,
         "baseline": 656,
         "delay": 862,
-        "unresolved": 242,
-        "kernelex_source": 44
+        "unresolved": 232,
+        "kernelex_source": 44,
+        "wrapper_source": 10
       },
-      "matched": 1597,
-      "matched_percent": 86.8407,
+      "matched": 1607,
+      "matched_percent": 87.3844,
       "baseline_or_artifact_percent": 35.6716,
       "unresolved": [
         {
@@ -7458,12 +6433,6 @@
         {
           "dll": "ADVAPI32.DLL",
           "symbol": "RegDeleteKeyExW",
-          "kind": "delay",
-          "count": 1
-        },
-        {
-          "dll": "ADVAPI32.DLL",
-          "symbol": "RegGetValueW",
           "kind": "delay",
           "count": 1
         },
@@ -7776,12 +6745,6 @@
         {
           "dll": "DWMAPI.DLL",
           "symbol": "DwmGetWindowAttribute",
-          "kind": "delay",
-          "count": 1
-        },
-        {
-          "dll": "DWMAPI.DLL",
-          "symbol": "DwmSetWindowAttribute",
           "kind": "delay",
           "count": 1
         },
@@ -8327,12 +7290,6 @@
         },
         {
           "dll": "SHELL32.DLL",
-          "symbol": "SHCreateItemFromParsingName",
-          "kind": "delay",
-          "count": 1
-        },
-        {
-          "dll": "SHELL32.DLL",
           "symbol": "SHGetKnownFolderPath",
           "kind": "delay",
           "count": 3
@@ -8423,12 +7380,6 @@
         },
         {
           "dll": "USER32.DLL",
-          "symbol": "AddClipboardFormatListener",
-          "kind": "delay",
-          "count": 1
-        },
-        {
-          "dll": "USER32.DLL",
           "symbol": "CloseTouchInputHandle",
           "kind": "delay",
           "count": 1
@@ -8501,12 +7452,6 @@
         },
         {
           "dll": "USER32.DLL",
-          "symbol": "RemoveClipboardFormatListener",
-          "kind": "delay",
-          "count": 1
-        },
-        {
-          "dll": "USER32.DLL",
           "symbol": "SetProcessDPIAware",
           "kind": "delay",
           "count": 1
@@ -8538,36 +7483,6 @@
         {
           "dll": "UXTHEME.DLL",
           "symbol": "#47",
-          "kind": "delay",
-          "count": 1
-        },
-        {
-          "dll": "UXTHEME.DLL",
-          "symbol": "CloseThemeData",
-          "kind": "delay",
-          "count": 1
-        },
-        {
-          "dll": "UXTHEME.DLL",
-          "symbol": "DrawThemeBackground",
-          "kind": "delay",
-          "count": 1
-        },
-        {
-          "dll": "UXTHEME.DLL",
-          "symbol": "GetThemeBackgroundContentRect",
-          "kind": "delay",
-          "count": 1
-        },
-        {
-          "dll": "UXTHEME.DLL",
-          "symbol": "GetThemePartSize",
-          "kind": "delay",
-          "count": 1
-        },
-        {
-          "dll": "UXTHEME.DLL",
-          "symbol": "OpenThemeData",
           "kind": "delay",
           "count": 1
         },
@@ -8935,12 +7850,13 @@
             "total": 1297,
             "load": 569,
             "app_peer": 495,
-            "unresolved": 220,
+            "unresolved": 210,
+            "wrapper_source": 10,
             "delay": 728,
             "kernelex_source": 32
           },
-          "matched": 1077,
-          "matched_percent": 83.0378,
+          "matched": 1087,
+          "matched_percent": 83.8088,
           "baseline_or_artifact_percent": 42.4056,
           "unresolved": [
             {
@@ -9018,12 +7934,6 @@
             {
               "dll": "ADVAPI32.DLL",
               "symbol": "RegDeleteKeyExW",
-              "kind": "delay",
-              "count": 1
-            },
-            {
-              "dll": "ADVAPI32.DLL",
-              "symbol": "RegGetValueW",
               "kind": "delay",
               "count": 1
             },
@@ -9330,12 +8240,6 @@
             {
               "dll": "DWMAPI.DLL",
               "symbol": "DwmGetWindowAttribute",
-              "kind": "delay",
-              "count": 1
-            },
-            {
-              "dll": "DWMAPI.DLL",
-              "symbol": "DwmSetWindowAttribute",
               "kind": "delay",
               "count": 1
             },
@@ -9881,12 +8785,6 @@
             },
             {
               "dll": "SHELL32.DLL",
-              "symbol": "SHCreateItemFromParsingName",
-              "kind": "delay",
-              "count": 1
-            },
-            {
-              "dll": "SHELL32.DLL",
               "symbol": "SHGetKnownFolderPath",
               "kind": "delay",
               "count": 1
@@ -9977,12 +8875,6 @@
             },
             {
               "dll": "USER32.DLL",
-              "symbol": "AddClipboardFormatListener",
-              "kind": "delay",
-              "count": 1
-            },
-            {
-              "dll": "USER32.DLL",
               "symbol": "CloseTouchInputHandle",
               "kind": "delay",
               "count": 1
@@ -10055,12 +8947,6 @@
             },
             {
               "dll": "USER32.DLL",
-              "symbol": "RemoveClipboardFormatListener",
-              "kind": "delay",
-              "count": 1
-            },
-            {
-              "dll": "USER32.DLL",
               "symbol": "SetProcessDPIAware",
               "kind": "delay",
               "count": 1
@@ -10086,36 +8972,6 @@
             {
               "dll": "UXTHEME.DLL",
               "symbol": "#47",
-              "kind": "delay",
-              "count": 1
-            },
-            {
-              "dll": "UXTHEME.DLL",
-              "symbol": "CloseThemeData",
-              "kind": "delay",
-              "count": 1
-            },
-            {
-              "dll": "UXTHEME.DLL",
-              "symbol": "DrawThemeBackground",
-              "kind": "delay",
-              "count": 1
-            },
-            {
-              "dll": "UXTHEME.DLL",
-              "symbol": "GetThemeBackgroundContentRect",
-              "kind": "delay",
-              "count": 1
-            },
-            {
-              "dll": "UXTHEME.DLL",
-              "symbol": "GetThemePartSize",
-              "kind": "delay",
-              "count": 1
-            },
-            {
-              "dll": "UXTHEME.DLL",
-              "symbol": "OpenThemeData",
               "kind": "delay",
               "count": 1
             },
@@ -10446,369 +9302,13 @@
         "baseline": 537,
         "total": 614,
         "load": 614,
-        "unresolved": 59,
-        "kernelex_source": 14,
-        "wrapper_source": 4
+        "wrapper_source": 63,
+        "kernelex_source": 14
       },
-      "matched": 555,
-      "matched_percent": 90.3909,
+      "matched": 614,
+      "matched_percent": 100.0,
       "baseline_or_artifact_percent": 87.4593,
-      "unresolved": [
-        {
-          "dll": "ADVAPI32.DLL",
-          "symbol": "RegGetValueW",
-          "kind": "load",
-          "count": 1
-        },
-        {
-          "dll": "BCRYPT.DLL",
-          "symbol": "BCryptCloseAlgorithmProvider",
-          "kind": "load",
-          "count": 1
-        },
-        {
-          "dll": "BCRYPT.DLL",
-          "symbol": "BCryptCreateHash",
-          "kind": "load",
-          "count": 1
-        },
-        {
-          "dll": "BCRYPT.DLL",
-          "symbol": "BCryptDestroyHash",
-          "kind": "load",
-          "count": 1
-        },
-        {
-          "dll": "BCRYPT.DLL",
-          "symbol": "BCryptFinishHash",
-          "kind": "load",
-          "count": 1
-        },
-        {
-          "dll": "BCRYPT.DLL",
-          "symbol": "BCryptGetProperty",
-          "kind": "load",
-          "count": 1
-        },
-        {
-          "dll": "BCRYPT.DLL",
-          "symbol": "BCryptHashData",
-          "kind": "load",
-          "count": 1
-        },
-        {
-          "dll": "BCRYPT.DLL",
-          "symbol": "BCryptOpenAlgorithmProvider",
-          "kind": "load",
-          "count": 1
-        },
-        {
-          "dll": "COMCTL32.DLL",
-          "symbol": "#345",
-          "kind": "load",
-          "count": 1
-        },
-        {
-          "dll": "COMCTL32.DLL",
-          "symbol": "#381",
-          "kind": "load",
-          "count": 1
-        },
-        {
-          "dll": "DBGHELP.DLL",
-          "symbol": "ImageNtHeader",
-          "kind": "load",
-          "count": 1
-        },
-        {
-          "dll": "DWMAPI.DLL",
-          "symbol": "DwmGetColorizationColor",
-          "kind": "load",
-          "count": 1
-        },
-        {
-          "dll": "DWMAPI.DLL",
-          "symbol": "DwmSetWindowAttribute",
-          "kind": "load",
-          "count": 1
-        },
-        {
-          "dll": "KERNEL32.DLL",
-          "symbol": "AcquireSRWLockExclusive",
-          "kind": "load",
-          "count": 1
-        },
-        {
-          "dll": "KERNEL32.DLL",
-          "symbol": "CloseThreadpoolWork",
-          "kind": "load",
-          "count": 1
-        },
-        {
-          "dll": "KERNEL32.DLL",
-          "symbol": "CompareStringEx",
-          "kind": "load",
-          "count": 1
-        },
-        {
-          "dll": "KERNEL32.DLL",
-          "symbol": "CreateThreadpoolWork",
-          "kind": "load",
-          "count": 1
-        },
-        {
-          "dll": "KERNEL32.DLL",
-          "symbol": "FindFirstStreamW",
-          "kind": "load",
-          "count": 1
-        },
-        {
-          "dll": "KERNEL32.DLL",
-          "symbol": "FlsAlloc",
-          "kind": "load",
-          "count": 1
-        },
-        {
-          "dll": "KERNEL32.DLL",
-          "symbol": "FlsFree",
-          "kind": "load",
-          "count": 1
-        },
-        {
-          "dll": "KERNEL32.DLL",
-          "symbol": "FlsGetValue",
-          "kind": "load",
-          "count": 1
-        },
-        {
-          "dll": "KERNEL32.DLL",
-          "symbol": "FlsSetValue",
-          "kind": "load",
-          "count": 1
-        },
-        {
-          "dll": "KERNEL32.DLL",
-          "symbol": "FreeLibraryWhenCallbackReturns",
-          "kind": "load",
-          "count": 1
-        },
-        {
-          "dll": "KERNEL32.DLL",
-          "symbol": "GetApplicationRestartSettings",
-          "kind": "load",
-          "count": 1
-        },
-        {
-          "dll": "KERNEL32.DLL",
-          "symbol": "GetDateFormatEx",
-          "kind": "load",
-          "count": 1
-        },
-        {
-          "dll": "KERNEL32.DLL",
-          "symbol": "GetFinalPathNameByHandleW",
-          "kind": "load",
-          "count": 1
-        },
-        {
-          "dll": "KERNEL32.DLL",
-          "symbol": "GetLocaleInfoEx",
-          "kind": "load",
-          "count": 1
-        },
-        {
-          "dll": "KERNEL32.DLL",
-          "symbol": "GetProductInfo",
-          "kind": "load",
-          "count": 1
-        },
-        {
-          "dll": "KERNEL32.DLL",
-          "symbol": "GetTimeFormatEx",
-          "kind": "load",
-          "count": 1
-        },
-        {
-          "dll": "KERNEL32.DLL",
-          "symbol": "InitOnceBeginInitialize",
-          "kind": "load",
-          "count": 1
-        },
-        {
-          "dll": "KERNEL32.DLL",
-          "symbol": "InitOnceComplete",
-          "kind": "load",
-          "count": 1
-        },
-        {
-          "dll": "KERNEL32.DLL",
-          "symbol": "LCMapStringEx",
-          "kind": "load",
-          "count": 1
-        },
-        {
-          "dll": "KERNEL32.DLL",
-          "symbol": "QueryFullProcessImageNameW",
-          "kind": "load",
-          "count": 1
-        },
-        {
-          "dll": "KERNEL32.DLL",
-          "symbol": "RegisterApplicationRestart",
-          "kind": "load",
-          "count": 1
-        },
-        {
-          "dll": "KERNEL32.DLL",
-          "symbol": "ReleaseSRWLockExclusive",
-          "kind": "load",
-          "count": 1
-        },
-        {
-          "dll": "KERNEL32.DLL",
-          "symbol": "SleepConditionVariableSRW",
-          "kind": "load",
-          "count": 1
-        },
-        {
-          "dll": "KERNEL32.DLL",
-          "symbol": "SubmitThreadpoolWork",
-          "kind": "load",
-          "count": 1
-        },
-        {
-          "dll": "KERNEL32.DLL",
-          "symbol": "TryAcquireSRWLockExclusive",
-          "kind": "load",
-          "count": 1
-        },
-        {
-          "dll": "KERNEL32.DLL",
-          "symbol": "UnregisterApplicationRestart",
-          "kind": "load",
-          "count": 1
-        },
-        {
-          "dll": "KERNEL32.DLL",
-          "symbol": "WakeAllConditionVariable",
-          "kind": "load",
-          "count": 1
-        },
-        {
-          "dll": "SHELL32.DLL",
-          "symbol": "SHCreateItemFromParsingName",
-          "kind": "load",
-          "count": 1
-        },
-        {
-          "dll": "USER32.DLL",
-          "symbol": "AddClipboardFormatListener",
-          "kind": "load",
-          "count": 1
-        },
-        {
-          "dll": "USER32.DLL",
-          "symbol": "RemoveClipboardFormatListener",
-          "kind": "load",
-          "count": 1
-        },
-        {
-          "dll": "UXTHEME.DLL",
-          "symbol": "BeginBufferedAnimation",
-          "kind": "load",
-          "count": 1
-        },
-        {
-          "dll": "UXTHEME.DLL",
-          "symbol": "BufferedPaintRenderAnimation",
-          "kind": "load",
-          "count": 1
-        },
-        {
-          "dll": "UXTHEME.DLL",
-          "symbol": "BufferedPaintStopAllAnimations",
-          "kind": "load",
-          "count": 1
-        },
-        {
-          "dll": "UXTHEME.DLL",
-          "symbol": "CloseThemeData",
-          "kind": "load",
-          "count": 1
-        },
-        {
-          "dll": "UXTHEME.DLL",
-          "symbol": "DrawThemeBackground",
-          "kind": "load",
-          "count": 1
-        },
-        {
-          "dll": "UXTHEME.DLL",
-          "symbol": "DrawThemeParentBackground",
-          "kind": "load",
-          "count": 1
-        },
-        {
-          "dll": "UXTHEME.DLL",
-          "symbol": "DrawThemeTextEx",
-          "kind": "load",
-          "count": 1
-        },
-        {
-          "dll": "UXTHEME.DLL",
-          "symbol": "EnableThemeDialogTexture",
-          "kind": "load",
-          "count": 1
-        },
-        {
-          "dll": "UXTHEME.DLL",
-          "symbol": "EndBufferedAnimation",
-          "kind": "load",
-          "count": 1
-        },
-        {
-          "dll": "UXTHEME.DLL",
-          "symbol": "GetThemeBackgroundContentRect",
-          "kind": "load",
-          "count": 1
-        },
-        {
-          "dll": "UXTHEME.DLL",
-          "symbol": "GetThemeColor",
-          "kind": "load",
-          "count": 1
-        },
-        {
-          "dll": "UXTHEME.DLL",
-          "symbol": "GetThemeFont",
-          "kind": "load",
-          "count": 1
-        },
-        {
-          "dll": "UXTHEME.DLL",
-          "symbol": "GetThemePartSize",
-          "kind": "load",
-          "count": 1
-        },
-        {
-          "dll": "UXTHEME.DLL",
-          "symbol": "GetThemeTransitionDuration",
-          "kind": "load",
-          "count": 1
-        },
-        {
-          "dll": "UXTHEME.DLL",
-          "symbol": "OpenThemeData",
-          "kind": "load",
-          "count": 1
-        },
-        {
-          "dll": "UXTHEME.DLL",
-          "symbol": "SetWindowTheme",
-          "kind": "load",
-          "count": 1
-        }
-      ],
+      "unresolved": [],
       "files": [
         {
           "file": "C:\\Users\\NSLT\\Documents\\Win98-Modern\\benchmarks\\media\\npp-8.9.8\\notepad++.exe",
@@ -10817,369 +9317,13 @@
             "baseline": 537,
             "total": 614,
             "load": 614,
-            "unresolved": 59,
-            "kernelex_source": 14,
-            "wrapper_source": 4
+            "wrapper_source": 63,
+            "kernelex_source": 14
           },
-          "matched": 555,
-          "matched_percent": 90.3909,
+          "matched": 614,
+          "matched_percent": 100.0,
           "baseline_or_artifact_percent": 87.4593,
-          "unresolved": [
-            {
-              "dll": "ADVAPI32.DLL",
-              "symbol": "RegGetValueW",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "BCRYPT.DLL",
-              "symbol": "BCryptCloseAlgorithmProvider",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "BCRYPT.DLL",
-              "symbol": "BCryptCreateHash",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "BCRYPT.DLL",
-              "symbol": "BCryptDestroyHash",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "BCRYPT.DLL",
-              "symbol": "BCryptFinishHash",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "BCRYPT.DLL",
-              "symbol": "BCryptGetProperty",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "BCRYPT.DLL",
-              "symbol": "BCryptHashData",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "BCRYPT.DLL",
-              "symbol": "BCryptOpenAlgorithmProvider",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "COMCTL32.DLL",
-              "symbol": "#345",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "COMCTL32.DLL",
-              "symbol": "#381",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "DBGHELP.DLL",
-              "symbol": "ImageNtHeader",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "DWMAPI.DLL",
-              "symbol": "DwmGetColorizationColor",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "DWMAPI.DLL",
-              "symbol": "DwmSetWindowAttribute",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
-              "symbol": "AcquireSRWLockExclusive",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
-              "symbol": "CloseThreadpoolWork",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
-              "symbol": "CompareStringEx",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
-              "symbol": "CreateThreadpoolWork",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
-              "symbol": "FindFirstStreamW",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
-              "symbol": "FlsAlloc",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
-              "symbol": "FlsFree",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
-              "symbol": "FlsGetValue",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
-              "symbol": "FlsSetValue",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
-              "symbol": "FreeLibraryWhenCallbackReturns",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
-              "symbol": "GetApplicationRestartSettings",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
-              "symbol": "GetDateFormatEx",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
-              "symbol": "GetFinalPathNameByHandleW",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
-              "symbol": "GetLocaleInfoEx",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
-              "symbol": "GetProductInfo",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
-              "symbol": "GetTimeFormatEx",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
-              "symbol": "InitOnceBeginInitialize",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
-              "symbol": "InitOnceComplete",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
-              "symbol": "LCMapStringEx",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
-              "symbol": "QueryFullProcessImageNameW",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
-              "symbol": "RegisterApplicationRestart",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
-              "symbol": "ReleaseSRWLockExclusive",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
-              "symbol": "SleepConditionVariableSRW",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
-              "symbol": "SubmitThreadpoolWork",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
-              "symbol": "TryAcquireSRWLockExclusive",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
-              "symbol": "UnregisterApplicationRestart",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "KERNEL32.DLL",
-              "symbol": "WakeAllConditionVariable",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "SHELL32.DLL",
-              "symbol": "SHCreateItemFromParsingName",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "USER32.DLL",
-              "symbol": "AddClipboardFormatListener",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "USER32.DLL",
-              "symbol": "RemoveClipboardFormatListener",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "UXTHEME.DLL",
-              "symbol": "BeginBufferedAnimation",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "UXTHEME.DLL",
-              "symbol": "BufferedPaintRenderAnimation",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "UXTHEME.DLL",
-              "symbol": "BufferedPaintStopAllAnimations",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "UXTHEME.DLL",
-              "symbol": "CloseThemeData",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "UXTHEME.DLL",
-              "symbol": "DrawThemeBackground",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "UXTHEME.DLL",
-              "symbol": "DrawThemeParentBackground",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "UXTHEME.DLL",
-              "symbol": "DrawThemeTextEx",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "UXTHEME.DLL",
-              "symbol": "EnableThemeDialogTexture",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "UXTHEME.DLL",
-              "symbol": "EndBufferedAnimation",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "UXTHEME.DLL",
-              "symbol": "GetThemeBackgroundContentRect",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "UXTHEME.DLL",
-              "symbol": "GetThemeColor",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "UXTHEME.DLL",
-              "symbol": "GetThemeFont",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "UXTHEME.DLL",
-              "symbol": "GetThemePartSize",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "UXTHEME.DLL",
-              "symbol": "GetThemeTransitionDuration",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "UXTHEME.DLL",
-              "symbol": "OpenThemeData",
-              "kind": "load",
-              "count": 1
-            },
-            {
-              "dll": "UXTHEME.DLL",
-              "symbol": "SetWindowTheme",
-              "kind": "load",
-              "count": 1
-            }
-          ]
+          "unresolved": []
         }
       ],
       "app_peer_pe": []
