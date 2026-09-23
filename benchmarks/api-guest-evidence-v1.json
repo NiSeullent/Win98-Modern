@@ -1,0 +1,202 @@
+{
+  "schema": "w98mod.api-guest-evidence.v1",
+  "records": [
+    {
+      "id": "guest-m98wrp16-initonce-2026-09-24",
+      "family": "initonce",
+      "apis": [
+        {
+          "dll": "KERNEL32.DLL",
+          "name": "InitOnceBeginInitialize"
+        },
+        {
+          "dll": "KERNEL32.DLL",
+          "name": "InitOnceComplete"
+        },
+        {
+          "dll": "KERNEL32.DLL",
+          "name": "InitOnceExecuteOnce"
+        },
+        {
+          "dll": "KERNEL32.DLL",
+          "name": "InitOnceInitialize"
+        }
+      ],
+      "evidence_kind": "guest_static_import_contract_subset",
+      "environment": {
+        "os": "Directly installed Korean Windows 98 SE",
+        "vm": "Win98Modern-Accel-128",
+        "acceleration": "VirtualBox NEM hardware virtualization; current boot checked by vm/run.ps1"
+      },
+      "provider": {
+        "path": "build/m98wrap.dll",
+        "guest_path": "C:\\WINDOWS\\KernelEx\\M98WRP16.DLL",
+        "sha256": "e519192a39ca04f5bc2563a9fd42ac3d4d406209b4bd024ded481a3c3d9714b9"
+      },
+      "core_ini_sha256": "bd443e91dfa00a49d30dc870441c556b123e1e7dc0bce939b8c05fb39f647d97",
+      "test": {
+        "path": "build/initonce/initonce_import_probe.exe",
+        "sha256": "eda1117c4b288eb8d9961496ae52b575dfd95888350a483e65951564f6750ea6"
+      },
+      "source_hashes": {
+        "src/m98wrap.c": "ce61c8b5ccf023df4ce0b60e88ab375f0b45c0eb160718b6493a04bd0c55c1dd",
+        "src/m98_initonce.c": "74d7d663f4969f9b4a62788695a345e96f90b2059d40cb376a9649abc2383e5d",
+        "src/m98_initonce.h": "4dedec974f4e34280e8b88bb00eed1bc7e7f5530f2456aa89643d3847b57e55c",
+        "src/m98_threadpool.c": "0b66bb50e1a7a785053ce5bc6ee8cc3ebafa880d04b0b0f713c9a7a1a4b8851a",
+        "src/m98_threadpool.h": "33b986e0d8d3a2eb0cfbca29e5f82f97c337dc156d713ec4f55d6f28f6d083b2",
+        "src/m98nls_ex.c": "8f9fcd1b5ed2a9a446ed64f4568386c7013d1cbe459106a15dd95fda8366344c",
+        "src/m98nls_ex.h": "1dcefe53ee05290fe6d2f77df454534aeb7a08327b9ad17d90788d3e6d0e4505",
+        "src/wine_uppercase.c": "59a48d395e850d39eee0c6919fdc7ed73d28e7982da544a6d300c454d83bb888",
+        "src/kex_abi.h": "87899e80ba1076fa0a2ccde507304f1553cdd6bf4468cb708f361d749a2673fd"
+      },
+      "receipt": {
+        "command": "C:\\M98LAB\\ONCEIMP.EXE",
+        "cwd": "C:\\M98LAB",
+        "timeout_ms": 60000,
+        "exit_code": 0,
+        "timed_out": false,
+        "output_truncated": false,
+        "output_bytes": 72,
+        "output_sha256": "c0356210364223dac3ebe0cb8068f166d6694eadae3950326c6f67e08a9787ac",
+        "output": "PASS: static KERNEL32 InitOnce four-API contracts and 192 worker races\r\n",
+        "guest": "m98agent/v1 protocol=1 os=4.10 build=67766446",
+        "transport": "VirtualBox COM1 local named pipe",
+        "pipe": "\\\\.\\pipe\\Win98Modern-Lab"
+      },
+      "scope": "Four-API valid/invalid flags, manual/ExecuteOnce mixing, retry, aligned contexts and 192 worker races",
+      "limitations": "Invalid ExecuteOnce on async state and misaligned callback context return FALSE instead of the native exceptions; polling wait differs from NT keyed events.",
+      "documentation": "docs/INITONCE_PORT.md",
+      "full_compatibility_verified": false
+    },
+    {
+      "id": "guest-m98wrp16-threadpool-work-2026-09-24",
+      "family": "threadpool-work",
+      "apis": [
+        {
+          "dll": "KERNEL32.DLL",
+          "name": "CloseThreadpoolWork"
+        },
+        {
+          "dll": "KERNEL32.DLL",
+          "name": "CreateThreadpoolWork"
+        },
+        {
+          "dll": "KERNEL32.DLL",
+          "name": "FreeLibraryWhenCallbackReturns"
+        },
+        {
+          "dll": "KERNEL32.DLL",
+          "name": "SubmitThreadpoolWork"
+        },
+        {
+          "dll": "KERNEL32.DLL",
+          "name": "WaitForThreadpoolWorkCallbacks"
+        }
+      ],
+      "evidence_kind": "guest_static_import_contract_subset",
+      "environment": {
+        "os": "Directly installed Korean Windows 98 SE",
+        "vm": "Win98Modern-Accel-128",
+        "acceleration": "VirtualBox NEM hardware virtualization; current boot checked by vm/run.ps1"
+      },
+      "provider": {
+        "path": "build/m98wrap.dll",
+        "guest_path": "C:\\WINDOWS\\KernelEx\\M98WRP16.DLL",
+        "sha256": "e519192a39ca04f5bc2563a9fd42ac3d4d406209b4bd024ded481a3c3d9714b9"
+      },
+      "core_ini_sha256": "bd443e91dfa00a49d30dc870441c556b123e1e7dc0bce939b8c05fb39f647d97",
+      "test": {
+        "path": "build/threadpool/threadpool_guest_import_smoke.exe",
+        "sha256": "6c03fda354102ffbff0f732589461ebcb32e532d8d15d0718d6cbdffe2662810"
+      },
+      "source_hashes": {
+        "src/m98wrap.c": "ce61c8b5ccf023df4ce0b60e88ab375f0b45c0eb160718b6493a04bd0c55c1dd",
+        "src/m98_initonce.c": "74d7d663f4969f9b4a62788695a345e96f90b2059d40cb376a9649abc2383e5d",
+        "src/m98_initonce.h": "4dedec974f4e34280e8b88bb00eed1bc7e7f5530f2456aa89643d3847b57e55c",
+        "src/m98_threadpool.c": "0b66bb50e1a7a785053ce5bc6ee8cc3ebafa880d04b0b0f713c9a7a1a4b8851a",
+        "src/m98_threadpool.h": "33b986e0d8d3a2eb0cfbca29e5f82f97c337dc156d713ec4f55d6f28f6d083b2",
+        "src/m98nls_ex.c": "8f9fcd1b5ed2a9a446ed64f4568386c7013d1cbe459106a15dd95fda8366344c",
+        "src/m98nls_ex.h": "1dcefe53ee05290fe6d2f77df454534aeb7a08327b9ad17d90788d3e6d0e4505",
+        "src/wine_uppercase.c": "59a48d395e850d39eee0c6919fdc7ed73d28e7982da544a6d300c454d83bb888",
+        "src/kex_abi.h": "87899e80ba1076fa0a2ccde507304f1553cdd6bf4468cb708f361d749a2673fd"
+      },
+      "receipt": {
+        "command": "C:\\M98LAB\\TPFULL.EXE",
+        "cwd": "C:\\M98LAB",
+        "timeout_ms": 45000,
+        "exit_code": 0,
+        "timed_out": false,
+        "output_truncated": false,
+        "output_bytes": 79,
+        "output_sha256": "8d211601f8525aac30b95958fd294b4825db7ad97e868fd67a3b07127db6b37a",
+        "output": "PASS: static Win98 threadpool lifecycle, parallelism, cancel, deferred unload\r\n",
+        "guest": "m98agent/v1 protocol=1 os=4.10 build=67766446",
+        "transport": "VirtualBox COM1 local named pipe",
+        "pipe": "\\\\.\\pipe\\Win98Modern-Lab"
+      },
+      "scope": "Default work pool, parallelism, queue cancellation, queued/active close lifetime and deferred DLL unload",
+      "limitations": "Custom pools and timer/wait/I/O/cleanup-group APIs are not implemented; this is five work-object API contract subsets.",
+      "documentation": "docs/THREADPOOL_WORK_PORT.md",
+      "full_compatibility_verified": false
+    },
+    {
+      "id": "guest-m98wrp16-nls-ex-2026-09-24",
+      "family": "nls-ex",
+      "apis": [
+        {
+          "dll": "KERNEL32.DLL",
+          "name": "CompareStringEx"
+        },
+        {
+          "dll": "KERNEL32.DLL",
+          "name": "LCMapStringEx"
+        }
+      ],
+      "evidence_kind": "guest_static_import_contract_subset",
+      "environment": {
+        "os": "Directly installed Korean Windows 98 SE",
+        "vm": "Win98Modern-Accel-128",
+        "acceleration": "VirtualBox NEM hardware virtualization; current boot checked by vm/run.ps1"
+      },
+      "provider": {
+        "path": "build/m98wrap.dll",
+        "guest_path": "C:\\WINDOWS\\KernelEx\\M98WRP16.DLL",
+        "sha256": "e519192a39ca04f5bc2563a9fd42ac3d4d406209b4bd024ded481a3c3d9714b9"
+      },
+      "core_ini_sha256": "bd443e91dfa00a49d30dc870441c556b123e1e7dc0bce939b8c05fb39f647d97",
+      "test": {
+        "path": "build/nls-ex/nls_ex_import_probe.exe",
+        "sha256": "b756589b4705efa15ba47004f61804452dd5bb3bc1a6a006cb07a61d825d6a46"
+      },
+      "source_hashes": {
+        "src/m98wrap.c": "ce61c8b5ccf023df4ce0b60e88ab375f0b45c0eb160718b6493a04bd0c55c1dd",
+        "src/m98_initonce.c": "74d7d663f4969f9b4a62788695a345e96f90b2059d40cb376a9649abc2383e5d",
+        "src/m98_initonce.h": "4dedec974f4e34280e8b88bb00eed1bc7e7f5530f2456aa89643d3847b57e55c",
+        "src/m98_threadpool.c": "0b66bb50e1a7a785053ce5bc6ee8cc3ebafa880d04b0b0f713c9a7a1a4b8851a",
+        "src/m98_threadpool.h": "33b986e0d8d3a2eb0cfbca29e5f82f97c337dc156d713ec4f55d6f28f6d083b2",
+        "src/m98nls_ex.c": "8f9fcd1b5ed2a9a446ed64f4568386c7013d1cbe459106a15dd95fda8366344c",
+        "src/m98nls_ex.h": "1dcefe53ee05290fe6d2f77df454534aeb7a08327b9ad17d90788d3e6d0e4505",
+        "src/wine_uppercase.c": "59a48d395e850d39eee0c6919fdc7ed73d28e7982da544a6d300c454d83bb888",
+        "src/kex_abi.h": "87899e80ba1076fa0a2ccde507304f1553cdd6bf4468cb708f361d749a2673fd"
+      },
+      "receipt": {
+        "command": "C:\\M98LAB\\NLSI14.EXE",
+        "cwd": "C:\\M98LAB",
+        "timeout_ms": 20000,
+        "exit_code": 0,
+        "timed_out": false,
+        "output_truncated": false,
+        "output_bytes": 0,
+        "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "output": "",
+        "guest": "m98agent/v1 protocol=1 os=4.10 build=67766446",
+        "transport": "VirtualBox COM1 local named pipe",
+        "pipe": "\\\\.\\pipe\\Win98Modern-Lab"
+      },
+      "scope": "Static en-US case-insensitive comparison and lowercase mapping through the sibling KernelEx Unicode provider",
+      "limitations": "A limited static comparison/mapping probe does not establish all flags, locales or modern linguistic-data parity.",
+      "documentation": "docs/NLS_EX_PORT.md",
+      "full_compatibility_verified": false
+    }
+  ]
+}

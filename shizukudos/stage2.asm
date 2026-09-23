@@ -33,6 +33,7 @@ start:
     sti
     mov [boot_drive], dl
     call serial_init
+    call cpu_detect
     mov si, banner
     call puts
     call load_fat
@@ -102,6 +103,11 @@ shell:
     test al, al
     jnz do_pci
     mov si, input_buffer
+    mov di, cmd_cpu
+    call match_cmd
+    test al, al
+    jnz do_cpu
+    mov si, input_buffer
     mov di, cmd_boot
     call match_cmd
     test al, al
@@ -168,6 +174,120 @@ do_stack:
     call print_hex16
     call newline
     jmp shell
+
+do_cpu:
+    mov si, cpu_header_text
+    call puts
+    cmp byte [cpu_has_cpuid], 0
+    jne .with_cpuid
+    mov si, cpu_legacy_text
+    call puts
+    mov al, [cpu_legacy_class]
+    add al, '0'
+    call putc
+    mov si, cpu_legacy_suffix
+    call puts
+    jmp shell
+.with_cpuid:
+    mov si, cpu_vendor_text
+    call puts
+    mov si, cpu_vendor
+    call puts
+    call newline
+    cmp dword [cpu_max_basic], 1
+    jae .leaf1_available
+    mov si, cpu_leaf1_unavailable_text
+    call puts
+    jmp shell
+.leaf1_available:
+    mov si, cpu_family_text
+    call puts
+    mov ax, [cpu_family]
+    call print_u16
+    mov si, cpu_model_text
+    call puts
+    mov ax, [cpu_model]
+    call print_u16
+    mov si, cpu_stepping_text
+    call puts
+    mov ax, [cpu_stepping]
+    call print_u16
+    call newline
+    mov si, cpu_logical_text
+    call puts
+    mov ax, [cpu_logical]
+    call print_u16
+    mov si, cpu_cores_text
+    call puts
+    cmp word [cpu_cores], 0
+    je .unknown_cores
+    mov ax, [cpu_cores]
+    call print_u16
+    jmp .threads
+.unknown_cores:
+    mov si, cpu_unknown_text
+    call puts
+.threads:
+    mov si, cpu_threads_text
+    call puts
+    cmp word [cpu_cores], 0
+    je .unknown_threads
+    mov ax, [cpu_threads]
+    call print_u16
+    jmp .feature_lines
+.unknown_threads:
+    mov si, cpu_unknown_text
+    call puts
+.feature_lines:
+    call newline
+    mov si, cpu_top_source_text
+    call puts
+    xor bx, bx
+    mov bl, [cpu_top_source]
+    shl bx, 1
+    mov si, [cpu_top_source_labels+bx]
+    call puts
+    call newline
+    mov si, cpu_pae_text
+    call puts
+    mov edx, [cpu_leaf1_edx]
+    bt edx, 6
+    call cpu_put_cf_yesno
+    mov si, cpu_xsave_text
+    call puts
+    mov edx, [cpu_leaf1_ecx]
+    bt edx, 26
+    call cpu_put_cf_yesno
+    mov si, cpu_osxsave_text
+    call puts
+    bt edx, 27
+    call cpu_put_cf_yesno
+    mov si, cpu_avx_hw_text
+    call puts
+    bt edx, 28
+    call cpu_put_cf_yesno
+    mov si, cpu_avx_active_text
+    call puts
+    cmp byte [cpu_avx_eligible], 0
+    je .avx_inactive
+    stc
+    jmp .print_avx_active
+.avx_inactive:
+    clc
+.print_avx_active:
+    call cpu_put_cf_yesno
+    call newline
+    jmp shell
+
+cpu_put_cf_yesno:
+    push ax
+    mov al, 'N'
+    jnc .emit
+    mov al, 'Y'
+.emit:
+    call putc
+    pop ax
+    ret
 
 do_pci:
     mov ax, 0xb101             ; PCI BIOS installation check
@@ -1122,6 +1242,8 @@ print_hex_nibble:
     call putc
     ret
 
+%include "cpu_detect.inc"
+
 boot_drive: db 0
 root_sector: dw 0
 file_cluster: dw 0
@@ -1165,12 +1287,13 @@ cmd_cls: db 'CLS',0
 cmd_ver: db 'VER',0
 cmd_mem: db 'MEM',0
 cmd_pci: db 'PCI',0
+cmd_cpu: db 'CPU',0
 cmd_boot: db 'BOOT',0
 cmd_bootc: db 'BOOTC',0
 cmd_reboot: db 'REBOOT',0
 banner: db 13,10,'ShizukuDOS 0.1 - experimental real-mode shell',13,10,0
 prompt: db 'A:\> ',0
-help_text: db 'HELP DIR TYPE filename EXEC file.COM CLS VER MEM STACK PCI BOOT BOOTC REBOOT',13,10,0
+help_text: db 'HELP DIR TYPE filename EXEC file.COM CLS VER MEM STACK CPU PCI BOOT BOOTC REBOOT',13,10,0
 dir_heading: db 'FAT12 root directory:',13,10,0
 type_usage: db 'Usage: TYPE 8.3NAME',13,10,0
 exec_usage: db 'Usage: EXEC 8.3NAME.COM',13,10,0

@@ -14,7 +14,7 @@ $stdDemo = Join-Path $OutputDirectory 'std.com'
 $image = Join-Path $OutputDirectory 'shizukudos.img'
 & $assembler -f bin (Join-Path $PSScriptRoot 'boot.asm') -o $boot
 if ($LASTEXITCODE -ne 0) { throw 'Failed to assemble boot sector.' }
-& $assembler -f bin (Join-Path $PSScriptRoot 'stage2.asm') -o $stage2
+& $assembler -f bin '-I' "$PSScriptRoot/" (Join-Path $PSScriptRoot 'stage2.asm') -o $stage2
 if ($LASTEXITCODE -ne 0) { throw 'Failed to assemble stage2.' }
 & $assembler -f bin (Join-Path $PSScriptRoot 'tests\demo_com.asm') -o $demo
 if ($LASTEXITCODE -ne 0) { throw 'Failed to assemble demo COM program.' }

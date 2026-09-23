@@ -28,8 +28,9 @@ device registration. In the Korean Win98 guest the manual hardware wizard can
 be opened with `rundll32.exe sysdm.cpl,InstallDevice_Rundll`. Select Ports,
 Communications Port, 03F8–03FF and IRQ 4; provide the original OEM installation
 CD when it requests SERIALUI.DLL. Preserve a snapshot before device experiments.
-The first post-install reboot in this lab hit a VxD exception; see the validation
-status below before treating this bootstrap procedure as complete.
+The first post-install reboot in this lab hit a VxD exception with a 16550A
+UART. The recovered test clone subsequently booted and passed the suites with
+the VM set to a 16450 UART. Keep that setting for the current evidence.
 
 `remote/console.py` supplies paced bootstrap keys and screenshots without guest
 additions. `run` opens the Run dialog and submits an ASCII command; `type`
@@ -44,6 +45,7 @@ python remote/controller.py ping
 python remote/controller.py exec 'C:\M98LAB\remote_fixture.exe fail'
 python remote/tester.py remote/suites/transport.json
 python remote/tester.py remote/suites/api-direct.json
+python remote/controller.py stop
 ```
 
 `transport.json` tests stdout/stderr, exit code 7, bounded child termination and
@@ -65,15 +67,24 @@ is 30 seconds; restart it visibly after a broken frame. Details: [protocol](PROT
 ## Current evidence
 
 Host protocol tests: `python -B -m unittest discover -s remote/tests -v` passes
-9 cases, including real Windows named-pipe partial reads and deadline cancellation,
+10 cases, including real Windows named-pipe partial reads and deadline cancellation,
 and simulated interrupted/corrupt transfers that preserve the destination.
-These host tests do not establish Windows 98 serial behavior.
+These host tests alone do not establish Windows 98 serial behavior.
 
 The guest agent builds as PE32 console 4.10 with 30 OEM-native KERNEL32 imports.
 On 2026-09-23 COM1 registration completed using the OEM CD, but the next boot
 raised VxD 0D and then 0E exceptions. The test clone was snapshotted as
 `before-com-recovery-20260923`. Patcher9x v0.9.91 found VMM32 already patched for
 TLB and made no change. UART-off recovery reached safe mode, followed by a clean
-restart to the normal desktop. A 16450 UART is the next isolated trial; this
-does not yet establish which component caused the first exception. No successful
-guest PING, file transfer, or remote test suite is claimed yet.
+restart to the normal desktop. A 16450 UART then booted the normal GUI and
+connected to the agent. The exact cause of the earlier 16550A boot exception
+remains undetermined.
+
+With that 16450 setup, `build/remote/transport-16450-first.json` recorded 3/3
+guest transport cases passing. `build/remote/api-direct-16450-first.json`
+recorded 5/5 direct API cases passing for KERNEL32, BCRYPT, DBGHELP, DWMAPI and
+SHELL32 after SHA-256 verified file transfers. These ignored local evidence
+files identify the guest as Windows 4.10 and record current hardware-acceleration
+evidence. The newer agent uploaded to `C:\M98LAB\M98AG2.EXE` also acknowledged
+STOP in the guest and its console exited cleanly. This verifies the lab channel
+and the direct cases only; it does not establish application startup.

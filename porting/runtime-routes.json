@@ -1,0 +1,8 @@
+{
+  "schema": "w98mod.runtime-routes.v1",
+  "families": {
+    "initonce": ["InitOnceBeginInitialize", "InitOnceComplete", "InitOnceExecuteOnce", "InitOnceInitialize"],
+    "nls-ex": ["CompareStringEx", "LCMapStringEx"],
+    "threadpool-work": ["CloseThreadpoolWork", "CreateThreadpoolWork", "FreeLibraryWhenCallbackReturns", "SubmitThreadpoolWork", "WaitForThreadpoolWorkCallbacks"]
+  }
+}

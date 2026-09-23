@@ -1,0 +1,3383 @@
+{
+  "counts": {
+    "distinct_interface_guid": 65,
+    "lexical_pairs": 67,
+    "matching_guid_requires_abi_review": 2
+  },
+  "input_inventory_sha256": "e95ee97b426941d3deb1d6f3f34a4f460c012f8a5623b1dc0a7e53f445b033c0",
+  "input_tree_sha256": "7576ed1802901edd16a096165a32e3dd9ef771a8910672085f0ae305288be78d",
+  "matching_rule": "unqualified IDL interface name + method name equals WinMD owner name + method name",
+  "reviews": [
+    {
+      "decision_reason": "IDL IID 0dc5e6ed-3e16-4bf1-8f9a-a979878bc195 differs from WinMD GuidAttribute df1d48bc-0487-4e7f-9d5e-f09e77e41246; these are distinct nominal interface identities.",
+      "dependency_review": null,
+      "identity_review": "distinct_interface_guid",
+      "idl": {
+        "base": "ITextProvider",
+        "iid": "0dc5e6ed-3e16-4bf1-8f9a-a979878bc195",
+        "sources": [
+          {
+            "declaration": {
+              "declaration_sha256": "76225acbcf4d7a833132c0575e2cdbdeac7d25b57778f8b4daf748f865d2c147",
+              "declaration_text": "HRESULT GetCaretRange ( \n            [out] BOOL * isActive,\n            [out, retval] ITextRangeProvider ** pRetVal )",
+              "declared_return": "HRESULT",
+              "parameter_count": 2,
+              "parameter_declarations": [
+                "[out] BOOL * isActive",
+                "[out, retval] ITextRangeProvider ** pRetVal"
+              ],
+              "retval_parameter_count": 1
+            },
+            "path": "Include/10.0.28000.2705/um/UIAutomationCore.idl",
+            "sha256": "57833474568fcdc6ea385834d95b7f7d6229c6949c20902d714a5ea16b5297eb"
+          }
+        ]
+      },
+      "idl_id": "com:{0dc5e6ed-3e16-4bf1-8f9a-a979878bc195}::GetCaretRange#1",
+      "lexical_key": {
+        "method": "GetCaretRange",
+        "unqualified_owner": "ITextProvider2"
+      },
+      "winmd": {
+        "interface_guid": "df1d48bc-0487-4e7f-9d5e-f09e77e41246",
+        "method_def_row": 52971,
+        "method_def_token": "0x0600ceeb",
+        "namespace": "Windows.UI.Xaml.Automation.Provider",
+        "signature": {
+          "blob_hex": "200112c000b5211002",
+          "calling_convention_byte": 32,
+          "decode_status": "decoded_supported_elements",
+          "parameter_count": 1,
+          "parameter_types": [
+            "byref<bool>"
+          ],
+          "return_type": "Windows.UI.Xaml.Automation.Provider.ITextRangeProvider"
+        },
+        "source": "UnionMetadata/10.0.28000.2705/Windows.winmd",
+        "source_sha256": "f8f32012964adb9130dd4d66fdd651daddb6cbbb9fe59e70ba6637e16e3c99ad",
+        "type_def_row": 11587
+      },
+      "winmd_id": "winrt:Windows.UI.Xaml.Automation.Provider.ITextProvider2::GetCaretRange#1"
+    },
+    {
+      "decision_reason": "IDL IID 0dc5e6ed-3e16-4bf1-8f9a-a979878bc195 differs from WinMD GuidAttribute df1d48bc-0487-4e7f-9d5e-f09e77e41246; these are distinct nominal interface identities.",
+      "dependency_review": null,
+      "identity_review": "distinct_interface_guid",
+      "idl": {
+        "base": "ITextProvider",
+        "iid": "0dc5e6ed-3e16-4bf1-8f9a-a979878bc195",
+        "sources": [
+          {
+            "declaration": {
+              "declaration_sha256": "616254cc2e8f786606ec726aa8a34c0326a769a997e3192dc248b7427ae72867",
+              "declaration_text": "HRESULT RangeFromAnnotation (\n            [in] IRawElementProviderSimple * annotationElement,\n            [out, retval] ITextRangeProvider ** pRetVal )",
+              "declared_return": "HRESULT",
+              "parameter_count": 2,
+              "parameter_declarations": [
+                "[in] IRawElementProviderSimple * annotationElement",
+                "[out, retval] ITextRangeProvider ** pRetVal"
+              ],
+              "retval_parameter_count": 1
+            },
+            "path": "Include/10.0.28000.2705/um/UIAutomationCore.idl",
+            "sha256": "57833474568fcdc6ea385834d95b7f7d6229c6949c20902d714a5ea16b5297eb"
+          }
+        ]
+      },
+      "idl_id": "com:{0dc5e6ed-3e16-4bf1-8f9a-a979878bc195}::RangeFromAnnotation#1",
+      "lexical_key": {
+        "method": "RangeFromAnnotation",
+        "unqualified_owner": "ITextProvider2"
+      },
+      "winmd": {
+        "interface_guid": "df1d48bc-0487-4e7f-9d5e-f09e77e41246",
+        "method_def_row": 52970,
+        "method_def_token": "0x0600ceea",
+        "namespace": "Windows.UI.Xaml.Automation.Provider",
+        "signature": {
+          "blob_hex": "200112c000b52112c000b4e5",
+          "calling_convention_byte": 32,
+          "decode_status": "decoded_supported_elements",
+          "parameter_count": 1,
+          "parameter_types": [
+            "Windows.UI.Xaml.Automation.Provider.IRawElementProviderSimple"
+          ],
+          "return_type": "Windows.UI.Xaml.Automation.Provider.ITextRangeProvider"
+        },
+        "source": "UnionMetadata/10.0.28000.2705/Windows.winmd",
+        "source_sha256": "f8f32012964adb9130dd4d66fdd651daddb6cbbb9fe59e70ba6637e16e3c99ad",
+        "type_def_row": 11587
+      },
+      "winmd_id": "winrt:Windows.UI.Xaml.Automation.Provider.ITextProvider2::RangeFromAnnotation#1"
+    },
+    {
+      "decision_reason": "IDL IID 159bc72c-4ad3-485e-9637-d7052edf0146 differs from WinMD GuidAttribute 48c243f8-78b1-44a0-ac5f-750757bcde3c; these are distinct nominal interface identities.",
+      "dependency_review": null,
+      "identity_review": "distinct_interface_guid",
+      "idl": {
+        "base": "IUnknown",
+        "iid": "159bc72c-4ad3-485e-9637-d7052edf0146",
+        "sources": [
+          {
+            "declaration": {
+              "declaration_sha256": "001dac46ad0660dc69ddd6e2c044414469d06472ce14e1061107e763bc5a166e",
+              "declaration_text": "HRESULT SetDockPosition (\n            [in] enum DockPosition dockPosition )",
+              "declared_return": "HRESULT",
+              "parameter_count": 1,
+              "parameter_declarations": [
+                "[in] enum DockPosition dockPosition"
+              ],
+              "retval_parameter_count": 0
+            },
+            "path": "Include/10.0.28000.2705/um/UIAutomationCore.idl",
+            "sha256": "57833474568fcdc6ea385834d95b7f7d6229c6949c20902d714a5ea16b5297eb"
+          }
+        ]
+      },
+      "idl_id": "com:{159bc72c-4ad3-485e-9637-d7052edf0146}::SetDockPosition#1",
+      "lexical_key": {
+        "method": "SetDockPosition",
+        "unqualified_owner": "IDockProvider"
+      },
+      "winmd": {
+        "interface_guid": "48c243f8-78b1-44a0-ac5f-750757bcde3c",
+        "method_def_row": 52893,
+        "method_def_token": "0x0600ce9d",
+        "namespace": "Windows.UI.Xaml.Automation.Provider",
+        "signature": {
+          "blob_hex": "20010111c000aee5",
+          "calling_convention_byte": 32,
+          "decode_status": "decoded_supported_elements",
+          "parameter_count": 1,
+          "parameter_types": [
+            "Windows.UI.Xaml.Automation.DockPosition"
+          ],
+          "return_type": "void"
+        },
+        "source": "UnionMetadata/10.0.28000.2705/Windows.winmd",
+        "source_sha256": "f8f32012964adb9130dd4d66fdd651daddb6cbbb9fe59e70ba6637e16e3c99ad",
+        "type_def_row": 11561
+      },
+      "winmd_id": "winrt:Windows.UI.Xaml.Automation.Provider.IDockProvider::SetDockPosition#1"
+    },
+    {
+      "decision_reason": "IDL IID 2360c714-4bf1-4b26-ba65-9b21316127eb differs from WinMD GuidAttribute 9a3ec090-5d2c-4e42-9ee6-9d58db100b55; these are distinct nominal interface identities.",
+      "dependency_review": null,
+      "identity_review": "distinct_interface_guid",
+      "idl": {
+        "base": "IUnknown",
+        "iid": "2360c714-4bf1-4b26-ba65-9b21316127eb",
+        "sources": [
+          {
+            "declaration": {
+              "declaration_sha256": "be2554243dbd69bfb6142794cdcd4f5bf8078c51d09cdf644564cb12f9b00d52",
+              "declaration_text": "HRESULT ScrollIntoView ()",
+              "declared_return": "HRESULT",
+              "parameter_count": 0,
+              "parameter_declarations": [],
+              "retval_parameter_count": 0
+            },
+            "path": "Include/10.0.28000.2705/um/UIAutomationCore.idl",
+            "sha256": "57833474568fcdc6ea385834d95b7f7d6229c6949c20902d714a5ea16b5297eb"
+          }
+        ]
+      },
+      "idl_id": "com:{2360c714-4bf1-4b26-ba65-9b21316127eb}::ScrollIntoView#1",
+      "lexical_key": {
+        "method": "ScrollIntoView",
+        "unqualified_owner": "IScrollItemProvider"
+      },
+      "winmd": {
+        "interface_guid": "9a3ec090-5d2c-4e42-9ee6-9d58db100b55",
+        "method_def_row": 52925,
+        "method_def_token": "0x0600cebd",
+        "namespace": "Windows.UI.Xaml.Automation.Provider",
+        "signature": {
+          "blob_hex": "200001",
+          "calling_convention_byte": 32,
+          "decode_status": "decoded_supported_elements",
+          "parameter_count": 0,
+          "parameter_types": [],
+          "return_type": "void"
+        },
+        "source": "UnionMetadata/10.0.28000.2705/Windows.winmd",
+        "source_sha256": "f8f32012964adb9130dd4d66fdd651daddb6cbbb9fe59e70ba6637e16e3c99ad",
+        "type_def_row": 11574
+      },
+      "winmd_id": "winrt:Windows.UI.Xaml.Automation.Provider.IScrollItemProvider::ScrollIntoView#1"
+    },
+    {
+      "decision_reason": "IDL IID 29db1a06-02ce-4cf7-9b42-565d4fab20ee differs from WinMD GuidAttribute 3d60cecb-da54-4aa3-b915-e3244427d4ac; these are distinct nominal interface identities.",
+      "dependency_review": null,
+      "identity_review": "distinct_interface_guid",
+      "idl": {
+        "base": "IUnknown",
+        "iid": "29db1a06-02ce-4cf7-9b42-565d4fab20ee",
+        "sources": [
+          {
+            "declaration": {
+              "declaration_sha256": "aa914619769b233e53f0d2b8033f44bb11ed941ab5956803be0f282fc29fb802",
+              "declaration_text": "HRESULT Cancel ()",
+              "declared_return": "HRESULT",
+              "parameter_count": 0,
+              "parameter_declarations": [],
+              "retval_parameter_count": 0
+            },
+            "path": "Include/10.0.28000.2705/um/UIAutomationCore.idl",
+            "sha256": "57833474568fcdc6ea385834d95b7f7d6229c6949c20902d714a5ea16b5297eb"
+          }
+        ]
+      },
+      "idl_id": "com:{29db1a06-02ce-4cf7-9b42-565d4fab20ee}::Cancel#1",
+      "lexical_key": {
+        "method": "Cancel",
+        "unqualified_owner": "ISynchronizedInputProvider"
+      },
+      "winmd": {
+        "interface_guid": "3d60cecb-da54-4aa3-b915-e3244427d4ac",
+        "method_def_row": 52953,
+        "method_def_token": "0x0600ced9",
+        "namespace": "Windows.UI.Xaml.Automation.Provider",
+        "signature": {
+          "blob_hex": "200001",
+          "calling_convention_byte": 32,
+          "decode_status": "decoded_supported_elements",
+          "parameter_count": 0,
+          "parameter_types": [],
+          "return_type": "void"
+        },
+        "source": "UnionMetadata/10.0.28000.2705/Windows.winmd",
+        "source_sha256": "f8f32012964adb9130dd4d66fdd651daddb6cbbb9fe59e70ba6637e16e3c99ad",
+        "type_def_row": 11581
+      },
+      "winmd_id": "winrt:Windows.UI.Xaml.Automation.Provider.ISynchronizedInputProvider::Cancel#1"
+    },
+    {
+      "decision_reason": "IDL IID 29db1a06-02ce-4cf7-9b42-565d4fab20ee differs from WinMD GuidAttribute 3d60cecb-da54-4aa3-b915-e3244427d4ac; these are distinct nominal interface identities.",
+      "dependency_review": null,
+      "identity_review": "distinct_interface_guid",
+      "idl": {
+        "base": "IUnknown",
+        "iid": "29db1a06-02ce-4cf7-9b42-565d4fab20ee",
+        "sources": [
+          {
+            "declaration": {
+              "declaration_sha256": "66688bce93bdaab73f4b57bb837649fdaf7c2aa7db5ff735928cf38b2c858562",
+              "declaration_text": "HRESULT StartListening (\n            [in] enum SynchronizedInputType inputType )",
+              "declared_return": "HRESULT",
+              "parameter_count": 1,
+              "parameter_declarations": [
+                "[in] enum SynchronizedInputType inputType"
+              ],
+              "retval_parameter_count": 0
+            },
+            "path": "Include/10.0.28000.2705/um/UIAutomationCore.idl",
+            "sha256": "57833474568fcdc6ea385834d95b7f7d6229c6949c20902d714a5ea16b5297eb"
+          }
+        ]
+      },
+      "idl_id": "com:{29db1a06-02ce-4cf7-9b42-565d4fab20ee}::StartListening#1",
+      "lexical_key": {
+        "method": "StartListening",
+        "unqualified_owner": "ISynchronizedInputProvider"
+      },
+      "winmd": {
+        "interface_guid": "3d60cecb-da54-4aa3-b915-e3244427d4ac",
+        "method_def_row": 52954,
+        "method_def_token": "0x0600ceda",
+        "namespace": "Windows.UI.Xaml.Automation.Provider",
+        "signature": {
+          "blob_hex": "20010111c000b565",
+          "calling_convention_byte": 32,
+          "decode_status": "decoded_supported_elements",
+          "parameter_count": 1,
+          "parameter_types": [
+            "Windows.UI.Xaml.Automation.SynchronizedInputType"
+          ],
+          "return_type": "void"
+        },
+        "source": "UnionMetadata/10.0.28000.2705/Windows.winmd",
+        "source_sha256": "f8f32012964adb9130dd4d66fdd651daddb6cbbb9fe59e70ba6637e16e3c99ad",
+        "type_def_row": 11581
+      },
+      "winmd_id": "winrt:Windows.UI.Xaml.Automation.Provider.ISynchronizedInputProvider::StartListening#1"
+    },
+    {
+      "decision_reason": "IDL IID 2acad808-b2d4-452d-a407-91ff1ad167b2 differs from WinMD GuidAttribute 6a4977c1-830d-42d2-bf62-042ebddecc19; these are distinct nominal interface identities.",
+      "dependency_review": null,
+      "identity_review": "distinct_interface_guid",
+      "idl": {
+        "base": "IUnknown",
+        "iid": "2acad808-b2d4-452d-a407-91ff1ad167b2",
+        "sources": [
+          {
+            "declaration": {
+              "declaration_sha256": "e5016ebcd9cd854ef04cc27ba3ba5c828ee29cc3c3e461bc4d2e80a7828da798",
+              "declaration_text": "HRESULT AddToSelection ()",
+              "declared_return": "HRESULT",
+              "parameter_count": 0,
+              "parameter_declarations": [],
+              "retval_parameter_count": 0
+            },
+            "path": "Include/10.0.28000.2705/um/UIAutomationCore.idl",
+            "sha256": "57833474568fcdc6ea385834d95b7f7d6229c6949c20902d714a5ea16b5297eb"
+          }
+        ]
+      },
+      "idl_id": "com:{2acad808-b2d4-452d-a407-91ff1ad167b2}::AddToSelection#1",
+      "lexical_key": {
+        "method": "AddToSelection",
+        "unqualified_owner": "ISelectionItemProvider"
+      },
+      "winmd": {
+        "interface_guid": "6a4977c1-830d-42d2-bf62-042ebddecc19",
+        "method_def_row": 52936,
+        "method_def_token": "0x0600cec8",
+        "namespace": "Windows.UI.Xaml.Automation.Provider",
+        "signature": {
+          "blob_hex": "200001",
+          "calling_convention_byte": 32,
+          "decode_status": "decoded_supported_elements",
+          "parameter_count": 0,
+          "parameter_types": [],
+          "return_type": "void"
+        },
+        "source": "UnionMetadata/10.0.28000.2705/Windows.winmd",
+        "source_sha256": "f8f32012964adb9130dd4d66fdd651daddb6cbbb9fe59e70ba6637e16e3c99ad",
+        "type_def_row": 11576
+      },
+      "winmd_id": "winrt:Windows.UI.Xaml.Automation.Provider.ISelectionItemProvider::AddToSelection#1"
+    },
+    {
+      "decision_reason": "IDL IID 2acad808-b2d4-452d-a407-91ff1ad167b2 differs from WinMD GuidAttribute 6a4977c1-830d-42d2-bf62-042ebddecc19; these are distinct nominal interface identities.",
+      "dependency_review": null,
+      "identity_review": "distinct_interface_guid",
+      "idl": {
+        "base": "IUnknown",
+        "iid": "2acad808-b2d4-452d-a407-91ff1ad167b2",
+        "sources": [
+          {
+            "declaration": {
+              "declaration_sha256": "e5f8a1ed5a6cee28d6f9d8ee8a9633526987c14916b64e384a6e36e4b701f178",
+              "declaration_text": "HRESULT RemoveFromSelection ()",
+              "declared_return": "HRESULT",
+              "parameter_count": 0,
+              "parameter_declarations": [],
+              "retval_parameter_count": 0
+            },
+            "path": "Include/10.0.28000.2705/um/UIAutomationCore.idl",
+            "sha256": "57833474568fcdc6ea385834d95b7f7d6229c6949c20902d714a5ea16b5297eb"
+          }
+        ]
+      },
+      "idl_id": "com:{2acad808-b2d4-452d-a407-91ff1ad167b2}::RemoveFromSelection#1",
+      "lexical_key": {
+        "method": "RemoveFromSelection",
+        "unqualified_owner": "ISelectionItemProvider"
+      },
+      "winmd": {
+        "interface_guid": "6a4977c1-830d-42d2-bf62-042ebddecc19",
+        "method_def_row": 52937,
+        "method_def_token": "0x0600cec9",
+        "namespace": "Windows.UI.Xaml.Automation.Provider",
+        "signature": {
+          "blob_hex": "200001",
+          "calling_convention_byte": 32,
+          "decode_status": "decoded_supported_elements",
+          "parameter_count": 0,
+          "parameter_types": [],
+          "return_type": "void"
+        },
+        "source": "UnionMetadata/10.0.28000.2705/Windows.winmd",
+        "source_sha256": "f8f32012964adb9130dd4d66fdd651daddb6cbbb9fe59e70ba6637e16e3c99ad",
+        "type_def_row": 11576
+      },
+      "winmd_id": "winrt:Windows.UI.Xaml.Automation.Provider.ISelectionItemProvider::RemoveFromSelection#1"
+    },
+    {
+      "decision_reason": "IDL IID 2acad808-b2d4-452d-a407-91ff1ad167b2 differs from WinMD GuidAttribute 6a4977c1-830d-42d2-bf62-042ebddecc19; these are distinct nominal interface identities.",
+      "dependency_review": null,
+      "identity_review": "distinct_interface_guid",
+      "idl": {
+        "base": "IUnknown",
+        "iid": "2acad808-b2d4-452d-a407-91ff1ad167b2",
+        "sources": [
+          {
+            "declaration": {
+              "declaration_sha256": "4dbe4afbcbd01dfa94cdf6136b7c7a543da8b4a33fa6afadd3f20b96257da98d",
+              "declaration_text": "HRESULT Select ()",
+              "declared_return": "HRESULT",
+              "parameter_count": 0,
+              "parameter_declarations": [],
+              "retval_parameter_count": 0
+            },
+            "path": "Include/10.0.28000.2705/um/UIAutomationCore.idl",
+            "sha256": "57833474568fcdc6ea385834d95b7f7d6229c6949c20902d714a5ea16b5297eb"
+          }
+        ]
+      },
+      "idl_id": "com:{2acad808-b2d4-452d-a407-91ff1ad167b2}::Select#1",
+      "lexical_key": {
+        "method": "Select",
+        "unqualified_owner": "ISelectionItemProvider"
+      },
+      "winmd": {
+        "interface_guid": "6a4977c1-830d-42d2-bf62-042ebddecc19",
+        "method_def_row": 52938,
+        "method_def_token": "0x0600ceca",
+        "namespace": "Windows.UI.Xaml.Automation.Provider",
+        "signature": {
+          "blob_hex": "200001",
+          "calling_convention_byte": 32,
+          "decode_status": "decoded_supported_elements",
+          "parameter_count": 0,
+          "parameter_types": [],
+          "return_type": "void"
+        },
+        "source": "UnionMetadata/10.0.28000.2705/Windows.winmd",
+        "source_sha256": "f8f32012964adb9130dd4d66fdd651daddb6cbbb9fe59e70ba6637e16e3c99ad",
+        "type_def_row": 11576
+      },
+      "winmd_id": "winrt:Windows.UI.Xaml.Automation.Provider.ISelectionItemProvider::Select#1"
+    },
+    {
+      "decision_reason": "IDL IID 3589c92c-63f3-4367-99bb-ada653b77cf2 differs from WinMD GuidAttribute db5bbc9f-4807-4f2a-8678-1b13f3c60e22; these are distinct nominal interface identities.",
+      "dependency_review": null,
+      "identity_review": "distinct_interface_guid",
+      "idl": {
+        "base": "IUnknown",
+        "iid": "3589c92c-63f3-4367-99bb-ada653b77cf2",
+        "sources": [
+          {
+            "declaration": {
+              "declaration_sha256": "53298a17b72d4d6c1f10d9b4c6070556825cf3970f6fcb31c0d0dc27e9baa356",
+              "declaration_text": "HRESULT GetSelection (\n            [out, retval] SAFEARRAY(ITextRangeProvider *) * pRetVal )",
+              "declared_return": "HRESULT",
+              "parameter_count": 1,
+              "parameter_declarations": [
+                "[out, retval] SAFEARRAY(ITextRangeProvider *) * pRetVal"
+              ],
+              "retval_parameter_count": 1
+            },
+            "path": "Include/10.0.28000.2705/um/UIAutomationCore.idl",
+            "sha256": "57833474568fcdc6ea385834d95b7f7d6229c6949c20902d714a5ea16b5297eb"
+          }
+        ]
+      },
+      "idl_id": "com:{3589c92c-63f3-4367-99bb-ada653b77cf2}::GetSelection#1",
+      "lexical_key": {
+        "method": "GetSelection",
+        "unqualified_owner": "ITextProvider"
+      },
+      "winmd": {
+        "interface_guid": "db5bbc9f-4807-4f2a-8678-1b13f3c60e22",
+        "method_def_row": 52966,
+        "method_def_token": "0x0600cee6",
+        "namespace": "Windows.UI.Xaml.Automation.Provider",
+        "signature": {
+          "blob_hex": "20001d12c000b521",
+          "calling_convention_byte": 32,
+          "decode_status": "decoded_supported_elements",
+          "parameter_count": 0,
+          "parameter_types": [],
+          "return_type": "array<Windows.UI.Xaml.Automation.Provider.ITextRangeProvider>"
+        },
+        "source": "UnionMetadata/10.0.28000.2705/Windows.winmd",
+        "source_sha256": "f8f32012964adb9130dd4d66fdd651daddb6cbbb9fe59e70ba6637e16e3c99ad",
+        "type_def_row": 11586
+      },
+      "winmd_id": "winrt:Windows.UI.Xaml.Automation.Provider.ITextProvider::GetSelection#1"
+    },
+    {
+      "decision_reason": "IDL IID 3589c92c-63f3-4367-99bb-ada653b77cf2 differs from WinMD GuidAttribute db5bbc9f-4807-4f2a-8678-1b13f3c60e22; these are distinct nominal interface identities.",
+      "dependency_review": null,
+      "identity_review": "distinct_interface_guid",
+      "idl": {
+        "base": "IUnknown",
+        "iid": "3589c92c-63f3-4367-99bb-ada653b77cf2",
+        "sources": [
+          {
+            "declaration": {
+              "declaration_sha256": "be2066267f3b3cc209064c9af81ef5de3d02a2495db9037512ce6ee34f547fe8",
+              "declaration_text": "HRESULT GetVisibleRanges (\n            [out, retval] SAFEARRAY(ITextRangeProvider *) * pRetVal )",
+              "declared_return": "HRESULT",
+              "parameter_count": 1,
+              "parameter_declarations": [
+                "[out, retval] SAFEARRAY(ITextRangeProvider *) * pRetVal"
+              ],
+              "retval_parameter_count": 1
+            },
+            "path": "Include/10.0.28000.2705/um/UIAutomationCore.idl",
+            "sha256": "57833474568fcdc6ea385834d95b7f7d6229c6949c20902d714a5ea16b5297eb"
+          }
+        ]
+      },
+      "idl_id": "com:{3589c92c-63f3-4367-99bb-ada653b77cf2}::GetVisibleRanges#1",
+      "lexical_key": {
+        "method": "GetVisibleRanges",
+        "unqualified_owner": "ITextProvider"
+      },
+      "winmd": {
+        "interface_guid": "db5bbc9f-4807-4f2a-8678-1b13f3c60e22",
+        "method_def_row": 52967,
+        "method_def_token": "0x0600cee7",
+        "namespace": "Windows.UI.Xaml.Automation.Provider",
+        "signature": {
+          "blob_hex": "20001d12c000b521",
+          "calling_convention_byte": 32,
+          "decode_status": "decoded_supported_elements",
+          "parameter_count": 0,
+          "parameter_types": [],
+          "return_type": "array<Windows.UI.Xaml.Automation.Provider.ITextRangeProvider>"
+        },
+        "source": "UnionMetadata/10.0.28000.2705/Windows.winmd",
+        "source_sha256": "f8f32012964adb9130dd4d66fdd651daddb6cbbb9fe59e70ba6637e16e3c99ad",
+        "type_def_row": 11586
+      },
+      "winmd_id": "winrt:Windows.UI.Xaml.Automation.Provider.ITextProvider::GetVisibleRanges#1"
+    },
+    {
+      "decision_reason": "IDL IID 3589c92c-63f3-4367-99bb-ada653b77cf2 differs from WinMD GuidAttribute db5bbc9f-4807-4f2a-8678-1b13f3c60e22; these are distinct nominal interface identities.",
+      "dependency_review": null,
+      "identity_review": "distinct_interface_guid",
+      "idl": {
+        "base": "IUnknown",
+        "iid": "3589c92c-63f3-4367-99bb-ada653b77cf2",
+        "sources": [
+          {
+            "declaration": {
+              "declaration_sha256": "1f3a57a3c76660d643f27f272b9a1c488ae7d515046cf517c31cf9af8bc8bea0",
+              "declaration_text": "HRESULT RangeFromChild (\n            [in] IRawElementProviderSimple * childElement,\n            [out, retval] ITextRangeProvider ** pRetVal )",
+              "declared_return": "HRESULT",
+              "parameter_count": 2,
+              "parameter_declarations": [
+                "[in] IRawElementProviderSimple * childElement",
+                "[out, retval] ITextRangeProvider ** pRetVal"
+              ],
+              "retval_parameter_count": 1
+            },
+            "path": "Include/10.0.28000.2705/um/UIAutomationCore.idl",
+            "sha256": "57833474568fcdc6ea385834d95b7f7d6229c6949c20902d714a5ea16b5297eb"
+          }
+        ]
+      },
+      "idl_id": "com:{3589c92c-63f3-4367-99bb-ada653b77cf2}::RangeFromChild#1",
+      "lexical_key": {
+        "method": "RangeFromChild",
+        "unqualified_owner": "ITextProvider"
+      },
+      "winmd": {
+        "interface_guid": "db5bbc9f-4807-4f2a-8678-1b13f3c60e22",
+        "method_def_row": 52968,
+        "method_def_token": "0x0600cee8",
+        "namespace": "Windows.UI.Xaml.Automation.Provider",
+        "signature": {
+          "blob_hex": "200112c000b52112c000b4e5",
+          "calling_convention_byte": 32,
+          "decode_status": "decoded_supported_elements",
+          "parameter_count": 1,
+          "parameter_types": [
+            "Windows.UI.Xaml.Automation.Provider.IRawElementProviderSimple"
+          ],
+          "return_type": "Windows.UI.Xaml.Automation.Provider.ITextRangeProvider"
+        },
+        "source": "UnionMetadata/10.0.28000.2705/Windows.winmd",
+        "source_sha256": "f8f32012964adb9130dd4d66fdd651daddb6cbbb9fe59e70ba6637e16e3c99ad",
+        "type_def_row": 11586
+      },
+      "winmd_id": "winrt:Windows.UI.Xaml.Automation.Provider.ITextProvider::RangeFromChild#1"
+    },
+    {
+      "decision_reason": "IDL IID 3589c92c-63f3-4367-99bb-ada653b77cf2 differs from WinMD GuidAttribute db5bbc9f-4807-4f2a-8678-1b13f3c60e22; these are distinct nominal interface identities.",
+      "dependency_review": null,
+      "identity_review": "distinct_interface_guid",
+      "idl": {
+        "base": "IUnknown",
+        "iid": "3589c92c-63f3-4367-99bb-ada653b77cf2",
+        "sources": [
+          {
+            "declaration": {
+              "declaration_sha256": "344a00df048ce0ff1afa77e1877b8acb8449e3976b1981ab12b76fd924c967ea",
+              "declaration_text": "HRESULT RangeFromPoint (\n            [in] struct UiaPoint point,\n            [out, retval] ITextRangeProvider ** pRetVal )",
+              "declared_return": "HRESULT",
+              "parameter_count": 2,
+              "parameter_declarations": [
+                "[in] struct UiaPoint point",
+                "[out, retval] ITextRangeProvider ** pRetVal"
+              ],
+              "retval_parameter_count": 1
+            },
+            "path": "Include/10.0.28000.2705/um/UIAutomationCore.idl",
+            "sha256": "57833474568fcdc6ea385834d95b7f7d6229c6949c20902d714a5ea16b5297eb"
+          }
+        ]
+      },
+      "idl_id": "com:{3589c92c-63f3-4367-99bb-ada653b77cf2}::RangeFromPoint#1",
+      "lexical_key": {
+        "method": "RangeFromPoint",
+        "unqualified_owner": "ITextProvider"
+      },
+      "winmd": {
+        "interface_guid": "db5bbc9f-4807-4f2a-8678-1b13f3c60e22",
+        "method_def_row": 52969,
+        "method_def_token": "0x0600cee9",
+        "namespace": "Windows.UI.Xaml.Automation.Provider",
+        "signature": {
+          "blob_hex": "200112c000b52111c0004355",
+          "calling_convention_byte": 32,
+          "decode_status": "decoded_supported_elements",
+          "parameter_count": 1,
+          "parameter_types": [
+            "Windows.Foundation.Point"
+          ],
+          "return_type": "Windows.UI.Xaml.Automation.Provider.ITextRangeProvider"
+        },
+        "source": "UnionMetadata/10.0.28000.2705/Windows.winmd",
+        "source_sha256": "f8f32012964adb9130dd4d66fdd651daddb6cbbb9fe59e70ba6637e16e3c99ad",
+        "type_def_row": 11586
+      },
+      "winmd_id": "winrt:Windows.UI.Xaml.Automation.Provider.ITextProvider::RangeFromPoint#1"
+    },
+    {
+      "decision_reason": "IDL IID 36dc7aef-33e6-4691-afe1-2be7274b3d33 differs from WinMD GuidAttribute 838a34a8-7d5f-4079-af03-c3d015e93413; these are distinct nominal interface identities.",
+      "dependency_review": null,
+      "identity_review": "distinct_interface_guid",
+      "idl": {
+        "base": "IUnknown",
+        "iid": "36dc7aef-33e6-4691-afe1-2be7274b3d33",
+        "sources": [
+          {
+            "declaration": {
+              "declaration_sha256": "f570e9046112d0eab4b06aa1c319ce6c238dd7b53f6d00ef88d9203d7700017b",
+              "declaration_text": "HRESULT SetValue (\n            [in] double val )",
+              "declared_return": "HRESULT",
+              "parameter_count": 1,
+              "parameter_declarations": [
+                "[in] double val"
+              ],
+              "retval_parameter_count": 0
+            },
+            "path": "Include/10.0.28000.2705/um/UIAutomationCore.idl",
+            "sha256": "57833474568fcdc6ea385834d95b7f7d6229c6949c20902d714a5ea16b5297eb"
+          }
+        ]
+      },
+      "idl_id": "com:{36dc7aef-33e6-4691-afe1-2be7274b3d33}::SetValue#1",
+      "lexical_key": {
+        "method": "SetValue",
+        "unqualified_owner": "IRangeValueProvider"
+      },
+      "winmd": {
+        "interface_guid": "838a34a8-7d5f-4079-af03-c3d015e93413",
+        "method_def_row": 52924,
+        "method_def_token": "0x0600cebc",
+        "namespace": "Windows.UI.Xaml.Automation.Provider",
+        "signature": {
+          "blob_hex": "2001010d",
+          "calling_convention_byte": 32,
+          "decode_status": "decoded_supported_elements",
+          "parameter_count": 1,
+          "parameter_types": [
+            "float64"
+          ],
+          "return_type": "void"
+        },
+        "source": "UnionMetadata/10.0.28000.2705/Windows.winmd",
+        "source_sha256": "f8f32012964adb9130dd4d66fdd651daddb6cbbb9fe59e70ba6637e16e3c99ad",
+        "type_def_row": 11572
+      },
+      "winmd_id": "winrt:Windows.UI.Xaml.Automation.Provider.IRangeValueProvider::SetValue#1"
+    },
+    {
+      "decision_reason": "IDL IID 3ad86ebd-f5ef-483d-bb18-b1042a475d64 differs from WinMD GuidAttribute c3ca36b9-0793-4ed0-bbf4-9ff4e0f98f80; these are distinct nominal interface identities.",
+      "dependency_review": null,
+      "identity_review": "distinct_interface_guid",
+      "idl": {
+        "base": "IUnknown",
+        "iid": "3ad86ebd-f5ef-483d-bb18-b1042a475d64",
+        "sources": [
+          {
+            "declaration": {
+              "declaration_sha256": "adc83e0b1c6f54fe6d22c0f24a6c50c53b5c874ab1ee49a4f92df23edeca7e1b",
+              "declaration_text": "HRESULT GetUnderlyingObjectModel ( [out, retval] IUnknown ** ppUnknown )",
+              "declared_return": "HRESULT",
+              "parameter_count": 1,
+              "parameter_declarations": [
+                "[out, retval] IUnknown ** ppUnknown"
+              ],
+              "retval_parameter_count": 1
+            },
+            "path": "Include/10.0.28000.2705/um/UIAutomationCore.idl",
+            "sha256": "57833474568fcdc6ea385834d95b7f7d6229c6949c20902d714a5ea16b5297eb"
+          }
+        ]
+      },
+      "idl_id": "com:{3ad86ebd-f5ef-483d-bb18-b1042a475d64}::GetUnderlyingObjectModel#1",
+      "lexical_key": {
+        "method": "GetUnderlyingObjectModel",
+        "unqualified_owner": "IObjectModelProvider"
+      },
+      "winmd": {
+        "interface_guid": "c3ca36b9-0793-4ed0-bbf4-9ff4e0f98f80",
+        "method_def_row": 52917,
+        "method_def_token": "0x0600ceb5",
+        "namespace": "Windows.UI.Xaml.Automation.Provider",
+        "signature": {
+          "blob_hex": "20001c",
+          "calling_convention_byte": 32,
+          "decode_status": "decoded_supported_elements",
+          "parameter_count": 0,
+          "parameter_types": [],
+          "return_type": "object"
+        },
+        "source": "UnionMetadata/10.0.28000.2705/Windows.winmd",
+        "source_sha256": "f8f32012964adb9130dd4d66fdd651daddb6cbbb9fe59e70ba6637e16e3c99ad",
+        "type_def_row": 11571
+      },
+      "winmd_id": "winrt:Windows.UI.Xaml.Automation.Provider.IObjectModelProvider::GetUnderlyingObjectModel#1"
+    },
+    {
+      "decision_reason": "IDL IID 4758742f-7ac2-460c-bc48-09fc09308a93 differs from WinMD GuidAttribute a8b11756-a39f-4e97-8c7d-c1ea8dd633c5; these are distinct nominal interface identities.",
+      "dependency_review": null,
+      "identity_review": "distinct_interface_guid",
+      "idl": {
+        "base": "ITransformProvider",
+        "iid": "4758742f-7ac2-460c-bc48-09fc09308a93",
+        "sources": [
+          {
+            "declaration": {
+              "declaration_sha256": "d53cfa735cd6e97ddadce18f2da2f02954b3466f32ebbc9007c6f9707367aae4",
+              "declaration_text": "HRESULT Zoom (\n            [in] double zoom )",
+              "declared_return": "HRESULT",
+              "parameter_count": 1,
+              "parameter_declarations": [
+                "[in] double zoom"
+              ],
+              "retval_parameter_count": 0
+            },
+            "path": "Include/10.0.28000.2705/um/UIAutomationCore.idl",
+            "sha256": "57833474568fcdc6ea385834d95b7f7d6229c6949c20902d714a5ea16b5297eb"
+          }
+        ]
+      },
+      "idl_id": "com:{4758742f-7ac2-460c-bc48-09fc09308a93}::Zoom#1",
+      "lexical_key": {
+        "method": "Zoom",
+        "unqualified_owner": "ITransformProvider2"
+      },
+      "winmd": {
+        "interface_guid": "a8b11756-a39f-4e97-8c7d-c1ea8dd633c5",
+        "method_def_row": 53003,
+        "method_def_token": "0x0600cf0b",
+        "namespace": "Windows.UI.Xaml.Automation.Provider",
+        "signature": {
+          "blob_hex": "2001010d",
+          "calling_convention_byte": 32,
+          "decode_status": "decoded_supported_elements",
+          "parameter_count": 1,
+          "parameter_types": [
+            "float64"
+          ],
+          "return_type": "void"
+        },
+        "source": "UnionMetadata/10.0.28000.2705/Windows.winmd",
+        "source_sha256": "f8f32012964adb9130dd4d66fdd651daddb6cbbb9fe59e70ba6637e16e3c99ad",
+        "type_def_row": 11592
+      },
+      "winmd_id": "winrt:Windows.UI.Xaml.Automation.Provider.ITransformProvider2::Zoom#1"
+    },
+    {
+      "decision_reason": "IDL IID 4758742f-7ac2-460c-bc48-09fc09308a93 differs from WinMD GuidAttribute a8b11756-a39f-4e97-8c7d-c1ea8dd633c5; these are distinct nominal interface identities.",
+      "dependency_review": null,
+      "identity_review": "distinct_interface_guid",
+      "idl": {
+        "base": "ITransformProvider",
+        "iid": "4758742f-7ac2-460c-bc48-09fc09308a93",
+        "sources": [
+          {
+            "declaration": {
+              "declaration_sha256": "6db4e657c4c4a13292931c1f4993426342b4d03df108a2f706db338f331280de",
+              "declaration_text": "HRESULT ZoomByUnit (\n            [in] enum ZoomUnit zoomUnit)",
+              "declared_return": "HRESULT",
+              "parameter_count": 1,
+              "parameter_declarations": [
+                "[in] enum ZoomUnit zoomUnit"
+              ],
+              "retval_parameter_count": 0
+            },
+            "path": "Include/10.0.28000.2705/um/UIAutomationCore.idl",
+            "sha256": "57833474568fcdc6ea385834d95b7f7d6229c6949c20902d714a5ea16b5297eb"
+          }
+        ]
+      },
+      "idl_id": "com:{4758742f-7ac2-460c-bc48-09fc09308a93}::ZoomByUnit#1",
+      "lexical_key": {
+        "method": "ZoomByUnit",
+        "unqualified_owner": "ITransformProvider2"
+      },
+      "winmd": {
+        "interface_guid": "a8b11756-a39f-4e97-8c7d-c1ea8dd633c5",
+        "method_def_row": 53004,
+        "method_def_token": "0x0600cf0c",
+        "namespace": "Windows.UI.Xaml.Automation.Provider",
+        "signature": {
+          "blob_hex": "20010111c000b599",
+          "calling_convention_byte": 32,
+          "decode_status": "decoded_supported_elements",
+          "parameter_count": 1,
+          "parameter_types": [
+            "Windows.UI.Xaml.Automation.ZoomUnit"
+          ],
+          "return_type": "void"
+        },
+        "source": "UnionMetadata/10.0.28000.2705/Windows.winmd",
+        "source_sha256": "f8f32012964adb9130dd4d66fdd651daddb6cbbb9fe59e70ba6637e16e3c99ad",
+        "type_def_row": 11592
+      },
+      "winmd_id": "winrt:Windows.UI.Xaml.Automation.Provider.ITransformProvider2::ZoomByUnit#1"
+    },
+    {
+      "decision_reason": "IDL IID 5347ad7b-c355-46f8-aff5-909033582f63 differs from WinMD GuidAttribute 0274688d-06e9-4f66-9446-28a5be98fbd0; these are distinct nominal interface identities.",
+      "dependency_review": null,
+      "identity_review": "distinct_interface_guid",
+      "idl": {
+        "base": "IUnknown",
+        "iid": "5347ad7b-c355-46f8-aff5-909033582f63",
+        "sources": [
+          {
+            "declaration": {
+              "declaration_sha256": "e5016ebcd9cd854ef04cc27ba3ba5c828ee29cc3c3e461bc4d2e80a7828da798",
+              "declaration_text": "HRESULT AddToSelection ()",
+              "declared_return": "HRESULT",
+              "parameter_count": 0,
+              "parameter_declarations": [],
+              "retval_parameter_count": 0
+            },
+            "path": "Include/10.0.28000.2705/um/UIAutomationCore.idl",
+            "sha256": "57833474568fcdc6ea385834d95b7f7d6229c6949c20902d714a5ea16b5297eb"
+          }
+        ]
+      },
+      "idl_id": "com:{5347ad7b-c355-46f8-aff5-909033582f63}::AddToSelection#1",
+      "lexical_key": {
+        "method": "AddToSelection",
+        "unqualified_owner": "ITextRangeProvider"
+      },
+      "winmd": {
+        "interface_guid": "0274688d-06e9-4f66-9446-28a5be98fbd0",
+        "method_def_row": 52986,
+        "method_def_token": "0x0600cefa",
+        "namespace": "Windows.UI.Xaml.Automation.Provider",
+        "signature": {
+          "blob_hex": "200001",
+          "calling_convention_byte": 32,
+          "decode_status": "decoded_supported_elements",
+          "parameter_count": 0,
+          "parameter_types": [],
+          "return_type": "void"
+        },
+        "source": "UnionMetadata/10.0.28000.2705/Windows.winmd",
+        "source_sha256": "f8f32012964adb9130dd4d66fdd651daddb6cbbb9fe59e70ba6637e16e3c99ad",
+        "type_def_row": 11588
+      },
+      "winmd_id": "winrt:Windows.UI.Xaml.Automation.Provider.ITextRangeProvider::AddToSelection#1"
+    },
+    {
+      "decision_reason": "IDL IID 5347ad7b-c355-46f8-aff5-909033582f63 differs from WinMD GuidAttribute 0274688d-06e9-4f66-9446-28a5be98fbd0; these are distinct nominal interface identities.",
+      "dependency_review": null,
+      "identity_review": "distinct_interface_guid",
+      "idl": {
+        "base": "IUnknown",
+        "iid": "5347ad7b-c355-46f8-aff5-909033582f63",
+        "sources": [
+          {
+            "declaration": {
+              "declaration_sha256": "f94b21849b74748733ffba691ed2d37c604a9f6a68311e839820c7375eb90a9d",
+              "declaration_text": "HRESULT Clone (\n            [out, retval] ITextRangeProvider ** pRetVal )",
+              "declared_return": "HRESULT",
+              "parameter_count": 1,
+              "parameter_declarations": [
+                "[out, retval] ITextRangeProvider ** pRetVal"
+              ],
+              "retval_parameter_count": 1
+            },
+            "path": "Include/10.0.28000.2705/um/UIAutomationCore.idl",
+            "sha256": "57833474568fcdc6ea385834d95b7f7d6229c6949c20902d714a5ea16b5297eb"
+          }
+        ]
+      },
+      "idl_id": "com:{5347ad7b-c355-46f8-aff5-909033582f63}::Clone#1",
+      "lexical_key": {
+        "method": "Clone",
+        "unqualified_owner": "ITextRangeProvider"
+      },
+      "winmd": {
+        "interface_guid": "0274688d-06e9-4f66-9446-28a5be98fbd0",
+        "method_def_row": 52972,
+        "method_def_token": "0x0600ceec",
+        "namespace": "Windows.UI.Xaml.Automation.Provider",
+        "signature": {
+          "blob_hex": "200012c000b521",
+          "calling_convention_byte": 32,
+          "decode_status": "decoded_supported_elements",
+          "parameter_count": 0,
+          "parameter_types": [],
+          "return_type": "Windows.UI.Xaml.Automation.Provider.ITextRangeProvider"
+        },
+        "source": "UnionMetadata/10.0.28000.2705/Windows.winmd",
+        "source_sha256": "f8f32012964adb9130dd4d66fdd651daddb6cbbb9fe59e70ba6637e16e3c99ad",
+        "type_def_row": 11588
+      },
+      "winmd_id": "winrt:Windows.UI.Xaml.Automation.Provider.ITextRangeProvider::Clone#1"
+    },
+    {
+      "decision_reason": "IDL IID 5347ad7b-c355-46f8-aff5-909033582f63 differs from WinMD GuidAttribute 0274688d-06e9-4f66-9446-28a5be98fbd0; these are distinct nominal interface identities.",
+      "dependency_review": null,
+      "identity_review": "distinct_interface_guid",
+      "idl": {
+        "base": "IUnknown",
+        "iid": "5347ad7b-c355-46f8-aff5-909033582f63",
+        "sources": [
+          {
+            "declaration": {
+              "declaration_sha256": "9bc7e42c145d96d74e0151d8113fbea8b5efe8ccac041e6749c57645d0ce98aa",
+              "declaration_text": "HRESULT Compare (\n            [in] ITextRangeProvider * range,\n            [out, retval] BOOL * pRetVal )",
+              "declared_return": "HRESULT",
+              "parameter_count": 2,
+              "parameter_declarations": [
+                "[in] ITextRangeProvider * range",
+                "[out, retval] BOOL * pRetVal"
+              ],
+              "retval_parameter_count": 1
+            },
+            "path": "Include/10.0.28000.2705/um/UIAutomationCore.idl",
+            "sha256": "57833474568fcdc6ea385834d95b7f7d6229c6949c20902d714a5ea16b5297eb"
+          }
+        ]
+      },
+      "idl_id": "com:{5347ad7b-c355-46f8-aff5-909033582f63}::Compare#1",
+      "lexical_key": {
+        "method": "Compare",
+        "unqualified_owner": "ITextRangeProvider"
+      },
+      "winmd": {
+        "interface_guid": "0274688d-06e9-4f66-9446-28a5be98fbd0",
+        "method_def_row": 52973,
+        "method_def_token": "0x0600ceed",
+        "namespace": "Windows.UI.Xaml.Automation.Provider",
+        "signature": {
+          "blob_hex": "20010212c000b521",
+          "calling_convention_byte": 32,
+          "decode_status": "decoded_supported_elements",
+          "parameter_count": 1,
+          "parameter_types": [
+            "Windows.UI.Xaml.Automation.Provider.ITextRangeProvider"
+          ],
+          "return_type": "bool"
+        },
+        "source": "UnionMetadata/10.0.28000.2705/Windows.winmd",
+        "source_sha256": "f8f32012964adb9130dd4d66fdd651daddb6cbbb9fe59e70ba6637e16e3c99ad",
+        "type_def_row": 11588
+      },
+      "winmd_id": "winrt:Windows.UI.Xaml.Automation.Provider.ITextRangeProvider::Compare#1"
+    },
+    {
+      "decision_reason": "IDL IID 5347ad7b-c355-46f8-aff5-909033582f63 differs from WinMD GuidAttribute 0274688d-06e9-4f66-9446-28a5be98fbd0; these are distinct nominal interface identities.",
+      "dependency_review": null,
+      "identity_review": "distinct_interface_guid",
+      "idl": {
+        "base": "IUnknown",
+        "iid": "5347ad7b-c355-46f8-aff5-909033582f63",
+        "sources": [
+          {
+            "declaration": {
+              "declaration_sha256": "adbb821b2190fc0942667866b7ade8b95d360b224a3f0cfafd5d6f6333252d7e",
+              "declaration_text": "HRESULT CompareEndpoints (\n            [in] enum TextPatternRangeEndpoint endpoint,\n            [in] ITextRangeProvider * targetRange,\n            [in] enum TextPatternRangeEndpoint targetEndpoint,\n            [out, retval] int * pRetVal )",
+              "declared_return": "HRESULT",
+              "parameter_count": 4,
+              "parameter_declarations": [
+                "[in] enum TextPatternRangeEndpoint endpoint",
+                "[in] ITextRangeProvider * targetRange",
+                "[in] enum TextPatternRangeEndpoint targetEndpoint",
+                "[out, retval] int * pRetVal"
+              ],
+              "retval_parameter_count": 1
+            },
+            "path": "Include/10.0.28000.2705/um/UIAutomationCore.idl",
+            "sha256": "57833474568fcdc6ea385834d95b7f7d6229c6949c20902d714a5ea16b5297eb"
+          }
+        ]
+      },
+      "idl_id": "com:{5347ad7b-c355-46f8-aff5-909033582f63}::CompareEndpoints#1",
+      "lexical_key": {
+        "method": "CompareEndpoints",
+        "unqualified_owner": "ITextRangeProvider"
+      },
+      "winmd": {
+        "interface_guid": "0274688d-06e9-4f66-9446-28a5be98fbd0",
+        "method_def_row": 52974,
+        "method_def_token": "0x0600ceee",
+        "namespace": "Windows.UI.Xaml.Automation.Provider",
+        "signature": {
+          "blob_hex": "20030811c000b57112c000b52111c000b571",
+          "calling_convention_byte": 32,
+          "decode_status": "decoded_supported_elements",
+          "parameter_count": 3,
+          "parameter_types": [
+            "Windows.UI.Xaml.Automation.Text.TextPatternRangeEndpoint",
+            "Windows.UI.Xaml.Automation.Provider.ITextRangeProvider",
+            "Windows.UI.Xaml.Automation.Text.TextPatternRangeEndpoint"
+          ],
+          "return_type": "int32"
+        },
+        "source": "UnionMetadata/10.0.28000.2705/Windows.winmd",
+        "source_sha256": "f8f32012964adb9130dd4d66fdd651daddb6cbbb9fe59e70ba6637e16e3c99ad",
+        "type_def_row": 11588
+      },
+      "winmd_id": "winrt:Windows.UI.Xaml.Automation.Provider.ITextRangeProvider::CompareEndpoints#1"
+    },
+    {
+      "decision_reason": "IDL IID 5347ad7b-c355-46f8-aff5-909033582f63 differs from WinMD GuidAttribute 0274688d-06e9-4f66-9446-28a5be98fbd0; these are distinct nominal interface identities.",
+      "dependency_review": null,
+      "identity_review": "distinct_interface_guid",
+      "idl": {
+        "base": "IUnknown",
+        "iid": "5347ad7b-c355-46f8-aff5-909033582f63",
+        "sources": [
+          {
+            "declaration": {
+              "declaration_sha256": "dda06b967c19937bc5a51308d15fc4dc97105cda914868e2814fc4ed6b3afe51",
+              "declaration_text": "HRESULT ExpandToEnclosingUnit (\n            [in] enum TextUnit unit )",
+              "declared_return": "HRESULT",
+              "parameter_count": 1,
+              "parameter_declarations": [
+                "[in] enum TextUnit unit"
+              ],
+              "retval_parameter_count": 0
+            },
+            "path": "Include/10.0.28000.2705/um/UIAutomationCore.idl",
+            "sha256": "57833474568fcdc6ea385834d95b7f7d6229c6949c20902d714a5ea16b5297eb"
+          }
+        ]
+      },
+      "idl_id": "com:{5347ad7b-c355-46f8-aff5-909033582f63}::ExpandToEnclosingUnit#1",
+      "lexical_key": {
+        "method": "ExpandToEnclosingUnit",
+        "unqualified_owner": "ITextRangeProvider"
+      },
+      "winmd": {
+        "interface_guid": "0274688d-06e9-4f66-9446-28a5be98fbd0",
+        "method_def_row": 52975,
+        "method_def_token": "0x0600ceef",
+        "namespace": "Windows.UI.Xaml.Automation.Provider",
+        "signature": {
+          "blob_hex": "20010111c000b575",
+          "calling_convention_byte": 32,
+          "decode_status": "decoded_supported_elements",
+          "parameter_count": 1,
+          "parameter_types": [
+            "Windows.UI.Xaml.Automation.Text.TextUnit"
+          ],
+          "return_type": "void"
+        },
+        "source": "UnionMetadata/10.0.28000.2705/Windows.winmd",
+        "source_sha256": "f8f32012964adb9130dd4d66fdd651daddb6cbbb9fe59e70ba6637e16e3c99ad",
+        "type_def_row": 11588
+      },
+      "winmd_id": "winrt:Windows.UI.Xaml.Automation.Provider.ITextRangeProvider::ExpandToEnclosingUnit#1"
+    },
+    {
+      "decision_reason": "IDL IID 5347ad7b-c355-46f8-aff5-909033582f63 differs from WinMD GuidAttribute 0274688d-06e9-4f66-9446-28a5be98fbd0; these are distinct nominal interface identities.",
+      "dependency_review": null,
+      "identity_review": "distinct_interface_guid",
+      "idl": {
+        "base": "IUnknown",
+        "iid": "5347ad7b-c355-46f8-aff5-909033582f63",
+        "sources": [
+          {
+            "declaration": {
+              "declaration_sha256": "8785c09ad1714a4b2b3fc524349a9c0a4b3acb2a5e5a4f61ca1c5d8e71bacde0",
+              "declaration_text": "HRESULT FindAttribute (\n            [in] TEXTATTRIBUTEID attributeId,\n            [in] VARIANT val,\n            [in] BOOL backward,\n            [out, retval] ITextRangeProvider ** pRetVal )",
+              "declared_return": "HRESULT",
+              "parameter_count": 4,
+              "parameter_declarations": [
+                "[in] TEXTATTRIBUTEID attributeId",
+                "[in] VARIANT val",
+                "[in] BOOL backward",
+                "[out, retval] ITextRangeProvider ** pRetVal"
+              ],
+              "retval_parameter_count": 1
+            },
+            "path": "Include/10.0.28000.2705/um/UIAutomationCore.idl",
+            "sha256": "57833474568fcdc6ea385834d95b7f7d6229c6949c20902d714a5ea16b5297eb"
+          }
+        ]
+      },
+      "idl_id": "com:{5347ad7b-c355-46f8-aff5-909033582f63}::FindAttribute#1",
+      "lexical_key": {
+        "method": "FindAttribute",
+        "unqualified_owner": "ITextRangeProvider"
+      },
+      "winmd": {
+        "interface_guid": "0274688d-06e9-4f66-9446-28a5be98fbd0",
+        "method_def_row": 52976,
+        "method_def_token": "0x0600cef0",
+        "namespace": "Windows.UI.Xaml.Automation.Provider",
+        "signature": {
+          "blob_hex": "200312c000b521081c02",
+          "calling_convention_byte": 32,
+          "decode_status": "decoded_supported_elements",
+          "parameter_count": 3,
+          "parameter_types": [
+            "int32",
+            "object",
+            "bool"
+          ],
+          "return_type": "Windows.UI.Xaml.Automation.Provider.ITextRangeProvider"
+        },
+        "source": "UnionMetadata/10.0.28000.2705/Windows.winmd",
+        "source_sha256": "f8f32012964adb9130dd4d66fdd651daddb6cbbb9fe59e70ba6637e16e3c99ad",
+        "type_def_row": 11588
+      },
+      "winmd_id": "winrt:Windows.UI.Xaml.Automation.Provider.ITextRangeProvider::FindAttribute#1"
+    },
+    {
+      "decision_reason": "IDL IID 5347ad7b-c355-46f8-aff5-909033582f63 differs from WinMD GuidAttribute 0274688d-06e9-4f66-9446-28a5be98fbd0; these are distinct nominal interface identities.",
+      "dependency_review": null,
+      "identity_review": "distinct_interface_guid",
+      "idl": {
+        "base": "IUnknown",
+        "iid": "5347ad7b-c355-46f8-aff5-909033582f63",
+        "sources": [
+          {
+            "declaration": {
+              "declaration_sha256": "a7460e629bd82ee862dca2f8d06b2f33ce2364a53840f9efb6c25f5a971b3e94",
+              "declaration_text": "HRESULT FindText (\n            [in] BSTR text,\n            [in] BOOL backward,\n            [in] BOOL ignoreCase,\n            [out, retval] ITextRangeProvider ** pRetVal )",
+              "declared_return": "HRESULT",
+              "parameter_count": 4,
+              "parameter_declarations": [
+                "[in] BSTR text",
+                "[in] BOOL backward",
+                "[in] BOOL ignoreCase",
+                "[out, retval] ITextRangeProvider ** pRetVal"
+              ],
+              "retval_parameter_count": 1
+            },
+            "path": "Include/10.0.28000.2705/um/UIAutomationCore.idl",
+            "sha256": "57833474568fcdc6ea385834d95b7f7d6229c6949c20902d714a5ea16b5297eb"
+          }
+        ]
+      },
+      "idl_id": "com:{5347ad7b-c355-46f8-aff5-909033582f63}::FindText#1",
+      "lexical_key": {
+        "method": "FindText",
+        "unqualified_owner": "ITextRangeProvider"
+      },
+      "winmd": {
+        "interface_guid": "0274688d-06e9-4f66-9446-28a5be98fbd0",
+        "method_def_row": 52977,
+        "method_def_token": "0x0600cef1",
+        "namespace": "Windows.UI.Xaml.Automation.Provider",
+        "signature": {
+          "blob_hex": "200312c000b5210e0202",
+          "calling_convention_byte": 32,
+          "decode_status": "decoded_supported_elements",
+          "parameter_count": 3,
+          "parameter_types": [
+            "string",
+            "bool",
+            "bool"
+          ],
+          "return_type": "Windows.UI.Xaml.Automation.Provider.ITextRangeProvider"
+        },
+        "source": "UnionMetadata/10.0.28000.2705/Windows.winmd",
+        "source_sha256": "f8f32012964adb9130dd4d66fdd651daddb6cbbb9fe59e70ba6637e16e3c99ad",
+        "type_def_row": 11588
+      },
+      "winmd_id": "winrt:Windows.UI.Xaml.Automation.Provider.ITextRangeProvider::FindText#1"
+    },
+    {
+      "decision_reason": "IDL IID 5347ad7b-c355-46f8-aff5-909033582f63 differs from WinMD GuidAttribute 0274688d-06e9-4f66-9446-28a5be98fbd0; these are distinct nominal interface identities.",
+      "dependency_review": null,
+      "identity_review": "distinct_interface_guid",
+      "idl": {
+        "base": "IUnknown",
+        "iid": "5347ad7b-c355-46f8-aff5-909033582f63",
+        "sources": [
+          {
+            "declaration": {
+              "declaration_sha256": "01c78e740753adb45e7c0f11a3b2615e532deb494c5830fc9d375f0e644d46ac",
+              "declaration_text": "HRESULT GetAttributeValue (\n            [in] TEXTATTRIBUTEID attributeId,\n            [out, retval] VARIANT * pRetVal )",
+              "declared_return": "HRESULT",
+              "parameter_count": 2,
+              "parameter_declarations": [
+                "[in] TEXTATTRIBUTEID attributeId",
+                "[out, retval] VARIANT * pRetVal"
+              ],
+              "retval_parameter_count": 1
+            },
+            "path": "Include/10.0.28000.2705/um/UIAutomationCore.idl",
+            "sha256": "57833474568fcdc6ea385834d95b7f7d6229c6949c20902d714a5ea16b5297eb"
+          }
+        ]
+      },
+      "idl_id": "com:{5347ad7b-c355-46f8-aff5-909033582f63}::GetAttributeValue#1",
+      "lexical_key": {
+        "method": "GetAttributeValue",
+        "unqualified_owner": "ITextRangeProvider"
+      },
+      "winmd": {
+        "interface_guid": "0274688d-06e9-4f66-9446-28a5be98fbd0",
+        "method_def_row": 52978,
+        "method_def_token": "0x0600cef2",
+        "namespace": "Windows.UI.Xaml.Automation.Provider",
+        "signature": {
+          "blob_hex": "20011c08",
+          "calling_convention_byte": 32,
+          "decode_status": "decoded_supported_elements",
+          "parameter_count": 1,
+          "parameter_types": [
+            "int32"
+          ],
+          "return_type": "object"
+        },
+        "source": "UnionMetadata/10.0.28000.2705/Windows.winmd",
+        "source_sha256": "f8f32012964adb9130dd4d66fdd651daddb6cbbb9fe59e70ba6637e16e3c99ad",
+        "type_def_row": 11588
+      },
+      "winmd_id": "winrt:Windows.UI.Xaml.Automation.Provider.ITextRangeProvider::GetAttributeValue#1"
+    },
+    {
+      "decision_reason": "IDL IID 5347ad7b-c355-46f8-aff5-909033582f63 differs from WinMD GuidAttribute 0274688d-06e9-4f66-9446-28a5be98fbd0; these are distinct nominal interface identities.",
+      "dependency_review": null,
+      "identity_review": "distinct_interface_guid",
+      "idl": {
+        "base": "IUnknown",
+        "iid": "5347ad7b-c355-46f8-aff5-909033582f63",
+        "sources": [
+          {
+            "declaration": {
+              "declaration_sha256": "c305811b65964f3a4ead349e6a2e28403f7cc09924cc9c37a28707315cd01a4b",
+              "declaration_text": "HRESULT GetBoundingRectangles (\n            [out, retval] SAFEARRAY(double) * pRetVal )",
+              "declared_return": "HRESULT",
+              "parameter_count": 1,
+              "parameter_declarations": [
+                "[out, retval] SAFEARRAY(double) * pRetVal"
+              ],
+              "retval_parameter_count": 1
+            },
+            "path": "Include/10.0.28000.2705/um/UIAutomationCore.idl",
+            "sha256": "57833474568fcdc6ea385834d95b7f7d6229c6949c20902d714a5ea16b5297eb"
+          }
+        ]
+      },
+      "idl_id": "com:{5347ad7b-c355-46f8-aff5-909033582f63}::GetBoundingRectangles#1",
+      "lexical_key": {
+        "method": "GetBoundingRectangles",
+        "unqualified_owner": "ITextRangeProvider"
+      },
+      "winmd": {
+        "interface_guid": "0274688d-06e9-4f66-9446-28a5be98fbd0",
+        "method_def_row": 52979,
+        "method_def_token": "0x0600cef3",
+        "namespace": "Windows.UI.Xaml.Automation.Provider",
+        "signature": {
+          "blob_hex": "200101101d0d",
+          "calling_convention_byte": 32,
+          "decode_status": "decoded_supported_elements",
+          "parameter_count": 1,
+          "parameter_types": [
+            "byref<array<float64>>"
+          ],
+          "return_type": "void"
+        },
+        "source": "UnionMetadata/10.0.28000.2705/Windows.winmd",
+        "source_sha256": "f8f32012964adb9130dd4d66fdd651daddb6cbbb9fe59e70ba6637e16e3c99ad",
+        "type_def_row": 11588
+      },
+      "winmd_id": "winrt:Windows.UI.Xaml.Automation.Provider.ITextRangeProvider::GetBoundingRectangles#1"
+    },
+    {
+      "decision_reason": "IDL IID 5347ad7b-c355-46f8-aff5-909033582f63 differs from WinMD GuidAttribute 0274688d-06e9-4f66-9446-28a5be98fbd0; these are distinct nominal interface identities.",
+      "dependency_review": null,
+      "identity_review": "distinct_interface_guid",
+      "idl": {
+        "base": "IUnknown",
+        "iid": "5347ad7b-c355-46f8-aff5-909033582f63",
+        "sources": [
+          {
+            "declaration": {
+              "declaration_sha256": "f5e0c380c34a6392ae53dae9d76b8e43572567196eb34d4f0dc5c2cc51b20101",
+              "declaration_text": "HRESULT GetChildren (\n            [out, retval] SAFEARRAY(IRawElementProviderSimple*) * pRetVal )",
+              "declared_return": "HRESULT",
+              "parameter_count": 1,
+              "parameter_declarations": [
+                "[out, retval] SAFEARRAY(IRawElementProviderSimple*) * pRetVal"
+              ],
+              "retval_parameter_count": 1
+            },
+            "path": "Include/10.0.28000.2705/um/UIAutomationCore.idl",
+            "sha256": "57833474568fcdc6ea385834d95b7f7d6229c6949c20902d714a5ea16b5297eb"
+          }
+        ]
+      },
+      "idl_id": "com:{5347ad7b-c355-46f8-aff5-909033582f63}::GetChildren#1",
+      "lexical_key": {
+        "method": "GetChildren",
+        "unqualified_owner": "ITextRangeProvider"
+      },
+      "winmd": {
+        "interface_guid": "0274688d-06e9-4f66-9446-28a5be98fbd0",
+        "method_def_row": 52989,
+        "method_def_token": "0x0600cefd",
+        "namespace": "Windows.UI.Xaml.Automation.Provider",
+        "signature": {
+          "blob_hex": "20001d12c000b4e5",
+          "calling_convention_byte": 32,
+          "decode_status": "decoded_supported_elements",
+          "parameter_count": 0,
+          "parameter_types": [],
+          "return_type": "array<Windows.UI.Xaml.Automation.Provider.IRawElementProviderSimple>"
+        },
+        "source": "UnionMetadata/10.0.28000.2705/Windows.winmd",
+        "source_sha256": "f8f32012964adb9130dd4d66fdd651daddb6cbbb9fe59e70ba6637e16e3c99ad",
+        "type_def_row": 11588
+      },
+      "winmd_id": "winrt:Windows.UI.Xaml.Automation.Provider.ITextRangeProvider::GetChildren#1"
+    },
+    {
+      "decision_reason": "IDL IID 5347ad7b-c355-46f8-aff5-909033582f63 differs from WinMD GuidAttribute 0274688d-06e9-4f66-9446-28a5be98fbd0; these are distinct nominal interface identities.",
+      "dependency_review": null,
+      "identity_review": "distinct_interface_guid",
+      "idl": {
+        "base": "IUnknown",
+        "iid": "5347ad7b-c355-46f8-aff5-909033582f63",
+        "sources": [
+          {
+            "declaration": {
+              "declaration_sha256": "aec0b93c97545c6411a2891ae720a21ed326ba163b59a47559c3fe64ee1acb8f",
+              "declaration_text": "HRESULT GetEnclosingElement (\n            [out, retval] IRawElementProviderSimple ** pRetVal )",
+              "declared_return": "HRESULT",
+              "parameter_count": 1,
+              "parameter_declarations": [
+                "[out, retval] IRawElementProviderSimple ** pRetVal"
+              ],
+              "retval_parameter_count": 1
+            },
+            "path": "Include/10.0.28000.2705/um/UIAutomationCore.idl",
+            "sha256": "57833474568fcdc6ea385834d95b7f7d6229c6949c20902d714a5ea16b5297eb"
+          }
+        ]
+      },
+      "idl_id": "com:{5347ad7b-c355-46f8-aff5-909033582f63}::GetEnclosingElement#1",
+      "lexical_key": {
+        "method": "GetEnclosingElement",
+        "unqualified_owner": "ITextRangeProvider"
+      },
+      "winmd": {
+        "interface_guid": "0274688d-06e9-4f66-9446-28a5be98fbd0",
+        "method_def_row": 52980,
+        "method_def_token": "0x0600cef4",
+        "namespace": "Windows.UI.Xaml.Automation.Provider",
+        "signature": {
+          "blob_hex": "200012c000b4e5",
+          "calling_convention_byte": 32,
+          "decode_status": "decoded_supported_elements",
+          "parameter_count": 0,
+          "parameter_types": [],
+          "return_type": "Windows.UI.Xaml.Automation.Provider.IRawElementProviderSimple"
+        },
+        "source": "UnionMetadata/10.0.28000.2705/Windows.winmd",
+        "source_sha256": "f8f32012964adb9130dd4d66fdd651daddb6cbbb9fe59e70ba6637e16e3c99ad",
+        "type_def_row": 11588
+      },
+      "winmd_id": "winrt:Windows.UI.Xaml.Automation.Provider.ITextRangeProvider::GetEnclosingElement#1"
+    },
+    {
+      "decision_reason": "IDL IID 5347ad7b-c355-46f8-aff5-909033582f63 differs from WinMD GuidAttribute 0274688d-06e9-4f66-9446-28a5be98fbd0; these are distinct nominal interface identities.",
+      "dependency_review": null,
+      "identity_review": "distinct_interface_guid",
+      "idl": {
+        "base": "IUnknown",
+        "iid": "5347ad7b-c355-46f8-aff5-909033582f63",
+        "sources": [
+          {
+            "declaration": {
+              "declaration_sha256": "6f1b571aec02e8a0417cfc55b172bdc412f409b2d3b77fe1b908a8c13aa7c06e",
+              "declaration_text": "HRESULT GetText (\n            [in] int maxLength,\n            [out, retval] BSTR * pRetVal )",
+              "declared_return": "HRESULT",
+              "parameter_count": 2,
+              "parameter_declarations": [
+                "[in] int maxLength",
+                "[out, retval] BSTR * pRetVal"
+              ],
+              "retval_parameter_count": 1
+            },
+            "path": "Include/10.0.28000.2705/um/UIAutomationCore.idl",
+            "sha256": "57833474568fcdc6ea385834d95b7f7d6229c6949c20902d714a5ea16b5297eb"
+          }
+        ]
+      },
+      "idl_id": "com:{5347ad7b-c355-46f8-aff5-909033582f63}::GetText#1",
+      "lexical_key": {
+        "method": "GetText",
+        "unqualified_owner": "ITextRangeProvider"
+      },
+      "winmd": {
+        "interface_guid": "0274688d-06e9-4f66-9446-28a5be98fbd0",
+        "method_def_row": 52981,
+        "method_def_token": "0x0600cef5",
+        "namespace": "Windows.UI.Xaml.Automation.Provider",
+        "signature": {
+          "blob_hex": "20010e08",
+          "calling_convention_byte": 32,
+          "decode_status": "decoded_supported_elements",
+          "parameter_count": 1,
+          "parameter_types": [
+            "int32"
+          ],
+          "return_type": "string"
+        },
+        "source": "UnionMetadata/10.0.28000.2705/Windows.winmd",
+        "source_sha256": "f8f32012964adb9130dd4d66fdd651daddb6cbbb9fe59e70ba6637e16e3c99ad",
+        "type_def_row": 11588
+      },
+      "winmd_id": "winrt:Windows.UI.Xaml.Automation.Provider.ITextRangeProvider::GetText#1"
+    },
+    {
+      "decision_reason": "IDL IID 5347ad7b-c355-46f8-aff5-909033582f63 differs from WinMD GuidAttribute 0274688d-06e9-4f66-9446-28a5be98fbd0; these are distinct nominal interface identities.",
+      "dependency_review": null,
+      "identity_review": "distinct_interface_guid",
+      "idl": {
+        "base": "IUnknown",
+        "iid": "5347ad7b-c355-46f8-aff5-909033582f63",
+        "sources": [
+          {
+            "declaration": {
+              "declaration_sha256": "0abd12c7e1c6f7aaa85aa6f14b0a8b2a9628b8e146bb5dcb9f36a966e5ce4dc8",
+              "declaration_text": "HRESULT Move (\n            [in] enum TextUnit unit,\n            [in] int count,\n            [out, retval] int * pRetVal )",
+              "declared_return": "HRESULT",
+              "parameter_count": 3,
+              "parameter_declarations": [
+                "[in] enum TextUnit unit",
+                "[in] int count",
+                "[out, retval] int * pRetVal"
+              ],
+              "retval_parameter_count": 1
+            },
+            "path": "Include/10.0.28000.2705/um/UIAutomationCore.idl",
+            "sha256": "57833474568fcdc6ea385834d95b7f7d6229c6949c20902d714a5ea16b5297eb"
+          }
+        ]
+      },
+      "idl_id": "com:{5347ad7b-c355-46f8-aff5-909033582f63}::Move#1",
+      "lexical_key": {
+        "method": "Move",
+        "unqualified_owner": "ITextRangeProvider"
+      },
+      "winmd": {
+        "interface_guid": "0274688d-06e9-4f66-9446-28a5be98fbd0",
+        "method_def_row": 52982,
+        "method_def_token": "0x0600cef6",
+        "namespace": "Windows.UI.Xaml.Automation.Provider",
+        "signature": {
+          "blob_hex": "20020811c000b57508",
+          "calling_convention_byte": 32,
+          "decode_status": "decoded_supported_elements",
+          "parameter_count": 2,
+          "parameter_types": [
+            "Windows.UI.Xaml.Automation.Text.TextUnit",
+            "int32"
+          ],
+          "return_type": "int32"
+        },
+        "source": "UnionMetadata/10.0.28000.2705/Windows.winmd",
+        "source_sha256": "f8f32012964adb9130dd4d66fdd651daddb6cbbb9fe59e70ba6637e16e3c99ad",
+        "type_def_row": 11588
+      },
+      "winmd_id": "winrt:Windows.UI.Xaml.Automation.Provider.ITextRangeProvider::Move#1"
+    },
+    {
+      "decision_reason": "IDL IID 5347ad7b-c355-46f8-aff5-909033582f63 differs from WinMD GuidAttribute 0274688d-06e9-4f66-9446-28a5be98fbd0; these are distinct nominal interface identities.",
+      "dependency_review": null,
+      "identity_review": "distinct_interface_guid",
+      "idl": {
+        "base": "IUnknown",
+        "iid": "5347ad7b-c355-46f8-aff5-909033582f63",
+        "sources": [
+          {
+            "declaration": {
+              "declaration_sha256": "0122c69c871a5ada67ef7325379e40e326ddab1a7c2a5bf8676517d81d55e6fd",
+              "declaration_text": "HRESULT MoveEndpointByRange (\n            [in] enum TextPatternRangeEndpoint endpoint,\n            [in] ITextRangeProvider * targetRange,\n            [in] enum TextPatternRangeEndpoint targetEndpoint )",
+              "declared_return": "HRESULT",
+              "parameter_count": 3,
+              "parameter_declarations": [
+                "[in] enum TextPatternRangeEndpoint endpoint",
+                "[in] ITextRangeProvider * targetRange",
+                "[in] enum TextPatternRangeEndpoint targetEndpoint"
+              ],
+              "retval_parameter_count": 0
+            },
+            "path": "Include/10.0.28000.2705/um/UIAutomationCore.idl",
+            "sha256": "57833474568fcdc6ea385834d95b7f7d6229c6949c20902d714a5ea16b5297eb"
+          }
+        ]
+      },
+      "idl_id": "com:{5347ad7b-c355-46f8-aff5-909033582f63}::MoveEndpointByRange#1",
+      "lexical_key": {
+        "method": "MoveEndpointByRange",
+        "unqualified_owner": "ITextRangeProvider"
+      },
+      "winmd": {
+        "interface_guid": "0274688d-06e9-4f66-9446-28a5be98fbd0",
+        "method_def_row": 52984,
+        "method_def_token": "0x0600cef8",
+        "namespace": "Windows.UI.Xaml.Automation.Provider",
+        "signature": {
+          "blob_hex": "20030111c000b57112c000b52111c000b571",
+          "calling_convention_byte": 32,
+          "decode_status": "decoded_supported_elements",
+          "parameter_count": 3,
+          "parameter_types": [
+            "Windows.UI.Xaml.Automation.Text.TextPatternRangeEndpoint",
+            "Windows.UI.Xaml.Automation.Provider.ITextRangeProvider",
+            "Windows.UI.Xaml.Automation.Text.TextPatternRangeEndpoint"
+          ],
+          "return_type": "void"
+        },
+        "source": "UnionMetadata/10.0.28000.2705/Windows.winmd",
+        "source_sha256": "f8f32012964adb9130dd4d66fdd651daddb6cbbb9fe59e70ba6637e16e3c99ad",
+        "type_def_row": 11588
+      },
+      "winmd_id": "winrt:Windows.UI.Xaml.Automation.Provider.ITextRangeProvider::MoveEndpointByRange#1"
+    },
+    {
+      "decision_reason": "IDL IID 5347ad7b-c355-46f8-aff5-909033582f63 differs from WinMD GuidAttribute 0274688d-06e9-4f66-9446-28a5be98fbd0; these are distinct nominal interface identities.",
+      "dependency_review": null,
+      "identity_review": "distinct_interface_guid",
+      "idl": {
+        "base": "IUnknown",
+        "iid": "5347ad7b-c355-46f8-aff5-909033582f63",
+        "sources": [
+          {
+            "declaration": {
+              "declaration_sha256": "bb046a6aa7239ebc799947bd41d89c9437c46b6ad363e75c6b518172378f3135",
+              "declaration_text": "HRESULT MoveEndpointByUnit (\n            [in] enum TextPatternRangeEndpoint endpoint,\n            [in] enum TextUnit unit,\n            [in] int count,\n            [out, retval] int * pRetVal )",
+              "declared_return": "HRESULT",
+              "parameter_count": 4,
+              "parameter_declarations": [
+                "[in] enum TextPatternRangeEndpoint endpoint",
+                "[in] enum TextUnit unit",
+                "[in] int count",
+                "[out, retval] int * pRetVal"
+              ],
+              "retval_parameter_count": 1
+            },
+            "path": "Include/10.0.28000.2705/um/UIAutomationCore.idl",
+            "sha256": "57833474568fcdc6ea385834d95b7f7d6229c6949c20902d714a5ea16b5297eb"
+          }
+        ]
+      },
+      "idl_id": "com:{5347ad7b-c355-46f8-aff5-909033582f63}::MoveEndpointByUnit#1",
+      "lexical_key": {
+        "method": "MoveEndpointByUnit",
+        "unqualified_owner": "ITextRangeProvider"
+      },
+      "winmd": {
+        "interface_guid": "0274688d-06e9-4f66-9446-28a5be98fbd0",
+        "method_def_row": 52983,
+        "method_def_token": "0x0600cef7",
+        "namespace": "Windows.UI.Xaml.Automation.Provider",
+        "signature": {
+          "blob_hex": "20030811c000b57111c000b57508",
+          "calling_convention_byte": 32,
+          "decode_status": "decoded_supported_elements",
+          "parameter_count": 3,
+          "parameter_types": [
+            "Windows.UI.Xaml.Automation.Text.TextPatternRangeEndpoint",
+            "Windows.UI.Xaml.Automation.Text.TextUnit",
+            "int32"
+          ],
+          "return_type": "int32"
+        },
+        "source": "UnionMetadata/10.0.28000.2705/Windows.winmd",
+        "source_sha256": "f8f32012964adb9130dd4d66fdd651daddb6cbbb9fe59e70ba6637e16e3c99ad",
+        "type_def_row": 11588
+      },
+      "winmd_id": "winrt:Windows.UI.Xaml.Automation.Provider.ITextRangeProvider::MoveEndpointByUnit#1"
+    },
+    {
+      "decision_reason": "IDL IID 5347ad7b-c355-46f8-aff5-909033582f63 differs from WinMD GuidAttribute 0274688d-06e9-4f66-9446-28a5be98fbd0; these are distinct nominal interface identities.",
+      "dependency_review": null,
+      "identity_review": "distinct_interface_guid",
+      "idl": {
+        "base": "IUnknown",
+        "iid": "5347ad7b-c355-46f8-aff5-909033582f63",
+        "sources": [
+          {
+            "declaration": {
+              "declaration_sha256": "e5f8a1ed5a6cee28d6f9d8ee8a9633526987c14916b64e384a6e36e4b701f178",
+              "declaration_text": "HRESULT RemoveFromSelection ()",
+              "declared_return": "HRESULT",
+              "parameter_count": 0,
+              "parameter_declarations": [],
+              "retval_parameter_count": 0
+            },
+            "path": "Include/10.0.28000.2705/um/UIAutomationCore.idl",
+            "sha256": "57833474568fcdc6ea385834d95b7f7d6229c6949c20902d714a5ea16b5297eb"
+          }
+        ]
+      },
+      "idl_id": "com:{5347ad7b-c355-46f8-aff5-909033582f63}::RemoveFromSelection#1",
+      "lexical_key": {
+        "method": "RemoveFromSelection",
+        "unqualified_owner": "ITextRangeProvider"
+      },
+      "winmd": {
+        "interface_guid": "0274688d-06e9-4f66-9446-28a5be98fbd0",
+        "method_def_row": 52987,
+        "method_def_token": "0x0600cefb",
+        "namespace": "Windows.UI.Xaml.Automation.Provider",
+        "signature": {
+          "blob_hex": "200001",
+          "calling_convention_byte": 32,
+          "decode_status": "decoded_supported_elements",
+          "parameter_count": 0,
+          "parameter_types": [],
+          "return_type": "void"
+        },
+        "source": "UnionMetadata/10.0.28000.2705/Windows.winmd",
+        "source_sha256": "f8f32012964adb9130dd4d66fdd651daddb6cbbb9fe59e70ba6637e16e3c99ad",
+        "type_def_row": 11588
+      },
+      "winmd_id": "winrt:Windows.UI.Xaml.Automation.Provider.ITextRangeProvider::RemoveFromSelection#1"
+    },
+    {
+      "decision_reason": "IDL IID 5347ad7b-c355-46f8-aff5-909033582f63 differs from WinMD GuidAttribute 0274688d-06e9-4f66-9446-28a5be98fbd0; these are distinct nominal interface identities.",
+      "dependency_review": null,
+      "identity_review": "distinct_interface_guid",
+      "idl": {
+        "base": "IUnknown",
+        "iid": "5347ad7b-c355-46f8-aff5-909033582f63",
+        "sources": [
+          {
+            "declaration": {
+              "declaration_sha256": "0d12d2465337f4362490b310626df3d87007a5e2400e660abfa09a43d885f3fe",
+              "declaration_text": "HRESULT ScrollIntoView (\n            [in] BOOL alignToTop )",
+              "declared_return": "HRESULT",
+              "parameter_count": 1,
+              "parameter_declarations": [
+                "[in] BOOL alignToTop"
+              ],
+              "retval_parameter_count": 0
+            },
+            "path": "Include/10.0.28000.2705/um/UIAutomationCore.idl",
+            "sha256": "57833474568fcdc6ea385834d95b7f7d6229c6949c20902d714a5ea16b5297eb"
+          }
+        ]
+      },
+      "idl_id": "com:{5347ad7b-c355-46f8-aff5-909033582f63}::ScrollIntoView#1",
+      "lexical_key": {
+        "method": "ScrollIntoView",
+        "unqualified_owner": "ITextRangeProvider"
+      },
+      "winmd": {
+        "interface_guid": "0274688d-06e9-4f66-9446-28a5be98fbd0",
+        "method_def_row": 52988,
+        "method_def_token": "0x0600cefc",
+        "namespace": "Windows.UI.Xaml.Automation.Provider",
+        "signature": {
+          "blob_hex": "20010102",
+          "calling_convention_byte": 32,
+          "decode_status": "decoded_supported_elements",
+          "parameter_count": 1,
+          "parameter_types": [
+            "bool"
+          ],
+          "return_type": "void"
+        },
+        "source": "UnionMetadata/10.0.28000.2705/Windows.winmd",
+        "source_sha256": "f8f32012964adb9130dd4d66fdd651daddb6cbbb9fe59e70ba6637e16e3c99ad",
+        "type_def_row": 11588
+      },
+      "winmd_id": "winrt:Windows.UI.Xaml.Automation.Provider.ITextRangeProvider::ScrollIntoView#1"
+    },
+    {
+      "decision_reason": "IDL IID 5347ad7b-c355-46f8-aff5-909033582f63 differs from WinMD GuidAttribute 0274688d-06e9-4f66-9446-28a5be98fbd0; these are distinct nominal interface identities.",
+      "dependency_review": null,
+      "identity_review": "distinct_interface_guid",
+      "idl": {
+        "base": "IUnknown",
+        "iid": "5347ad7b-c355-46f8-aff5-909033582f63",
+        "sources": [
+          {
+            "declaration": {
+              "declaration_sha256": "4dbe4afbcbd01dfa94cdf6136b7c7a543da8b4a33fa6afadd3f20b96257da98d",
+              "declaration_text": "HRESULT Select ()",
+              "declared_return": "HRESULT",
+              "parameter_count": 0,
+              "parameter_declarations": [],
+              "retval_parameter_count": 0
+            },
+            "path": "Include/10.0.28000.2705/um/UIAutomationCore.idl",
+            "sha256": "57833474568fcdc6ea385834d95b7f7d6229c6949c20902d714a5ea16b5297eb"
+          }
+        ]
+      },
+      "idl_id": "com:{5347ad7b-c355-46f8-aff5-909033582f63}::Select#1",
+      "lexical_key": {
+        "method": "Select",
+        "unqualified_owner": "ITextRangeProvider"
+      },
+      "winmd": {
+        "interface_guid": "0274688d-06e9-4f66-9446-28a5be98fbd0",
+        "method_def_row": 52985,
+        "method_def_token": "0x0600cef9",
+        "namespace": "Windows.UI.Xaml.Automation.Provider",
+        "signature": {
+          "blob_hex": "200001",
+          "calling_convention_byte": 32,
+          "decode_status": "decoded_supported_elements",
+          "parameter_count": 0,
+          "parameter_types": [],
+          "return_type": "void"
+        },
+        "source": "UnionMetadata/10.0.28000.2705/Windows.winmd",
+        "source_sha256": "f8f32012964adb9130dd4d66fdd651daddb6cbbb9fe59e70ba6637e16e3c99ad",
+        "type_def_row": 11588
+      },
+      "winmd_id": "winrt:Windows.UI.Xaml.Automation.Provider.ITextRangeProvider::Select#1"
+    },
+    {
+      "decision_reason": "IDL IID 54fcb24b-e18e-47a2-b4d3-eccbe77599a2 differs from WinMD GuidAttribute f7d1a187-b13c-4540-b09e-6778e2dc9ba5; these are distinct nominal interface identities.",
+      "dependency_review": null,
+      "identity_review": "distinct_interface_guid",
+      "idl": {
+        "base": "IUnknown",
+        "iid": "54fcb24b-e18e-47a2-b4d3-eccbe77599a2",
+        "sources": [
+          {
+            "declaration": {
+              "declaration_sha256": "1ff874f7c362a187598f227a471ac447fc11916f3294c603755e450c8626e5ee",
+              "declaration_text": "HRESULT Invoke ()",
+              "declared_return": "HRESULT",
+              "parameter_count": 0,
+              "parameter_declarations": [],
+              "retval_parameter_count": 0
+            },
+            "path": "Include/10.0.28000.2705/um/UIAutomationCore.idl",
+            "sha256": "57833474568fcdc6ea385834d95b7f7d6229c6949c20902d714a5ea16b5297eb"
+          }
+        ]
+      },
+      "idl_id": "com:{54fcb24b-e18e-47a2-b4d3-eccbe77599a2}::Invoke#1",
+      "lexical_key": {
+        "method": "Invoke",
+        "unqualified_owner": "IInvokeProvider"
+      },
+      "winmd": {
+        "interface_guid": "f7d1a187-b13c-4540-b09e-6778e2dc9ba5",
+        "method_def_row": 52911,
+        "method_def_token": "0x0600ceaf",
+        "namespace": "Windows.UI.Xaml.Automation.Provider",
+        "signature": {
+          "blob_hex": "200001",
+          "calling_convention_byte": 32,
+          "decode_status": "decoded_supported_elements",
+          "parameter_count": 0,
+          "parameter_types": [],
+          "return_type": "void"
+        },
+        "source": "UnionMetadata/10.0.28000.2705/Windows.winmd",
+        "source_sha256": "f8f32012964adb9130dd4d66fdd651daddb6cbbb9fe59e70ba6637e16e3c99ad",
+        "type_def_row": 11568
+      },
+      "winmd_id": "winrt:Windows.UI.Xaml.Automation.Provider.IInvokeProvider::Invoke#1"
+    },
+    {
+      "decision_reason": "IDL IID 56d00bd0-c4f4-433c-a836-1a52a57e0892 differs from WinMD GuidAttribute 93b88290-656f-44f7-aeaf-78b8f944d062; these are distinct nominal interface identities.",
+      "dependency_review": null,
+      "identity_review": "distinct_interface_guid",
+      "idl": {
+        "base": "IUnknown",
+        "iid": "56d00bd0-c4f4-433c-a836-1a52a57e0892",
+        "sources": [
+          {
+            "declaration": {
+              "declaration_sha256": "44c7ffca6fbc47fddf0856dd0da20c65545a024884e3c5eb871537e330c85af3",
+              "declaration_text": "HRESULT Toggle ()",
+              "declared_return": "HRESULT",
+              "parameter_count": 0,
+              "parameter_declarations": [],
+              "retval_parameter_count": 0
+            },
+            "path": "Include/10.0.28000.2705/um/UIAutomationCore.idl",
+            "sha256": "57833474568fcdc6ea385834d95b7f7d6229c6949c20902d714a5ea16b5297eb"
+          }
+        ]
+      },
+      "idl_id": "com:{56d00bd0-c4f4-433c-a836-1a52a57e0892}::Toggle#1",
+      "lexical_key": {
+        "method": "Toggle",
+        "unqualified_owner": "IToggleProvider"
+      },
+      "winmd": {
+        "interface_guid": "93b88290-656f-44f7-aeaf-78b8f944d062",
+        "method_def_row": 52992,
+        "method_def_token": "0x0600cf00",
+        "namespace": "Windows.UI.Xaml.Automation.Provider",
+        "signature": {
+          "blob_hex": "200001",
+          "calling_convention_byte": 32,
+          "decode_status": "decoded_supported_elements",
+          "parameter_count": 0,
+          "parameter_types": [],
+          "return_type": "void"
+        },
+        "source": "UnionMetadata/10.0.28000.2705/Windows.winmd",
+        "source_sha256": "f8f32012964adb9130dd4d66fdd651daddb6cbbb9fe59e70ba6637e16e3c99ad",
+        "type_def_row": 11590
+      },
+      "winmd_id": "winrt:Windows.UI.Xaml.Automation.Provider.IToggleProvider::Toggle#1"
+    },
+    {
+      "decision_reason": "IDL IID 6278cab1-b556-4a1a-b4e0-418acc523201 differs from WinMD GuidAttribute d014e196-0e50-4843-a5d2-c22897c8845a; these are distinct nominal interface identities.",
+      "dependency_review": null,
+      "identity_review": "distinct_interface_guid",
+      "idl": {
+        "base": "IUnknown",
+        "iid": "6278cab1-b556-4a1a-b4e0-418acc523201",
+        "sources": [
+          {
+            "declaration": {
+              "declaration_sha256": "e48648b55134d53a9cc4c510882b5bdddadcd9bc8abe5b82f0eadea8080b35a0",
+              "declaration_text": "HRESULT GetSupportedViews (\n            [out, retval] SAFEARRAY(int) * pRetVal )",
+              "declared_return": "HRESULT",
+              "parameter_count": 1,
+              "parameter_declarations": [
+                "[out, retval] SAFEARRAY(int) * pRetVal"
+              ],
+              "retval_parameter_count": 1
+            },
+            "path": "Include/10.0.28000.2705/um/UIAutomationCore.idl",
+            "sha256": "57833474568fcdc6ea385834d95b7f7d6229c6949c20902d714a5ea16b5297eb"
+          }
+        ]
+      },
+      "idl_id": "com:{6278cab1-b556-4a1a-b4e0-418acc523201}::GetSupportedViews#1",
+      "lexical_key": {
+        "method": "GetSupportedViews",
+        "unqualified_owner": "IMultipleViewProvider"
+      },
+      "winmd": {
+        "interface_guid": "d014e196-0e50-4843-a5d2-c22897c8845a",
+        "method_def_row": 52914,
+        "method_def_token": "0x0600ceb2",
+        "namespace": "Windows.UI.Xaml.Automation.Provider",
+        "signature": {
+          "blob_hex": "20001d08",
+          "calling_convention_byte": 32,
+          "decode_status": "decoded_supported_elements",
+          "parameter_count": 0,
+          "parameter_types": [],
+          "return_type": "array<int32>"
+        },
+        "source": "UnionMetadata/10.0.28000.2705/Windows.winmd",
+        "source_sha256": "f8f32012964adb9130dd4d66fdd651daddb6cbbb9fe59e70ba6637e16e3c99ad",
+        "type_def_row": 11570
+      },
+      "winmd_id": "winrt:Windows.UI.Xaml.Automation.Provider.IMultipleViewProvider::GetSupportedViews#1"
+    },
+    {
+      "decision_reason": "IDL IID 6278cab1-b556-4a1a-b4e0-418acc523201 differs from WinMD GuidAttribute d014e196-0e50-4843-a5d2-c22897c8845a; these are distinct nominal interface identities.",
+      "dependency_review": null,
+      "identity_review": "distinct_interface_guid",
+      "idl": {
+        "base": "IUnknown",
+        "iid": "6278cab1-b556-4a1a-b4e0-418acc523201",
+        "sources": [
+          {
+            "declaration": {
+              "declaration_sha256": "0c5d6abcb669a356fdf0a00aa33150e7baadc1a171c7682b5b5de9bd066b91cd",
+              "declaration_text": "HRESULT GetViewName (\n            [in] int viewId,\n            [out, retval] BSTR * pRetVal )",
+              "declared_return": "HRESULT",
+              "parameter_count": 2,
+              "parameter_declarations": [
+                "[in] int viewId",
+                "[out, retval] BSTR * pRetVal"
+              ],
+              "retval_parameter_count": 1
+            },
+            "path": "Include/10.0.28000.2705/um/UIAutomationCore.idl",
+            "sha256": "57833474568fcdc6ea385834d95b7f7d6229c6949c20902d714a5ea16b5297eb"
+          }
+        ]
+      },
+      "idl_id": "com:{6278cab1-b556-4a1a-b4e0-418acc523201}::GetViewName#1",
+      "lexical_key": {
+        "method": "GetViewName",
+        "unqualified_owner": "IMultipleViewProvider"
+      },
+      "winmd": {
+        "interface_guid": "d014e196-0e50-4843-a5d2-c22897c8845a",
+        "method_def_row": 52915,
+        "method_def_token": "0x0600ceb3",
+        "namespace": "Windows.UI.Xaml.Automation.Provider",
+        "signature": {
+          "blob_hex": "20010e08",
+          "calling_convention_byte": 32,
+          "decode_status": "decoded_supported_elements",
+          "parameter_count": 1,
+          "parameter_types": [
+            "int32"
+          ],
+          "return_type": "string"
+        },
+        "source": "UnionMetadata/10.0.28000.2705/Windows.winmd",
+        "source_sha256": "f8f32012964adb9130dd4d66fdd651daddb6cbbb9fe59e70ba6637e16e3c99ad",
+        "type_def_row": 11570
+      },
+      "winmd_id": "winrt:Windows.UI.Xaml.Automation.Provider.IMultipleViewProvider::GetViewName#1"
+    },
+    {
+      "decision_reason": "IDL IID 6278cab1-b556-4a1a-b4e0-418acc523201 differs from WinMD GuidAttribute d014e196-0e50-4843-a5d2-c22897c8845a; these are distinct nominal interface identities.",
+      "dependency_review": null,
+      "identity_review": "distinct_interface_guid",
+      "idl": {
+        "base": "IUnknown",
+        "iid": "6278cab1-b556-4a1a-b4e0-418acc523201",
+        "sources": [
+          {
+            "declaration": {
+              "declaration_sha256": "725461d2e72b2cee388445f366e18cb00d31f0beb402a3128c37fb2ac221ab54",
+              "declaration_text": "HRESULT SetCurrentView (\n            [in] int viewId )",
+              "declared_return": "HRESULT",
+              "parameter_count": 1,
+              "parameter_declarations": [
+                "[in] int viewId"
+              ],
+              "retval_parameter_count": 0
+            },
+            "path": "Include/10.0.28000.2705/um/UIAutomationCore.idl",
+            "sha256": "57833474568fcdc6ea385834d95b7f7d6229c6949c20902d714a5ea16b5297eb"
+          }
+        ]
+      },
+      "idl_id": "com:{6278cab1-b556-4a1a-b4e0-418acc523201}::SetCurrentView#1",
+      "lexical_key": {
+        "method": "SetCurrentView",
+        "unqualified_owner": "IMultipleViewProvider"
+      },
+      "winmd": {
+        "interface_guid": "d014e196-0e50-4843-a5d2-c22897c8845a",
+        "method_def_row": 52916,
+        "method_def_token": "0x0600ceb4",
+        "namespace": "Windows.UI.Xaml.Automation.Provider",
+        "signature": {
+          "blob_hex": "20010108",
+          "calling_convention_byte": 32,
+          "decode_status": "decoded_supported_elements",
+          "parameter_count": 1,
+          "parameter_types": [
+            "int32"
+          ],
+          "return_type": "void"
+        },
+        "source": "UnionMetadata/10.0.28000.2705/Windows.winmd",
+        "source_sha256": "f8f32012964adb9130dd4d66fdd651daddb6cbbb9fe59e70ba6637e16e3c99ad",
+        "type_def_row": 11570
+      },
+      "winmd_id": "winrt:Windows.UI.Xaml.Automation.Provider.IMultipleViewProvider::SetCurrentView#1"
+    },
+    {
+      "decision_reason": "IDL IID 6829ddc4-4f91-4ffa-b86f-bd3e2987cb4c differs from WinMD GuidAttribute 79670fdd-f6a9-4a65-af17-861db799a2da; these are distinct nominal interface identities.",
+      "dependency_review": null,
+      "identity_review": "distinct_interface_guid",
+      "idl": {
+        "base": "IUnknown",
+        "iid": "6829ddc4-4f91-4ffa-b86f-bd3e2987cb4c",
+        "sources": [
+          {
+            "declaration": {
+              "declaration_sha256": "95454432b02edbbaf08871a9908c80120123658ebfe4a4499c08ee5008448744",
+              "declaration_text": "HRESULT Move (\n            [in] double x,\n            [in] double y )",
+              "declared_return": "HRESULT",
+              "parameter_count": 2,
+              "parameter_declarations": [
+                "[in] double x",
+                "[in] double y"
+              ],
+              "retval_parameter_count": 0
+            },
+            "path": "Include/10.0.28000.2705/um/UIAutomationCore.idl",
+            "sha256": "57833474568fcdc6ea385834d95b7f7d6229c6949c20902d714a5ea16b5297eb"
+          }
+        ]
+      },
+      "idl_id": "com:{6829ddc4-4f91-4ffa-b86f-bd3e2987cb4c}::Move#1",
+      "lexical_key": {
+        "method": "Move",
+        "unqualified_owner": "ITransformProvider"
+      },
+      "winmd": {
+        "interface_guid": "79670fdd-f6a9-4a65-af17-861db799a2da",
+        "method_def_row": 52996,
+        "method_def_token": "0x0600cf04",
+        "namespace": "Windows.UI.Xaml.Automation.Provider",
+        "signature": {
+          "blob_hex": "2002010d0d",
+          "calling_convention_byte": 32,
+          "decode_status": "decoded_supported_elements",
+          "parameter_count": 2,
+          "parameter_types": [
+            "float64",
+            "float64"
+          ],
+          "return_type": "void"
+        },
+        "source": "UnionMetadata/10.0.28000.2705/Windows.winmd",
+        "source_sha256": "f8f32012964adb9130dd4d66fdd651daddb6cbbb9fe59e70ba6637e16e3c99ad",
+        "type_def_row": 11591
+      },
+      "winmd_id": "winrt:Windows.UI.Xaml.Automation.Provider.ITransformProvider::Move#1"
+    },
+    {
+      "decision_reason": "IDL IID 6829ddc4-4f91-4ffa-b86f-bd3e2987cb4c differs from WinMD GuidAttribute 79670fdd-f6a9-4a65-af17-861db799a2da; these are distinct nominal interface identities.",
+      "dependency_review": null,
+      "identity_review": "distinct_interface_guid",
+      "idl": {
+        "base": "IUnknown",
+        "iid": "6829ddc4-4f91-4ffa-b86f-bd3e2987cb4c",
+        "sources": [
+          {
+            "declaration": {
+              "declaration_sha256": "fd01bac0976062820dcb5717b4d88439f55492d9ac06fcf7f9f0cfe774fe18e7",
+              "declaration_text": "HRESULT Resize (\n            [in] double width,\n            [in] double height )",
+              "declared_return": "HRESULT",
+              "parameter_count": 2,
+              "parameter_declarations": [
+                "[in] double width",
+                "[in] double height"
+              ],
+              "retval_parameter_count": 0
+            },
+            "path": "Include/10.0.28000.2705/um/UIAutomationCore.idl",
+            "sha256": "57833474568fcdc6ea385834d95b7f7d6229c6949c20902d714a5ea16b5297eb"
+          }
+        ]
+      },
+      "idl_id": "com:{6829ddc4-4f91-4ffa-b86f-bd3e2987cb4c}::Resize#1",
+      "lexical_key": {
+        "method": "Resize",
+        "unqualified_owner": "ITransformProvider"
+      },
+      "winmd": {
+        "interface_guid": "79670fdd-f6a9-4a65-af17-861db799a2da",
+        "method_def_row": 52997,
+        "method_def_token": "0x0600cf05",
+        "namespace": "Windows.UI.Xaml.Automation.Provider",
+        "signature": {
+          "blob_hex": "2002010d0d",
+          "calling_convention_byte": 32,
+          "decode_status": "decoded_supported_elements",
+          "parameter_count": 2,
+          "parameter_types": [
+            "float64",
+            "float64"
+          ],
+          "return_type": "void"
+        },
+        "source": "UnionMetadata/10.0.28000.2705/Windows.winmd",
+        "source_sha256": "f8f32012964adb9130dd4d66fdd651daddb6cbbb9fe59e70ba6637e16e3c99ad",
+        "type_def_row": 11591
+      },
+      "winmd_id": "winrt:Windows.UI.Xaml.Automation.Provider.ITransformProvider::Resize#1"
+    },
+    {
+      "decision_reason": "IDL IID 6829ddc4-4f91-4ffa-b86f-bd3e2987cb4c differs from WinMD GuidAttribute 79670fdd-f6a9-4a65-af17-861db799a2da; these are distinct nominal interface identities.",
+      "dependency_review": null,
+      "identity_review": "distinct_interface_guid",
+      "idl": {
+        "base": "IUnknown",
+        "iid": "6829ddc4-4f91-4ffa-b86f-bd3e2987cb4c",
+        "sources": [
+          {
+            "declaration": {
+              "declaration_sha256": "8fc26e1de7e05099b2db3588ea2665148ad21a0785f247cb71d2fcd3ea2829fb",
+              "declaration_text": "HRESULT Rotate (\n            [in] double degrees )",
+              "declared_return": "HRESULT",
+              "parameter_count": 1,
+              "parameter_declarations": [
+                "[in] double degrees"
+              ],
+              "retval_parameter_count": 0
+            },
+            "path": "Include/10.0.28000.2705/um/UIAutomationCore.idl",
+            "sha256": "57833474568fcdc6ea385834d95b7f7d6229c6949c20902d714a5ea16b5297eb"
+          }
+        ]
+      },
+      "idl_id": "com:{6829ddc4-4f91-4ffa-b86f-bd3e2987cb4c}::Rotate#1",
+      "lexical_key": {
+        "method": "Rotate",
+        "unqualified_owner": "ITransformProvider"
+      },
+      "winmd": {
+        "interface_guid": "79670fdd-f6a9-4a65-af17-861db799a2da",
+        "method_def_row": 52998,
+        "method_def_token": "0x0600cf06",
+        "namespace": "Windows.UI.Xaml.Automation.Provider",
+        "signature": {
+          "blob_hex": "2001010d",
+          "calling_convention_byte": 32,
+          "decode_status": "decoded_supported_elements",
+          "parameter_count": 1,
+          "parameter_types": [
+            "float64"
+          ],
+          "return_type": "void"
+        },
+        "source": "UnionMetadata/10.0.28000.2705/Windows.winmd",
+        "source_sha256": "f8f32012964adb9130dd4d66fdd651daddb6cbbb9fe59e70ba6637e16e3c99ad",
+        "type_def_row": 11591
+      },
+      "winmd_id": "winrt:Windows.UI.Xaml.Automation.Provider.ITransformProvider::Rotate#1"
+    },
+    {
+      "decision_reason": "IDL IID 6aa7bbbb-7ff9-497d-904f-d20b897929d8 differs from WinMD GuidAttribute 2e7786a9-7ffc-4f57-b965-1ef1f373f546; these are distinct nominal interface identities.",
+      "dependency_review": null,
+      "identity_review": "distinct_interface_guid",
+      "idl": {
+        "base": "IUnknown",
+        "iid": "6aa7bbbb-7ff9-497d-904f-d20b897929d8",
+        "sources": [
+          {
+            "declaration": {
+              "declaration_sha256": "a856a758e8710122f8411382ea0ce2a4d486a83d4a5a4d6e58ee9b07fa64637a",
+              "declaration_text": "HRESULT GetGrabbedItems (\n            [out, retval] SAFEARRAY(IRawElementProviderSimple*) * pRetVal )",
+              "declared_return": "HRESULT",
+              "parameter_count": 1,
+              "parameter_declarations": [
+                "[out, retval] SAFEARRAY(IRawElementProviderSimple*) * pRetVal"
+              ],
+              "retval_parameter_count": 1
+            },
+            "path": "Include/10.0.28000.2705/um/UIAutomationCore.idl",
+            "sha256": "57833474568fcdc6ea385834d95b7f7d6229c6949c20902d714a5ea16b5297eb"
+          }
+        ]
+      },
+      "idl_id": "com:{6aa7bbbb-7ff9-497d-904f-d20b897929d8}::GetGrabbedItems#1",
+      "lexical_key": {
+        "method": "GetGrabbedItems",
+        "unqualified_owner": "IDragProvider"
+      },
+      "winmd": {
+        "interface_guid": "2e7786a9-7ffc-4f57-b965-1ef1f373f546",
+        "method_def_row": 52897,
+        "method_def_token": "0x0600cea1",
+        "namespace": "Windows.UI.Xaml.Automation.Provider",
+        "signature": {
+          "blob_hex": "20001d12c000b4e5",
+          "calling_convention_byte": 32,
+          "decode_status": "decoded_supported_elements",
+          "parameter_count": 0,
+          "parameter_types": [],
+          "return_type": "array<Windows.UI.Xaml.Automation.Provider.IRawElementProviderSimple>"
+        },
+        "source": "UnionMetadata/10.0.28000.2705/Windows.winmd",
+        "source_sha256": "f8f32012964adb9130dd4d66fdd651daddb6cbbb9fe59e70ba6637e16e3c99ad",
+        "type_def_row": 11562
+      },
+      "winmd_id": "winrt:Windows.UI.Xaml.Automation.Provider.IDragProvider::GetGrabbedItems#1"
+    },
+    {
+      "decision_reason": "IDL IID 6f6b5d35-5525-4f80-b758-85473832ffc7 differs from WinMD GuidAttribute 15359093-bd99-4cfd-9f07-3b14b315e23d; these are distinct nominal interface identities.",
+      "dependency_review": null,
+      "identity_review": "distinct_interface_guid",
+      "idl": {
+        "base": "IUnknown",
+        "iid": "6f6b5d35-5525-4f80-b758-85473832ffc7",
+        "sources": [
+          {
+            "declaration": {
+              "declaration_sha256": "b1c7cadc6374ce2c54c9cf3834c5ae03130e68b07f0c8e641c70d105812de631",
+              "declaration_text": "HRESULT GetItemByName (\n            [in] LPCWSTR name,\n            [out, retval] IRawElementProviderSimple ** pRetVal )",
+              "declared_return": "HRESULT",
+              "parameter_count": 2,
+              "parameter_declarations": [
+                "[in] LPCWSTR name",
+                "[out, retval] IRawElementProviderSimple ** pRetVal"
+              ],
+              "retval_parameter_count": 1
+            },
+            "path": "Include/10.0.28000.2705/um/UIAutomationCore.idl",
+            "sha256": "57833474568fcdc6ea385834d95b7f7d6229c6949c20902d714a5ea16b5297eb"
+          }
+        ]
+      },
+      "idl_id": "com:{6f6b5d35-5525-4f80-b758-85473832ffc7}::GetItemByName#1",
+      "lexical_key": {
+        "method": "GetItemByName",
+        "unqualified_owner": "ISpreadsheetProvider"
+      },
+      "winmd": {
+        "interface_guid": "15359093-bd99-4cfd-9f07-3b14b315e23d",
+        "method_def_row": 52945,
+        "method_def_token": "0x0600ced1",
+        "namespace": "Windows.UI.Xaml.Automation.Provider",
+        "signature": {
+          "blob_hex": "200112c000b4e50e",
+          "calling_convention_byte": 32,
+          "decode_status": "decoded_supported_elements",
+          "parameter_count": 1,
+          "parameter_types": [
+            "string"
+          ],
+          "return_type": "Windows.UI.Xaml.Automation.Provider.IRawElementProviderSimple"
+        },
+        "source": "UnionMetadata/10.0.28000.2705/Windows.winmd",
+        "source_sha256": "f8f32012964adb9130dd4d66fdd651daddb6cbbb9fe59e70ba6637e16e3c99ad",
+        "type_def_row": 11579
+      },
+      "winmd_id": "winrt:Windows.UI.Xaml.Automation.Provider.ISpreadsheetProvider::GetItemByName#1"
+    },
+    {
+      "decision_reason": "IDL IID 7b929c68-ccdc-4226-96b1-8724600b54c2 differs from WinMD GuidAttribute c8cfe973-daaf-57d3-8d3b-59eec0b082ea; these are distinct nominal interface identities.",
+      "dependency_review": null,
+      "identity_review": "distinct_interface_guid",
+      "idl": {
+        "base": "IDispatch",
+        "iid": "7b929c68-ccdc-4226-96b1-8724600b54c2",
+        "sources": [
+          {
+            "declaration": {
+              "declaration_sha256": "11078bd38f476177c89fe4a5e8e151a0f9e8d05a2fe2c4c9fc35c8fdd7ca82fc",
+              "declaration_text": "[\n        id(0x6002000a),\n        helpstring(\"Synchronously installs updates onto the target computer.\")\n    ]\n    HRESULT Install(\n                [out, retval] IInstallationResult** retval)",
+              "declared_return": "HRESULT",
+              "parameter_count": 1,
+              "parameter_declarations": [
+                "[out, retval] IInstallationResult** retval"
+              ],
+              "retval_parameter_count": 1
+            },
+            "path": "Include/10.0.28000.2705/um/wuapi.idl",
+            "sha256": "ba0e980fe970fc4ec24b56ff3a365a6c1f25e8a70366178d434b92364ca0ff9b"
+          }
+        ]
+      },
+      "idl_id": "com:{7b929c68-ccdc-4226-96b1-8724600b54c2}::Install#1",
+      "lexical_key": {
+        "method": "Install",
+        "unqualified_owner": "IUpdateInstaller"
+      },
+      "winmd": {
+        "interface_guid": "c8cfe973-daaf-57d3-8d3b-59eec0b082ea",
+        "method_def_row": 25221,
+        "method_def_token": "0x06006285",
+        "namespace": "Windows.Management.Update.Cluster",
+        "signature": {
+          "blob_hex": "200112c00053111512c00041210112c0005339",
+          "calling_convention_byte": 32,
+          "decode_status": "decoded_supported_elements",
+          "parameter_count": 1,
+          "parameter_types": [
+            "class Windows.Foundation.Collections.IVectorView`1<Windows.Management.Update.Cluster.UpdateScanRecord>"
+          ],
+          "return_type": "Windows.Management.Update.Cluster.InstallUpdateTaskResult"
+        },
+        "source": "UnionMetadata/10.0.28000.2705/Windows.winmd",
+        "source_sha256": "f8f32012964adb9130dd4d66fdd651daddb6cbbb9fe59e70ba6637e16e3c99ad",
+        "type_def_row": 5290
+      },
+      "winmd_id": "winrt:Windows.Management.Update.Cluster.IUpdateInstaller::Install#1"
+    },
+    {
+      "decision_reason": "IDL IID 987df77b-db06-4d77-8f8a-86a9c3bb90b9 differs from WinMD GuidAttribute 1baa8b3d-38cf-415a-85d3-20e43a0ec1b1; these are distinct nominal interface identities.",
+      "dependency_review": null,
+      "identity_review": "distinct_interface_guid",
+      "idl": {
+        "base": "IUnknown",
+        "iid": "987df77b-db06-4d77-8f8a-86a9c3bb90b9",
+        "sources": [
+          {
+            "declaration": {
+              "declaration_sha256": "6744473ddb9161ea8ed57f1909e4c1b8d95c61293bfcb07d6c4c8b6c135f10bd",
+              "declaration_text": "HRESULT Close ()",
+              "declared_return": "HRESULT",
+              "parameter_count": 0,
+              "parameter_declarations": [],
+              "retval_parameter_count": 0
+            },
+            "path": "Include/10.0.28000.2705/um/UIAutomationCore.idl",
+            "sha256": "57833474568fcdc6ea385834d95b7f7d6229c6949c20902d714a5ea16b5297eb"
+          }
+        ]
+      },
+      "idl_id": "com:{987df77b-db06-4d77-8f8a-86a9c3bb90b9}::Close#1",
+      "lexical_key": {
+        "method": "Close",
+        "unqualified_owner": "IWindowProvider"
+      },
+      "winmd": {
+        "interface_guid": "1baa8b3d-38cf-415a-85d3-20e43a0ec1b1",
+        "method_def_row": 53015,
+        "method_def_token": "0x0600cf17",
+        "namespace": "Windows.UI.Xaml.Automation.Provider",
+        "signature": {
+          "blob_hex": "200001",
+          "calling_convention_byte": 32,
+          "decode_status": "decoded_supported_elements",
+          "parameter_count": 0,
+          "parameter_types": [],
+          "return_type": "void"
+        },
+        "source": "UnionMetadata/10.0.28000.2705/Windows.winmd",
+        "source_sha256": "f8f32012964adb9130dd4d66fdd651daddb6cbbb9fe59e70ba6637e16e3c99ad",
+        "type_def_row": 11595
+      },
+      "winmd_id": "winrt:Windows.UI.Xaml.Automation.Provider.IWindowProvider::Close#1"
+    },
+    {
+      "decision_reason": "IDL IID 987df77b-db06-4d77-8f8a-86a9c3bb90b9 differs from WinMD GuidAttribute 1baa8b3d-38cf-415a-85d3-20e43a0ec1b1; these are distinct nominal interface identities.",
+      "dependency_review": null,
+      "identity_review": "distinct_interface_guid",
+      "idl": {
+        "base": "IUnknown",
+        "iid": "987df77b-db06-4d77-8f8a-86a9c3bb90b9",
+        "sources": [
+          {
+            "declaration": {
+              "declaration_sha256": "dcde40e7878b15cc8b75bfd26c35b39362bca3baf237e4df2f2acb413591c19f",
+              "declaration_text": "HRESULT SetVisualState (\n            [in] enum WindowVisualState state )",
+              "declared_return": "HRESULT",
+              "parameter_count": 1,
+              "parameter_declarations": [
+                "[in] enum WindowVisualState state"
+              ],
+              "retval_parameter_count": 0
+            },
+            "path": "Include/10.0.28000.2705/um/UIAutomationCore.idl",
+            "sha256": "57833474568fcdc6ea385834d95b7f7d6229c6949c20902d714a5ea16b5297eb"
+          }
+        ]
+      },
+      "idl_id": "com:{987df77b-db06-4d77-8f8a-86a9c3bb90b9}::SetVisualState#1",
+      "lexical_key": {
+        "method": "SetVisualState",
+        "unqualified_owner": "IWindowProvider"
+      },
+      "winmd": {
+        "interface_guid": "1baa8b3d-38cf-415a-85d3-20e43a0ec1b1",
+        "method_def_row": 53016,
+        "method_def_token": "0x0600cf18",
+        "namespace": "Windows.UI.Xaml.Automation.Provider",
+        "signature": {
+          "blob_hex": "20010111c000b595",
+          "calling_convention_byte": 32,
+          "decode_status": "decoded_supported_elements",
+          "parameter_count": 1,
+          "parameter_types": [
+            "Windows.UI.Xaml.Automation.WindowVisualState"
+          ],
+          "return_type": "void"
+        },
+        "source": "UnionMetadata/10.0.28000.2705/Windows.winmd",
+        "source_sha256": "f8f32012964adb9130dd4d66fdd651daddb6cbbb9fe59e70ba6637e16e3c99ad",
+        "type_def_row": 11595
+      },
+      "winmd_id": "winrt:Windows.UI.Xaml.Automation.Provider.IWindowProvider::SetVisualState#1"
+    },
+    {
+      "decision_reason": "IDL IID 987df77b-db06-4d77-8f8a-86a9c3bb90b9 differs from WinMD GuidAttribute 1baa8b3d-38cf-415a-85d3-20e43a0ec1b1; these are distinct nominal interface identities.",
+      "dependency_review": null,
+      "identity_review": "distinct_interface_guid",
+      "idl": {
+        "base": "IUnknown",
+        "iid": "987df77b-db06-4d77-8f8a-86a9c3bb90b9",
+        "sources": [
+          {
+            "declaration": {
+              "declaration_sha256": "da9800e0b20bbd1a48d80637020b53a14bac974b8d8d4c1e00df86cf1caa0d71",
+              "declaration_text": "HRESULT WaitForInputIdle (\n            [in] int milliseconds,\n            [out, retval] BOOL * pRetVal )",
+              "declared_return": "HRESULT",
+              "parameter_count": 2,
+              "parameter_declarations": [
+                "[in] int milliseconds",
+                "[out, retval] BOOL * pRetVal"
+              ],
+              "retval_parameter_count": 1
+            },
+            "path": "Include/10.0.28000.2705/um/UIAutomationCore.idl",
+            "sha256": "57833474568fcdc6ea385834d95b7f7d6229c6949c20902d714a5ea16b5297eb"
+          }
+        ]
+      },
+      "idl_id": "com:{987df77b-db06-4d77-8f8a-86a9c3bb90b9}::WaitForInputIdle#1",
+      "lexical_key": {
+        "method": "WaitForInputIdle",
+        "unqualified_owner": "IWindowProvider"
+      },
+      "winmd": {
+        "interface_guid": "1baa8b3d-38cf-415a-85d3-20e43a0ec1b1",
+        "method_def_row": 53017,
+        "method_def_token": "0x0600cf19",
+        "namespace": "Windows.UI.Xaml.Automation.Provider",
+        "signature": {
+          "blob_hex": "20010208",
+          "calling_convention_byte": 32,
+          "decode_status": "decoded_supported_elements",
+          "parameter_count": 1,
+          "parameter_types": [
+            "int32"
+          ],
+          "return_type": "bool"
+        },
+        "source": "UnionMetadata/10.0.28000.2705/Windows.winmd",
+        "source_sha256": "f8f32012964adb9130dd4d66fdd651daddb6cbbb9fe59e70ba6637e16e3c99ad",
+        "type_def_row": 11595
+      },
+      "winmd_id": "winrt:Windows.UI.Xaml.Automation.Provider.IWindowProvider::WaitForInputIdle#1"
+    },
+    {
+      "decision_reason": "IDL IID 9bbce42c-1921-4f18-89ca-dba1910a0386 differs from WinMD GuidAttribute d3be3dfb-9f54-4642-a7a5-5c18d5ee2a3f; these are distinct nominal interface identities.",
+      "dependency_review": null,
+      "identity_review": "distinct_interface_guid",
+      "idl": {
+        "base": "ITextRangeProvider",
+        "iid": "9bbce42c-1921-4f18-89ca-dba1910a0386",
+        "sources": [
+          {
+            "declaration": {
+              "declaration_sha256": "f5dcca14233db4fe38eceb72094d77e6841f65a96bd73e1bfdf6553dad4e3b2f",
+              "declaration_text": "HRESULT ShowContextMenu ()",
+              "declared_return": "HRESULT",
+              "parameter_count": 0,
+              "parameter_declarations": [],
+              "retval_parameter_count": 0
+            },
+            "path": "Include/10.0.28000.2705/um/UIAutomationCore.idl",
+            "sha256": "57833474568fcdc6ea385834d95b7f7d6229c6949c20902d714a5ea16b5297eb"
+          }
+        ]
+      },
+      "idl_id": "com:{9bbce42c-1921-4f18-89ca-dba1910a0386}::ShowContextMenu#1",
+      "lexical_key": {
+        "method": "ShowContextMenu",
+        "unqualified_owner": "ITextRangeProvider2"
+      },
+      "winmd": {
+        "interface_guid": "d3be3dfb-9f54-4642-a7a5-5c18d5ee2a3f",
+        "method_def_row": 52990,
+        "method_def_token": "0x0600cefe",
+        "namespace": "Windows.UI.Xaml.Automation.Provider",
+        "signature": {
+          "blob_hex": "200001",
+          "calling_convention_byte": 32,
+          "decode_status": "decoded_supported_elements",
+          "parameter_count": 0,
+          "parameter_types": [],
+          "return_type": "void"
+        },
+        "source": "UnionMetadata/10.0.28000.2705/Windows.winmd",
+        "source_sha256": "f8f32012964adb9130dd4d66fdd651daddb6cbbb9fe59e70ba6637e16e3c99ad",
+        "type_def_row": 11589
+      },
+      "winmd_id": "winrt:Windows.UI.Xaml.Automation.Provider.ITextRangeProvider2::ShowContextMenu#1"
+    },
+    {
+      "decision_reason": "IDL IID 9c860395-97b3-490a-b52a-858cc22af166 differs from WinMD GuidAttribute 7a8ed399-6824-4595-bab3-464bc9a04417; these are distinct nominal interface identities.",
+      "dependency_review": null,
+      "identity_review": "distinct_interface_guid",
+      "idl": {
+        "base": "IUnknown",
+        "iid": "9c860395-97b3-490a-b52a-858cc22af166",
+        "sources": [
+          {
+            "declaration": {
+              "declaration_sha256": "7e323493a74e415fc0d07304e9cf49e24298d0c1ea59a84d5ca6fa7b7b7faa6b",
+              "declaration_text": "HRESULT GetColumnHeaders (\n            [out, retval] SAFEARRAY(IRawElementProviderSimple*) * pRetVal )",
+              "declared_return": "HRESULT",
+              "parameter_count": 1,
+              "parameter_declarations": [
+                "[out, retval] SAFEARRAY(IRawElementProviderSimple*) * pRetVal"
+              ],
+              "retval_parameter_count": 1
+            },
+            "path": "Include/10.0.28000.2705/um/UIAutomationCore.idl",
+            "sha256": "57833474568fcdc6ea385834d95b7f7d6229c6949c20902d714a5ea16b5297eb"
+          }
+        ]
+      },
+      "idl_id": "com:{9c860395-97b3-490a-b52a-858cc22af166}::GetColumnHeaders#1",
+      "lexical_key": {
+        "method": "GetColumnHeaders",
+        "unqualified_owner": "ITableProvider"
+      },
+      "winmd": {
+        "interface_guid": "7a8ed399-6824-4595-bab3-464bc9a04417",
+        "method_def_row": 52958,
+        "method_def_token": "0x0600cede",
+        "namespace": "Windows.UI.Xaml.Automation.Provider",
+        "signature": {
+          "blob_hex": "20001d12c000b4e5",
+          "calling_convention_byte": 32,
+          "decode_status": "decoded_supported_elements",
+          "parameter_count": 0,
+          "parameter_types": [],
+          "return_type": "array<Windows.UI.Xaml.Automation.Provider.IRawElementProviderSimple>"
+        },
+        "source": "UnionMetadata/10.0.28000.2705/Windows.winmd",
+        "source_sha256": "f8f32012964adb9130dd4d66fdd651daddb6cbbb9fe59e70ba6637e16e3c99ad",
+        "type_def_row": 11583
+      },
+      "winmd_id": "winrt:Windows.UI.Xaml.Automation.Provider.ITableProvider::GetColumnHeaders#1"
+    },
+    {
+      "decision_reason": "IDL IID 9c860395-97b3-490a-b52a-858cc22af166 differs from WinMD GuidAttribute 7a8ed399-6824-4595-bab3-464bc9a04417; these are distinct nominal interface identities.",
+      "dependency_review": null,
+      "identity_review": "distinct_interface_guid",
+      "idl": {
+        "base": "IUnknown",
+        "iid": "9c860395-97b3-490a-b52a-858cc22af166",
+        "sources": [
+          {
+            "declaration": {
+              "declaration_sha256": "f63e71b5a5eb77e362b3be0b522d81ab0efb98e4e2eb9a3e4d92589700f810fa",
+              "declaration_text": "HRESULT GetRowHeaders (\n            [out, retval] SAFEARRAY(IRawElementProviderSimple*) * pRetVal )",
+              "declared_return": "HRESULT",
+              "parameter_count": 1,
+              "parameter_declarations": [
+                "[out, retval] SAFEARRAY(IRawElementProviderSimple*) * pRetVal"
+              ],
+              "retval_parameter_count": 1
+            },
+            "path": "Include/10.0.28000.2705/um/UIAutomationCore.idl",
+            "sha256": "57833474568fcdc6ea385834d95b7f7d6229c6949c20902d714a5ea16b5297eb"
+          }
+        ]
+      },
+      "idl_id": "com:{9c860395-97b3-490a-b52a-858cc22af166}::GetRowHeaders#1",
+      "lexical_key": {
+        "method": "GetRowHeaders",
+        "unqualified_owner": "ITableProvider"
+      },
+      "winmd": {
+        "interface_guid": "7a8ed399-6824-4595-bab3-464bc9a04417",
+        "method_def_row": 52959,
+        "method_def_token": "0x0600cedf",
+        "namespace": "Windows.UI.Xaml.Automation.Provider",
+        "signature": {
+          "blob_hex": "20001d12c000b4e5",
+          "calling_convention_byte": 32,
+          "decode_status": "decoded_supported_elements",
+          "parameter_count": 0,
+          "parameter_types": [],
+          "return_type": "array<Windows.UI.Xaml.Automation.Provider.IRawElementProviderSimple>"
+        },
+        "source": "UnionMetadata/10.0.28000.2705/Windows.winmd",
+        "source_sha256": "f8f32012964adb9130dd4d66fdd651daddb6cbbb9fe59e70ba6637e16e3c99ad",
+        "type_def_row": 11583
+      },
+      "winmd_id": "winrt:Windows.UI.Xaml.Automation.Provider.ITableProvider::GetRowHeaders#1"
+    },
+    {
+      "decision_reason": "IDL IID b17d6187-0907-464b-a168-0ef17a1572b1 differs from WinMD GuidAttribute 8b62b7a0-932c-4490-9a13-02fdb39a8f5b; these are distinct nominal interface identities.",
+      "dependency_review": null,
+      "identity_review": "distinct_interface_guid",
+      "idl": {
+        "base": "IUnknown",
+        "iid": "b17d6187-0907-464b-a168-0ef17a1572b1",
+        "sources": [
+          {
+            "declaration": {
+              "declaration_sha256": "ce411cbff498bcff881f3d7b4b81b8dc06ed34ffed1fdf8e1d0eaf8eab050eb7",
+              "declaration_text": "HRESULT GetItem (\n            [in] int row,\n            [in] int column,\n            [out, retval] IRawElementProviderSimple ** pRetVal )",
+              "declared_return": "HRESULT",
+              "parameter_count": 3,
+              "parameter_declarations": [
+                "[in] int row",
+                "[in] int column",
+                "[out, retval] IRawElementProviderSimple ** pRetVal"
+              ],
+              "retval_parameter_count": 1
+            },
+            "path": "Include/10.0.28000.2705/um/UIAutomationCore.idl",
+            "sha256": "57833474568fcdc6ea385834d95b7f7d6229c6949c20902d714a5ea16b5297eb"
+          }
+        ]
+      },
+      "idl_id": "com:{b17d6187-0907-464b-a168-0ef17a1572b1}::GetItem#1",
+      "lexical_key": {
+        "method": "GetItem",
+        "unqualified_owner": "IGridProvider"
+      },
+      "winmd": {
+        "interface_guid": "8b62b7a0-932c-4490-9a13-02fdb39a8f5b",
+        "method_def_row": 52910,
+        "method_def_token": "0x0600ceae",
+        "namespace": "Windows.UI.Xaml.Automation.Provider",
+        "signature": {
+          "blob_hex": "200212c000b4e50808",
+          "calling_convention_byte": 32,
+          "decode_status": "decoded_supported_elements",
+          "parameter_count": 2,
+          "parameter_types": [
+            "int32",
+            "int32"
+          ],
+          "return_type": "Windows.UI.Xaml.Automation.Provider.IRawElementProviderSimple"
+        },
+        "source": "UnionMetadata/10.0.28000.2705/Windows.winmd",
+        "source_sha256": "f8f32012964adb9130dd4d66fdd651daddb6cbbb9fe59e70ba6637e16e3c99ad",
+        "type_def_row": 11566
+      },
+      "winmd_id": "winrt:Windows.UI.Xaml.Automation.Provider.IGridProvider::GetItem#1"
+    },
+    {
+      "decision_reason": "IDL IID b38b8077-1fc3-42a5-8cae-d40c2215055a differs from WinMD GuidAttribute 374bf581-7716-4bbc-82eb-d997006ea999; these are distinct nominal interface identities.",
+      "dependency_review": null,
+      "identity_review": "distinct_interface_guid",
+      "idl": {
+        "base": "IUnknown",
+        "iid": "b38b8077-1fc3-42a5-8cae-d40c2215055a",
+        "sources": [
+          {
+            "declaration": {
+              "declaration_sha256": "bbfffe7f5b20633400899435c1ac8bf36d920c6e116ad9cd207fd904b0a4f77d",
+              "declaration_text": "HRESULT Scroll (\n            [in] enum ScrollAmount horizontalAmount,\n            [in] enum ScrollAmount verticalAmount )",
+              "declared_return": "HRESULT",
+              "parameter_count": 2,
+              "parameter_declarations": [
+                "[in] enum ScrollAmount horizontalAmount",
+                "[in] enum ScrollAmount verticalAmount"
+              ],
+              "retval_parameter_count": 0
+            },
+            "path": "Include/10.0.28000.2705/um/UIAutomationCore.idl",
+            "sha256": "57833474568fcdc6ea385834d95b7f7d6229c6949c20902d714a5ea16b5297eb"
+          }
+        ]
+      },
+      "idl_id": "com:{b38b8077-1fc3-42a5-8cae-d40c2215055a}::Scroll#1",
+      "lexical_key": {
+        "method": "Scroll",
+        "unqualified_owner": "IScrollProvider"
+      },
+      "winmd": {
+        "interface_guid": "374bf581-7716-4bbc-82eb-d997006ea999",
+        "method_def_row": 52932,
+        "method_def_token": "0x0600cec4",
+        "namespace": "Windows.UI.Xaml.Automation.Provider",
+        "signature": {
+          "blob_hex": "20020111c000b54911c000b549",
+          "calling_convention_byte": 32,
+          "decode_status": "decoded_supported_elements",
+          "parameter_count": 2,
+          "parameter_types": [
+            "Windows.UI.Xaml.Automation.ScrollAmount",
+            "Windows.UI.Xaml.Automation.ScrollAmount"
+          ],
+          "return_type": "void"
+        },
+        "source": "UnionMetadata/10.0.28000.2705/Windows.winmd",
+        "source_sha256": "f8f32012964adb9130dd4d66fdd651daddb6cbbb9fe59e70ba6637e16e3c99ad",
+        "type_def_row": 11575
+      },
+      "winmd_id": "winrt:Windows.UI.Xaml.Automation.Provider.IScrollProvider::Scroll#1"
+    },
+    {
+      "decision_reason": "IDL IID b38b8077-1fc3-42a5-8cae-d40c2215055a differs from WinMD GuidAttribute 374bf581-7716-4bbc-82eb-d997006ea999; these are distinct nominal interface identities.",
+      "dependency_review": null,
+      "identity_review": "distinct_interface_guid",
+      "idl": {
+        "base": "IUnknown",
+        "iid": "b38b8077-1fc3-42a5-8cae-d40c2215055a",
+        "sources": [
+          {
+            "declaration": {
+              "declaration_sha256": "c666866f806501959d1ca07b9dfa3d00dec95e83adbcc5e50a7f9ddd9b85b2ff",
+              "declaration_text": "HRESULT SetScrollPercent (\n            [in] double horizontalPercent,\n            [in] double verticalPercent )",
+              "declared_return": "HRESULT",
+              "parameter_count": 2,
+              "parameter_declarations": [
+                "[in] double horizontalPercent",
+                "[in] double verticalPercent"
+              ],
+              "retval_parameter_count": 0
+            },
+            "path": "Include/10.0.28000.2705/um/UIAutomationCore.idl",
+            "sha256": "57833474568fcdc6ea385834d95b7f7d6229c6949c20902d714a5ea16b5297eb"
+          }
+        ]
+      },
+      "idl_id": "com:{b38b8077-1fc3-42a5-8cae-d40c2215055a}::SetScrollPercent#1",
+      "lexical_key": {
+        "method": "SetScrollPercent",
+        "unqualified_owner": "IScrollProvider"
+      },
+      "winmd": {
+        "interface_guid": "374bf581-7716-4bbc-82eb-d997006ea999",
+        "method_def_row": 52933,
+        "method_def_token": "0x0600cec5",
+        "namespace": "Windows.UI.Xaml.Automation.Provider",
+        "signature": {
+          "blob_hex": "2002010d0d",
+          "calling_convention_byte": 32,
+          "decode_status": "decoded_supported_elements",
+          "parameter_count": 2,
+          "parameter_types": [
+            "float64",
+            "float64"
+          ],
+          "return_type": "void"
+        },
+        "source": "UnionMetadata/10.0.28000.2705/Windows.winmd",
+        "source_sha256": "f8f32012964adb9130dd4d66fdd651daddb6cbbb9fe59e70ba6637e16e3c99ad",
+        "type_def_row": 11575
+      },
+      "winmd_id": "winrt:Windows.UI.Xaml.Automation.Provider.IScrollProvider::SetScrollPercent#1"
+    },
+    {
+      "decision_reason": "IDL IID b9734fa6-771f-4d78-9c90-2517999349cd differs from WinMD GuidAttribute 3b2c49cd-1de2-4ee2-a3e1-fb553559d15d; these are distinct nominal interface identities.",
+      "dependency_review": null,
+      "identity_review": "distinct_interface_guid",
+      "idl": {
+        "base": "IUnknown",
+        "iid": "b9734fa6-771f-4d78-9c90-2517999349cd",
+        "sources": [
+          {
+            "declaration": {
+              "declaration_sha256": "91262772067add01c7fc208751c0ff2a7f908e2f08ff82fdc510b366ef39cda6",
+              "declaration_text": "HRESULT GetColumnHeaderItems (\n            [out, retval] SAFEARRAY(IRawElementProviderSimple*) * pRetVal )",
+              "declared_return": "HRESULT",
+              "parameter_count": 1,
+              "parameter_declarations": [
+                "[out, retval] SAFEARRAY(IRawElementProviderSimple*) * pRetVal"
+              ],
+              "retval_parameter_count": 1
+            },
+            "path": "Include/10.0.28000.2705/um/UIAutomationCore.idl",
+            "sha256": "57833474568fcdc6ea385834d95b7f7d6229c6949c20902d714a5ea16b5297eb"
+          }
+        ]
+      },
+      "idl_id": "com:{b9734fa6-771f-4d78-9c90-2517999349cd}::GetColumnHeaderItems#1",
+      "lexical_key": {
+        "method": "GetColumnHeaderItems",
+        "unqualified_owner": "ITableItemProvider"
+      },
+      "winmd": {
+        "interface_guid": "3b2c49cd-1de2-4ee2-a3e1-fb553559d15d",
+        "method_def_row": 52955,
+        "method_def_token": "0x0600cedb",
+        "namespace": "Windows.UI.Xaml.Automation.Provider",
+        "signature": {
+          "blob_hex": "20001d12c000b4e5",
+          "calling_convention_byte": 32,
+          "decode_status": "decoded_supported_elements",
+          "parameter_count": 0,
+          "parameter_types": [],
+          "return_type": "array<Windows.UI.Xaml.Automation.Provider.IRawElementProviderSimple>"
+        },
+        "source": "UnionMetadata/10.0.28000.2705/Windows.winmd",
+        "source_sha256": "f8f32012964adb9130dd4d66fdd651daddb6cbbb9fe59e70ba6637e16e3c99ad",
+        "type_def_row": 11582
+      },
+      "winmd_id": "winrt:Windows.UI.Xaml.Automation.Provider.ITableItemProvider::GetColumnHeaderItems#1"
+    },
+    {
+      "decision_reason": "IDL IID b9734fa6-771f-4d78-9c90-2517999349cd differs from WinMD GuidAttribute 3b2c49cd-1de2-4ee2-a3e1-fb553559d15d; these are distinct nominal interface identities.",
+      "dependency_review": null,
+      "identity_review": "distinct_interface_guid",
+      "idl": {
+        "base": "IUnknown",
+        "iid": "b9734fa6-771f-4d78-9c90-2517999349cd",
+        "sources": [
+          {
+            "declaration": {
+              "declaration_sha256": "93255eaf586b24e82431116c990991f4b00ea1746da26b255d75c3fa876a4504",
+              "declaration_text": "HRESULT GetRowHeaderItems (\n            [out, retval] SAFEARRAY(IRawElementProviderSimple*) * pRetVal )",
+              "declared_return": "HRESULT",
+              "parameter_count": 1,
+              "parameter_declarations": [
+                "[out, retval] SAFEARRAY(IRawElementProviderSimple*) * pRetVal"
+              ],
+              "retval_parameter_count": 1
+            },
+            "path": "Include/10.0.28000.2705/um/UIAutomationCore.idl",
+            "sha256": "57833474568fcdc6ea385834d95b7f7d6229c6949c20902d714a5ea16b5297eb"
+          }
+        ]
+      },
+      "idl_id": "com:{b9734fa6-771f-4d78-9c90-2517999349cd}::GetRowHeaderItems#1",
+      "lexical_key": {
+        "method": "GetRowHeaderItems",
+        "unqualified_owner": "ITableItemProvider"
+      },
+      "winmd": {
+        "interface_guid": "3b2c49cd-1de2-4ee2-a3e1-fb553559d15d",
+        "method_def_row": 52956,
+        "method_def_token": "0x0600cedc",
+        "namespace": "Windows.UI.Xaml.Automation.Provider",
+        "signature": {
+          "blob_hex": "20001d12c000b4e5",
+          "calling_convention_byte": 32,
+          "decode_status": "decoded_supported_elements",
+          "parameter_count": 0,
+          "parameter_types": [],
+          "return_type": "array<Windows.UI.Xaml.Automation.Provider.IRawElementProviderSimple>"
+        },
+        "source": "UnionMetadata/10.0.28000.2705/Windows.winmd",
+        "source_sha256": "f8f32012964adb9130dd4d66fdd651daddb6cbbb9fe59e70ba6637e16e3c99ad",
+        "type_def_row": 11582
+      },
+      "winmd_id": "winrt:Windows.UI.Xaml.Automation.Provider.ITableItemProvider::GetRowHeaderItems#1"
+    },
+    {
+      "decision_reason": "IDL IID c7935180-6fb3-4201-b174-7df73adbf64a differs from WinMD GuidAttribute 2086b7a7-ac0e-47d1-ab9b-2a64292afdf8; these are distinct nominal interface identities.",
+      "dependency_review": null,
+      "identity_review": "distinct_interface_guid",
+      "idl": {
+        "base": "IUnknown",
+        "iid": "c7935180-6fb3-4201-b174-7df73adbf64a",
+        "sources": [
+          {
+            "declaration": {
+              "declaration_sha256": "c002b06a01cfdec46a5ed967e6574a1b6956a3d8f69e07ea8da1bd0048c94bc6",
+              "declaration_text": "HRESULT SetValue (\n            [in] LPCWSTR val )",
+              "declared_return": "HRESULT",
+              "parameter_count": 1,
+              "parameter_declarations": [
+                "[in] LPCWSTR val"
+              ],
+              "retval_parameter_count": 0
+            },
+            "path": "Include/10.0.28000.2705/um/UIAutomationCore.idl",
+            "sha256": "57833474568fcdc6ea385834d95b7f7d6229c6949c20902d714a5ea16b5297eb"
+          }
+        ]
+      },
+      "idl_id": "com:{c7935180-6fb3-4201-b174-7df73adbf64a}::SetValue#1",
+      "lexical_key": {
+        "method": "SetValue",
+        "unqualified_owner": "IValueProvider"
+      },
+      "winmd": {
+        "interface_guid": "2086b7a7-ac0e-47d1-ab9b-2a64292afdf8",
+        "method_def_row": 53007,
+        "method_def_token": "0x0600cf0f",
+        "namespace": "Windows.UI.Xaml.Automation.Provider",
+        "signature": {
+          "blob_hex": "2001010e",
+          "calling_convention_byte": 32,
+          "decode_status": "decoded_supported_elements",
+          "parameter_count": 1,
+          "parameter_types": [
+            "string"
+          ],
+          "return_type": "void"
+        },
+        "source": "UnionMetadata/10.0.28000.2705/Windows.winmd",
+        "source_sha256": "f8f32012964adb9130dd4d66fdd651daddb6cbbb9fe59e70ba6637e16e3c99ad",
+        "type_def_row": 11593
+      },
+      "winmd_id": "winrt:Windows.UI.Xaml.Automation.Provider.IValueProvider::SetValue#1"
+    },
+    {
+      "decision_reason": "IDL IID cb98b665-2d35-4fac-ad35-f3c60d0c0b8b differs from WinMD GuidAttribute 17d4a04b-d658-48e0-a574-5a516c58dfa7; these are distinct nominal interface identities.",
+      "dependency_review": null,
+      "identity_review": "distinct_interface_guid",
+      "idl": {
+        "base": "IUnknown",
+        "iid": "cb98b665-2d35-4fac-ad35-f3c60d0c0b8b",
+        "sources": [
+          {
+            "declaration": {
+              "declaration_sha256": "032124b890d79dc253c4d992941bf55c1e5c84709c105f5ccc216a178558a718",
+              "declaration_text": "HRESULT Realize()",
+              "declared_return": "HRESULT",
+              "parameter_count": 0,
+              "parameter_declarations": [],
+              "retval_parameter_count": 0
+            },
+            "path": "Include/10.0.28000.2705/um/UIAutomationCore.idl",
+            "sha256": "57833474568fcdc6ea385834d95b7f7d6229c6949c20902d714a5ea16b5297eb"
+          }
+        ]
+      },
+      "idl_id": "com:{cb98b665-2d35-4fac-ad35-f3c60d0c0b8b}::Realize#1",
+      "lexical_key": {
+        "method": "Realize",
+        "unqualified_owner": "IVirtualizedItemProvider"
+      },
+      "winmd": {
+        "interface_guid": "17d4a04b-d658-48e0-a574-5a516c58dfa7",
+        "method_def_row": 53008,
+        "method_def_token": "0x0600cf10",
+        "namespace": "Windows.UI.Xaml.Automation.Provider",
+        "signature": {
+          "blob_hex": "200001",
+          "calling_convention_byte": 32,
+          "decode_status": "decoded_supported_elements",
+          "parameter_count": 0,
+          "parameter_types": [],
+          "return_type": "void"
+        },
+        "source": "UnionMetadata/10.0.28000.2705/Windows.winmd",
+        "source_sha256": "f8f32012964adb9130dd4d66fdd651daddb6cbbb9fe59e70ba6637e16e3c99ad",
+        "type_def_row": 11594
+      },
+      "winmd_id": "winrt:Windows.UI.Xaml.Automation.Provider.IVirtualizedItemProvider::Realize#1"
+    },
+    {
+      "decision_reason": "IDL IID d847d3a5-cab0-4a98-8c32-ecb45c59ad24 differs from WinMD GuidAttribute 49ac8399-d626-4543-94b9-a6d9a9593af6; these are distinct nominal interface identities.",
+      "dependency_review": null,
+      "identity_review": "distinct_interface_guid",
+      "idl": {
+        "base": "IUnknown",
+        "iid": "d847d3a5-cab0-4a98-8c32-ecb45c59ad24",
+        "sources": [
+          {
+            "declaration": {
+              "declaration_sha256": "ea727566ae858c4f38b360214b96622d64d271d906a3c3538e428b9fb62abf5c",
+              "declaration_text": "HRESULT Collapse ()",
+              "declared_return": "HRESULT",
+              "parameter_count": 0,
+              "parameter_declarations": [],
+              "retval_parameter_count": 0
+            },
+            "path": "Include/10.0.28000.2705/um/UIAutomationCore.idl",
+            "sha256": "57833474568fcdc6ea385834d95b7f7d6229c6949c20902d714a5ea16b5297eb"
+          }
+        ]
+      },
+      "idl_id": "com:{d847d3a5-cab0-4a98-8c32-ecb45c59ad24}::Collapse#1",
+      "lexical_key": {
+        "method": "Collapse",
+        "unqualified_owner": "IExpandCollapseProvider"
+      },
+      "winmd": {
+        "interface_guid": "49ac8399-d626-4543-94b9-a6d9a9593af6",
+        "method_def_row": 52901,
+        "method_def_token": "0x0600cea5",
+        "namespace": "Windows.UI.Xaml.Automation.Provider",
+        "signature": {
+          "blob_hex": "200001",
+          "calling_convention_byte": 32,
+          "decode_status": "decoded_supported_elements",
+          "parameter_count": 0,
+          "parameter_types": [],
+          "return_type": "void"
+        },
+        "source": "UnionMetadata/10.0.28000.2705/Windows.winmd",
+        "source_sha256": "f8f32012964adb9130dd4d66fdd651daddb6cbbb9fe59e70ba6637e16e3c99ad",
+        "type_def_row": 11564
+      },
+      "winmd_id": "winrt:Windows.UI.Xaml.Automation.Provider.IExpandCollapseProvider::Collapse#1"
+    },
+    {
+      "decision_reason": "IDL IID d847d3a5-cab0-4a98-8c32-ecb45c59ad24 differs from WinMD GuidAttribute 49ac8399-d626-4543-94b9-a6d9a9593af6; these are distinct nominal interface identities.",
+      "dependency_review": null,
+      "identity_review": "distinct_interface_guid",
+      "idl": {
+        "base": "IUnknown",
+        "iid": "d847d3a5-cab0-4a98-8c32-ecb45c59ad24",
+        "sources": [
+          {
+            "declaration": {
+              "declaration_sha256": "a987c4022668615d6e44287944f0193ac55c680fa0a2494f31f0aad839c19a7f",
+              "declaration_text": "HRESULT Expand ()",
+              "declared_return": "HRESULT",
+              "parameter_count": 0,
+              "parameter_declarations": [],
+              "retval_parameter_count": 0
+            },
+            "path": "Include/10.0.28000.2705/um/UIAutomationCore.idl",
+            "sha256": "57833474568fcdc6ea385834d95b7f7d6229c6949c20902d714a5ea16b5297eb"
+          }
+        ]
+      },
+      "idl_id": "com:{d847d3a5-cab0-4a98-8c32-ecb45c59ad24}::Expand#1",
+      "lexical_key": {
+        "method": "Expand",
+        "unqualified_owner": "IExpandCollapseProvider"
+      },
+      "winmd": {
+        "interface_guid": "49ac8399-d626-4543-94b9-a6d9a9593af6",
+        "method_def_row": 52902,
+        "method_def_token": "0x0600cea6",
+        "namespace": "Windows.UI.Xaml.Automation.Provider",
+        "signature": {
+          "blob_hex": "200001",
+          "calling_convention_byte": 32,
+          "decode_status": "decoded_supported_elements",
+          "parameter_count": 0,
+          "parameter_types": [],
+          "return_type": "void"
+        },
+        "source": "UnionMetadata/10.0.28000.2705/Windows.winmd",
+        "source_sha256": "f8f32012964adb9130dd4d66fdd651daddb6cbbb9fe59e70ba6637e16e3c99ad",
+        "type_def_row": 11564
+      },
+      "winmd_id": "winrt:Windows.UI.Xaml.Automation.Provider.IExpandCollapseProvider::Expand#1"
+    },
+    {
+      "decision_reason": "IDL IID e747770b-39ce-4382-ab30-d8fb3f336f24 differs from WinMD GuidAttribute ef5cd845-e1d4-40f4-bad5-c7fad44a703e; these are distinct nominal interface identities.",
+      "dependency_review": null,
+      "identity_review": "distinct_interface_guid",
+      "idl": {
+        "base": "IUnknown",
+        "iid": "e747770b-39ce-4382-ab30-d8fb3f336f24",
+        "sources": [
+          {
+            "declaration": {
+              "declaration_sha256": "41cc74a508e67c2abceb71617553c8e32a7bf066c5da16deee22eed38c422472",
+              "declaration_text": "HRESULT FindItemByProperty([in] IRawElementProviderSimple * pStartAfter,\n                                   [in] PROPERTYID propertyId,\n                                   [in] VARIANT value,\n                                   [out, retval] IRawElementProviderSimple ** pFound)",
+              "declared_return": "HRESULT",
+              "parameter_count": 4,
+              "parameter_declarations": [
+                "[in] IRawElementProviderSimple * pStartAfter",
+                "[in] PROPERTYID propertyId",
+                "[in] VARIANT value",
+                "[out, retval] IRawElementProviderSimple ** pFound"
+              ],
+              "retval_parameter_count": 1
+            },
+            "path": "Include/10.0.28000.2705/um/UIAutomationCore.idl",
+            "sha256": "57833474568fcdc6ea385834d95b7f7d6229c6949c20902d714a5ea16b5297eb"
+          }
+        ]
+      },
+      "idl_id": "com:{e747770b-39ce-4382-ab30-d8fb3f336f24}::FindItemByProperty#1",
+      "lexical_key": {
+        "method": "FindItemByProperty",
+        "unqualified_owner": "IItemContainerProvider"
+      },
+      "winmd": {
+        "interface_guid": "ef5cd845-e1d4-40f4-bad5-c7fad44a703e",
+        "method_def_row": 52912,
+        "method_def_token": "0x0600ceb0",
+        "namespace": "Windows.UI.Xaml.Automation.Provider",
+        "signature": {
+          "blob_hex": "200312c000b4e512c000b4e512c000aed11c",
+          "calling_convention_byte": 32,
+          "decode_status": "decoded_supported_elements",
+          "parameter_count": 3,
+          "parameter_types": [
+            "Windows.UI.Xaml.Automation.Provider.IRawElementProviderSimple",
+            "Windows.UI.Xaml.Automation.AutomationProperty",
+            "object"
+          ],
+          "return_type": "Windows.UI.Xaml.Automation.Provider.IRawElementProviderSimple"
+        },
+        "source": "UnionMetadata/10.0.28000.2705/Windows.winmd",
+        "source_sha256": "f8f32012964adb9130dd4d66fdd651daddb6cbbb9fe59e70ba6637e16e3c99ad",
+        "type_def_row": 11569
+      },
+      "winmd_id": "winrt:Windows.UI.Xaml.Automation.Provider.IItemContainerProvider::FindItemByProperty#1"
+    },
+    {
+      "decision_reason": "The nominal IID matches, but the IDL base/retval interface IIDs differ from the WinMD projected references. The WinMD method signature is a projection, so binary ABI and semantic equivalence remain unresolved; do not deduplicate this pair.",
+      "dependency_review": {
+        "idl_base_interfaces": [
+          {
+            "base": "ITextProvider",
+            "iid": "3589c92c-63f3-4367-99bb-ada653b77cf2",
+            "path": "Include/10.0.28000.2705/um/UIAutomationCore.idl"
+          }
+        ],
+        "idl_retval_interfaces": [
+          {
+            "interfaces": [
+              {
+                "iid": "5347ad7b-c355-46f8-aff5-909033582f63",
+                "name": "ITextRangeProvider"
+              }
+            ],
+            "path": "Include/10.0.28000.2705/um/UIAutomationCore.idl"
+          }
+        ],
+        "winmd_inherited_interfaces": [
+          {
+            "guid": "db5bbc9f-4807-4f2a-8678-1b13f3c60e22",
+            "name": "Windows.UI.Xaml.Automation.Provider.ITextProvider"
+          }
+        ],
+        "winmd_projected_return_interface": {
+          "guid": "0274688d-06e9-4f66-9446-28a5be98fbd0",
+          "name": "Windows.UI.Xaml.Automation.Provider.ITextRangeProvider"
+        }
+      },
+      "identity_review": "matching_guid_requires_abi_review",
+      "idl": {
+        "base": "ITextProvider",
+        "iid": "ea3605b4-3a05-400e-b5f9-4e91b40f6176",
+        "sources": [
+          {
+            "declaration": {
+              "declaration_sha256": "112b8d2445a97d4866e21ea8c513955150fcb712908c47818b9a883f0c86522c",
+              "declaration_text": "HRESULT GetActiveComposition (\n            [out, retval] ITextRangeProvider ** pRetVal )",
+              "declared_return": "HRESULT",
+              "parameter_count": 1,
+              "parameter_declarations": [
+                "[out, retval] ITextRangeProvider ** pRetVal"
+              ],
+              "retval_parameter_count": 1
+            },
+            "path": "Include/10.0.28000.2705/um/UIAutomationCore.idl",
+            "sha256": "57833474568fcdc6ea385834d95b7f7d6229c6949c20902d714a5ea16b5297eb"
+          }
+        ]
+      },
+      "idl_id": "com:{ea3605b4-3a05-400e-b5f9-4e91b40f6176}::GetActiveComposition#1",
+      "lexical_key": {
+        "method": "GetActiveComposition",
+        "unqualified_owner": "ITextEditProvider"
+      },
+      "winmd": {
+        "interface_guid": "ea3605b4-3a05-400e-b5f9-4e91b40f6176",
+        "method_def_row": 52962,
+        "method_def_token": "0x0600cee2",
+        "namespace": "Windows.UI.Xaml.Automation.Provider",
+        "signature": {
+          "blob_hex": "200012c000b521",
+          "calling_convention_byte": 32,
+          "decode_status": "decoded_supported_elements",
+          "parameter_count": 0,
+          "parameter_types": [],
+          "return_type": "Windows.UI.Xaml.Automation.Provider.ITextRangeProvider"
+        },
+        "source": "UnionMetadata/10.0.28000.2705/Windows.winmd",
+        "source_sha256": "f8f32012964adb9130dd4d66fdd651daddb6cbbb9fe59e70ba6637e16e3c99ad",
+        "type_def_row": 11585
+      },
+      "winmd_id": "winrt:Windows.UI.Xaml.Automation.Provider.ITextEditProvider::GetActiveComposition#1"
+    },
+    {
+      "decision_reason": "The nominal IID matches, but the IDL base/retval interface IIDs differ from the WinMD projected references. The WinMD method signature is a projection, so binary ABI and semantic equivalence remain unresolved; do not deduplicate this pair.",
+      "dependency_review": {
+        "idl_base_interfaces": [
+          {
+            "base": "ITextProvider",
+            "iid": "3589c92c-63f3-4367-99bb-ada653b77cf2",
+            "path": "Include/10.0.28000.2705/um/UIAutomationCore.idl"
+          }
+        ],
+        "idl_retval_interfaces": [
+          {
+            "interfaces": [
+              {
+                "iid": "5347ad7b-c355-46f8-aff5-909033582f63",
+                "name": "ITextRangeProvider"
+              }
+            ],
+            "path": "Include/10.0.28000.2705/um/UIAutomationCore.idl"
+          }
+        ],
+        "winmd_inherited_interfaces": [
+          {
+            "guid": "db5bbc9f-4807-4f2a-8678-1b13f3c60e22",
+            "name": "Windows.UI.Xaml.Automation.Provider.ITextProvider"
+          }
+        ],
+        "winmd_projected_return_interface": {
+          "guid": "0274688d-06e9-4f66-9446-28a5be98fbd0",
+          "name": "Windows.UI.Xaml.Automation.Provider.ITextRangeProvider"
+        }
+      },
+      "identity_review": "matching_guid_requires_abi_review",
+      "idl": {
+        "base": "ITextProvider",
+        "iid": "ea3605b4-3a05-400e-b5f9-4e91b40f6176",
+        "sources": [
+          {
+            "declaration": {
+              "declaration_sha256": "b2f4eef05267a32fc3b855b4c552e12b2ee63eda3072e55431512f46e0534d5f",
+              "declaration_text": "HRESULT GetConversionTarget (\n            [out, retval] ITextRangeProvider ** pRetVal )",
+              "declared_return": "HRESULT",
+              "parameter_count": 1,
+              "parameter_declarations": [
+                "[out, retval] ITextRangeProvider ** pRetVal"
+              ],
+              "retval_parameter_count": 1
+            },
+            "path": "Include/10.0.28000.2705/um/UIAutomationCore.idl",
+            "sha256": "57833474568fcdc6ea385834d95b7f7d6229c6949c20902d714a5ea16b5297eb"
+          }
+        ]
+      },
+      "idl_id": "com:{ea3605b4-3a05-400e-b5f9-4e91b40f6176}::GetConversionTarget#1",
+      "lexical_key": {
+        "method": "GetConversionTarget",
+        "unqualified_owner": "ITextEditProvider"
+      },
+      "winmd": {
+        "interface_guid": "ea3605b4-3a05-400e-b5f9-4e91b40f6176",
+        "method_def_row": 52963,
+        "method_def_token": "0x0600cee3",
+        "namespace": "Windows.UI.Xaml.Automation.Provider",
+        "signature": {
+          "blob_hex": "200012c000b521",
+          "calling_convention_byte": 32,
+          "decode_status": "decoded_supported_elements",
+          "parameter_count": 0,
+          "parameter_types": [],
+          "return_type": "Windows.UI.Xaml.Automation.Provider.ITextRangeProvider"
+        },
+        "source": "UnionMetadata/10.0.28000.2705/Windows.winmd",
+        "source_sha256": "f8f32012964adb9130dd4d66fdd651daddb6cbbb9fe59e70ba6637e16e3c99ad",
+        "type_def_row": 11585
+      },
+      "winmd_id": "winrt:Windows.UI.Xaml.Automation.Provider.ITextEditProvider::GetConversionTarget#1"
+    },
+    {
+      "decision_reason": "IDL IID eaed4660-7b3d-4879-a2e6-365ce603f3d0 differs from WinMD GuidAttribute ebde8f92-6015-4826-b719-47521a81c67e; these are distinct nominal interface identities.",
+      "dependency_review": null,
+      "identity_review": "distinct_interface_guid",
+      "idl": {
+        "base": "IUnknown",
+        "iid": "eaed4660-7b3d-4879-a2e6-365ce603f3d0",
+        "sources": [
+          {
+            "declaration": {
+              "declaration_sha256": "6055dd80925e9a78b961802428c2c356098756b5eaa5ada12d8d022253bc1f61",
+              "declaration_text": "HRESULT GetAnnotationObjects (\n            [out, retval] SAFEARRAY(IRawElementProviderSimple*) * pRetVal )",
+              "declared_return": "HRESULT",
+              "parameter_count": 1,
+              "parameter_declarations": [
+                "[out, retval] SAFEARRAY(IRawElementProviderSimple*) * pRetVal"
+              ],
+              "retval_parameter_count": 1
+            },
+            "path": "Include/10.0.28000.2705/um/UIAutomationCore.idl",
+            "sha256": "57833474568fcdc6ea385834d95b7f7d6229c6949c20902d714a5ea16b5297eb"
+          }
+        ]
+      },
+      "idl_id": "com:{eaed4660-7b3d-4879-a2e6-365ce603f3d0}::GetAnnotationObjects#1",
+      "lexical_key": {
+        "method": "GetAnnotationObjects",
+        "unqualified_owner": "ISpreadsheetItemProvider"
+      },
+      "winmd": {
+        "interface_guid": "ebde8f92-6015-4826-b719-47521a81c67e",
+        "method_def_row": 52943,
+        "method_def_token": "0x0600cecf",
+        "namespace": "Windows.UI.Xaml.Automation.Provider",
+        "signature": {
+          "blob_hex": "20001d12c000b4e5",
+          "calling_convention_byte": 32,
+          "decode_status": "decoded_supported_elements",
+          "parameter_count": 0,
+          "parameter_types": [],
+          "return_type": "array<Windows.UI.Xaml.Automation.Provider.IRawElementProviderSimple>"
+        },
+        "source": "UnionMetadata/10.0.28000.2705/Windows.winmd",
+        "source_sha256": "f8f32012964adb9130dd4d66fdd651daddb6cbbb9fe59e70ba6637e16e3c99ad",
+        "type_def_row": 11578
+      },
+      "winmd_id": "winrt:Windows.UI.Xaml.Automation.Provider.ISpreadsheetItemProvider::GetAnnotationObjects#1"
+    },
+    {
+      "decision_reason": "IDL IID eaed4660-7b3d-4879-a2e6-365ce603f3d0 differs from WinMD GuidAttribute ebde8f92-6015-4826-b719-47521a81c67e; these are distinct nominal interface identities.",
+      "dependency_review": null,
+      "identity_review": "distinct_interface_guid",
+      "idl": {
+        "base": "IUnknown",
+        "iid": "eaed4660-7b3d-4879-a2e6-365ce603f3d0",
+        "sources": [
+          {
+            "declaration": {
+              "declaration_sha256": "4fef17568a3ae17e1eca67c915aaa0a13fa3b73629696b6a9e59b99677a4858c",
+              "declaration_text": "HRESULT GetAnnotationTypes (\n            [out, retval] SAFEARRAY(int) * pRetVal )",
+              "declared_return": "HRESULT",
+              "parameter_count": 1,
+              "parameter_declarations": [
+                "[out, retval] SAFEARRAY(int) * pRetVal"
+              ],
+              "retval_parameter_count": 1
+            },
+            "path": "Include/10.0.28000.2705/um/UIAutomationCore.idl",
+            "sha256": "57833474568fcdc6ea385834d95b7f7d6229c6949c20902d714a5ea16b5297eb"
+          }
+        ]
+      },
+      "idl_id": "com:{eaed4660-7b3d-4879-a2e6-365ce603f3d0}::GetAnnotationTypes#1",
+      "lexical_key": {
+        "method": "GetAnnotationTypes",
+        "unqualified_owner": "ISpreadsheetItemProvider"
+      },
+      "winmd": {
+        "interface_guid": "ebde8f92-6015-4826-b719-47521a81c67e",
+        "method_def_row": 52944,
+        "method_def_token": "0x0600ced0",
+        "namespace": "Windows.UI.Xaml.Automation.Provider",
+        "signature": {
+          "blob_hex": "20001d11c000aea5",
+          "calling_convention_byte": 32,
+          "decode_status": "decoded_supported_elements",
+          "parameter_count": 0,
+          "parameter_types": [],
+          "return_type": "array<Windows.UI.Xaml.Automation.AnnotationType>"
+        },
+        "source": "UnionMetadata/10.0.28000.2705/Windows.winmd",
+        "source_sha256": "f8f32012964adb9130dd4d66fdd651daddb6cbbb9fe59e70ba6637e16e3c99ad",
+        "type_def_row": 11578
+      },
+      "winmd_id": "winrt:Windows.UI.Xaml.Automation.Provider.ISpreadsheetItemProvider::GetAnnotationTypes#1"
+    },
+    {
+      "decision_reason": "IDL IID fb8b03af-3bdf-48d4-bd36-1a65793be168 differs from WinMD GuidAttribute 1f018fca-b944-4395-8de1-88f674af51d3; these are distinct nominal interface identities.",
+      "dependency_review": null,
+      "identity_review": "distinct_interface_guid",
+      "idl": {
+        "base": "IUnknown",
+        "iid": "fb8b03af-3bdf-48d4-bd36-1a65793be168",
+        "sources": [
+          {
+            "declaration": {
+              "declaration_sha256": "7726df52b21639b0d8b9ebd5f77249a5535b7cb9935cb43085d0959e0b55ff1d",
+              "declaration_text": "HRESULT GetSelection (\n            [out, retval] SAFEARRAY(IRawElementProviderSimple *) * pRetVal )",
+              "declared_return": "HRESULT",
+              "parameter_count": 1,
+              "parameter_declarations": [
+                "[out, retval] SAFEARRAY(IRawElementProviderSimple *) * pRetVal"
+              ],
+              "retval_parameter_count": 1
+            },
+            "path": "Include/10.0.28000.2705/um/UIAutomationCore.idl",
+            "sha256": "57833474568fcdc6ea385834d95b7f7d6229c6949c20902d714a5ea16b5297eb"
+          }
+        ]
+      },
+      "idl_id": "com:{fb8b03af-3bdf-48d4-bd36-1a65793be168}::GetSelection#1",
+      "lexical_key": {
+        "method": "GetSelection",
+        "unqualified_owner": "ISelectionProvider"
+      },
+      "winmd": {
+        "interface_guid": "1f018fca-b944-4395-8de1-88f674af51d3",
+        "method_def_row": 52941,
+        "method_def_token": "0x0600cecd",
+        "namespace": "Windows.UI.Xaml.Automation.Provider",
+        "signature": {
+          "blob_hex": "20001d12c000b4e5",
+          "calling_convention_byte": 32,
+          "decode_status": "decoded_supported_elements",
+          "parameter_count": 0,
+          "parameter_types": [],
+          "return_type": "array<Windows.UI.Xaml.Automation.Provider.IRawElementProviderSimple>"
+        },
+        "source": "UnionMetadata/10.0.28000.2705/Windows.winmd",
+        "source_sha256": "f8f32012964adb9130dd4d66fdd651daddb6cbbb9fe59e70ba6637e16e3c99ad",
+        "type_def_row": 11577
+      },
+      "winmd_id": "winrt:Windows.UI.Xaml.Automation.Provider.ISelectionProvider::GetSelection#1"
+    }
+  ],
+  "schema": "w98mod.sdk-idl-winmd-name-review.v1",
+  "scope_note": "Lexical subset only; no denominator or compatibility score is changed",
+  "sdk_version": "10.0.28000.2705",
+  "winmd_sha256": "f8f32012964adb9130dd4d66fdd651daddb6cbbb9fe59e70ba6637e16e3c99ad"
+}

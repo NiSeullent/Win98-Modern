@@ -26,8 +26,25 @@ For each binary, record direct and delay-load imports, dependent DLLs, loader fa
 
 ## Notepad++ 8.9.8 guest probe
 
+Latest 2026-09-24 result: the installed Win98 SE guest cold-booted with
+`M98WRP16.DLL` (62 KERNEL32 table names), SHA-256
+`e519192a39ca04f5bc2563a9fd42ac3d4d406209b4bd024ded481a3c3d9714b9`.
+The complete focused InitOnce four-API suite with 192 worker races,
+five-API threadpool work lifecycle suite, and two-name NLS static probe
+all passed through ordinary KERNEL32 imports. The 62-entry sampled
+table smoke also passed. These follow earlier process-path, condition-variable,
+date/time/locale, restart, Shell, ADVAPI and UXTHEME focused guest checks.
+Exact new receipts are in `benchmarks/api-guest-evidence-v1.json`.
+Notepad++ itself still does not start: APP_PROBE returned exit 2 and
+`LAUNCH_FAIL win32_error=31`; the displayed next missing name was
+`KERNEL32.InitializeSListHead` (`build/guest/npp-after-initonce16.png`).
+It is assigned to the full SList family in the catalogue-first campaign.
+A preceding warm restart of a combined change produced one VxD exception,
+preserved in a separate snapshot. Later normal shutdown/cold boots passed,
+but repeated warm-restart reliability remains unverified.
+
 The first x86 portable build attempt in the Windows 98 SE + KernelEx guest stopped at a missing `DBGHELP.DLL` loader dialog (`vm/npp-first-run.png`). Its direct `DBGHELP.DLL` import is `ImageNtHeader`. The OEM Windows 98 `IMAGEHLP.DLL` already exports that function (see `benchmarks/win98se-ko-oem-native-exports-v1.json`), so `build/dbghelp.dll` provides the same export and calls the installed native implementation. This bridge passes a PE32 Windows 98 import gate and a 32-bit Windows host smoke test, including a malformed PE image returning `NULL`.
 
 With the bridge beside `notepad++.exe`, the next guest loader dialog reported missing `DWMAPI.DLL` (`vm/npp-shim-result.png`). An app-local DLL exports the two directly imported DWM functions and reports disabled composition. After initial shims the guest showed a generic invalid-format error (`vm/npp-new-alert-upper.png`); changing the executable's PE version fields in an **ignored local test copy** did not help (`vm/npp-pe410-error-revealed.png`). A clean retry with app-local BCRYPT exposed the specific issue: `DWMAPI.DLL` had no base relocation directory, so Win98 could not load it after another shim occupied the preferred base (`vm/npp-after-bcrypt.png`). The DWM build now forces a real base relocation; its PE gate, host smoke, and Win98 guest direct smoke pass (`vm/dwm-reloc-guest-smoke.png`).
 
-The seven direct BCRYPT imports are provided by an app-local SHA-256/MD5/HMAC subset. Its PE gate, host known-answer tests, and Win98 guest direct smoke pass (`vm/bcrypt-guest-smoke.png`). MD5/SHA256 and HMAC pseudo-handle paths also passed a direct guest smoke (`vm/pseudo-guest-smoke.png`). With DBGHELP, relocatable DWMAPI, and BCRYPT present, the next Notepad++ loader error is the absent `SHCreateItemFromParsingName` export in native `SHELL32.DLL` (`vm/npp-after-dwm-reloc.png`). Notepad++ has **not** started. None of the publisher binaries or test ISOs is distributed by this project.
+The seven direct BCRYPT imports are provided by an app-local SHA-256/MD5/HMAC subset. Its PE gate, host known-answer tests, and Win98 guest direct smoke pass (`vm/bcrypt-guest-smoke.png`). MD5/SHA256 and HMAC pseudo-handle paths also passed a direct guest smoke (`vm/pseudo-guest-smoke.png`). With DBGHELP, relocatable DWMAPI, and BCRYPT present, Notepad++ next stopped at the absent `SHCreateItemFromParsingName` export in native `SHELL32.DLL` (`vm/npp-after-dwm-reloc.png`). A new KernelEx Shell API library now supplies `SHCreateItemFromParsingName`, `SHParseDisplayName`, and the focused file-system case of `SHOpenFolderAndSelectItems`; direct and static-import guest probes passed, and Explorer selected the test file (`vm/select-shell3-guest.png`). The following Notepad++ loader error is `UXTHEME.DLL!DrawThemeTextEx` (`vm/npp-after-uxtheme.png`). A no-theme bridge passed direct guest testing, but KernelEx's KnownDLL redirection bypasses an app-local `UXTHEME.DLL`, so the app has **not** started. None of the publisher binaries or test ISOs is distributed by this project.

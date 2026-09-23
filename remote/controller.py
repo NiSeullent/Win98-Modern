@@ -190,6 +190,10 @@ class Client:
     def ping(self) -> str:
         return self.exchange(1).decode("ascii", errors="strict")
 
+    def stop(self) -> None:
+        if self.exchange(6):
+            raise ProtocolError("unexpected STOP response data")
+
     def execute(self, command: str, cwd: str = "", timeout_ms: int = 30000) -> dict:
         if not 1 <= timeout_ms <= 300000:
             raise ValueError("guest execution timeout must be 1..300000 ms")
@@ -317,6 +321,7 @@ def main() -> int:
     parser.add_argument("--json", type=Path, help="also save the result as UTF-8 JSON")
     commands = parser.add_subparsers(dest="operation", required=True)
     commands.add_parser("ping")
+    commands.add_parser("stop")
     execute = commands.add_parser("exec")
     execute.add_argument("command")
     execute.add_argument("--cwd", default="")
@@ -333,6 +338,9 @@ def main() -> int:
         identity = client.ping()
         if args.operation == "ping":
             result = {"guest": identity}
+        elif args.operation == "stop":
+            client.stop()
+            result = {"stopped": True}
         elif args.operation == "exec":
             result = client.execute(args.command, args.cwd, args.timeout_ms)
         elif args.operation == "put":

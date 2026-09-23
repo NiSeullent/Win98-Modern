@@ -1,0 +1,54 @@
+{
+  "schema": "w98mod.porting-sources.v1",
+  "sdk_inventory": "build/sdk-inventory-28000-candidates-v1.json",
+  "sdk_summary": "benchmarks/sdk-inventory-28000-candidates-summary-v1.json",
+  "sources": [
+    {
+      "id": "wine",
+      "repository": "https://github.com/wine-mirror/wine",
+      "revision": "df15af3652511150490934682202d45af892f887",
+      "archive_url": "https://codeload.github.com/wine-mirror/wine/tar.gz/df15af3652511150490934682202d45af892f887",
+      "license_policy": "LGPL-2.1-or-later; retain per-file notices and review dependencies before porting"
+    },
+    {
+      "id": "reactos",
+      "repository": "https://github.com/reactos/reactos",
+      "revision": "9dc3ca87209fd8ebabd96c8ea95d439c13e7fdf8",
+      "archive_url": "https://codeload.github.com/reactos/reactos/tar.gz/9dc3ca87209fd8ebabd96c8ea95d439c13e7fdf8",
+      "license_policy": "Per-file GPL/LGPL/BSD notices; review each implementation before porting"
+    },
+    {
+      "id": "onecore",
+      "repository": "https://github.com/shorthorn-project/One-Core-API-Source",
+      "revision": "9eb3c31de9460c1ccce3f6a10c9c4a704f032514",
+      "archive_url": "https://codeload.github.com/shorthorn-project/One-Core-API-Source/tar.gz/9eb3c31de9460c1ccce3f6a10c9c4a704f032514",
+      "license_policy": "Per-file review required; NT5 dependencies are not Win98 implementations"
+    },
+    {
+      "id": "kernelex",
+      "repository": "https://github.com/metaxor/KernelEx",
+      "revision": "31cdfc3560fc116637ee8ed7be31b12f3aacf5d1",
+      "local_root": "third_party/KernelEx",
+      "license_policy": "GPL-2.0-only and per-file LGPL notices"
+    },
+    {
+      "id": "vxkex",
+      "repository": "https://github.com/i486/VxKex",
+      "revision": "735bad15b1ea1f55dafcde9e7d0d12ba61fae230",
+      "local_root": "build/research/vxkex-i486",
+      "license_policy": "Reference metadata only; no reuse grant established, no code copied"
+    }
+  ],
+  "unresolved_sources": [
+    {
+      "id": "kex22",
+      "url": "https://msfn.org/board/topic/173233-kernelex-2022-kex22-test-versions-422262/",
+      "reason": "Developer change lists reviewed; a complete readable source archive and its revision/license have not been verified. Not silently counted as imported source."
+    },
+    {
+      "id": "kext-kstub",
+      "url": "https://msfn.org/board/topic/157173-kext-diy-kernelex-extensions/",
+      "reason": "Public configuration and author discussion are discovery references; archive availability and per-file license need review. Stub names are not implementations."
+    }
+  ]
+}

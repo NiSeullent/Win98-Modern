@@ -20,6 +20,7 @@
 #define OP_GET 3u
 #define OP_PUT 4u
 #define OP_PROMOTE 5u
+#define OP_STOP 6u
 
 typedef struct frame_clock {
     DWORD began;
@@ -593,6 +594,7 @@ static DWORD dispatch(DWORD opcode, const BYTE *payload, DWORD size,
     case OP_GET: error = handle_get(payload, size, reply_size); break;
     case OP_PUT: error = handle_put(payload, size, reply_size); break;
     case OP_PROMOTE: error = handle_promote(payload, size); break;
+    case OP_STOP: error = size == 0u ? NO_ERROR : ERROR_INVALID_PARAMETER; break;
     default: error = ERROR_INVALID_FUNCTION; break;
     }
     store_u32(reply_data, error);
@@ -698,7 +700,7 @@ void __cdecl mainCRTStartup(void)
         opcode = load_u32(header + 8);
         request_id = load_u32(header + 12);
         size = load_u32(header + 16);
-        if (opcode < OP_PING || opcode > OP_PROMOTE || size > MAX_PAYLOAD) {
+        if (opcode < OP_PING || opcode > OP_STOP || size > MAX_PAYLOAD) {
             console_text("M98 agent: invalid frame opcode/length\r\n");
             break;
         }
@@ -711,6 +713,11 @@ void __cdecl mainCRTStartup(void)
         if (!send_reply(channel, opcode, request_id, reply_size, &io_error)) {
             console_error("M98 agent: reply write failed, Win32 error=", io_error);
             break;
+        }
+        if (opcode == OP_STOP && load_u32(reply_data) == NO_ERROR) {
+            console_text("M98 agent: host requested clean stop\r\n");
+            CloseHandle(channel);
+            ExitProcess(0u);
         }
     }
     console_text("M98 agent: connection closed; restart for a new session\r\n");

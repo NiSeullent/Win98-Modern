@@ -1,0 +1,35 @@
+{
+  "schema": "w98mod.porting-groups.v1",
+  "policy": "Every catalogue record is assigned once. First matching rule wins. Dependencies are planning requirements, not implementations. Unmatched entries remain in per-DLL/interface batches.",
+  "foundations": [
+    {"id":"abi-loader","title":"x86 ABI, loader routing and native import boundary","depends_on":[]},
+    {"id":"memory-objects","title":"Memory, handle ownership and object lifetime","depends_on":["abi-loader"]},
+    {"id":"synchronization","title":"Atomic state, waits, wakeups and cancellation","depends_on":["memory-objects"]},
+    {"id":"thread-lifecycle","title":"Thread and fiber identity, teardown and callbacks","depends_on":["synchronization"]},
+    {"id":"unicode-nls","title":"Unicode data, conversion and locale provider","depends_on":["abi-loader"]},
+    {"id":"io-backend","title":"Files, asynchronous I/O and device boundary","depends_on":["memory-objects","synchronization"]},
+    {"id":"com-runtime","title":"COM identity, activation, marshaling and apartments","depends_on":["thread-lifecycle","unicode-nls"]},
+    {"id":"graphics-backend","title":"Window, drawing, surface and graphics services","depends_on":["memory-objects","thread-lifecycle"]},
+    {"id":"network-backend","title":"Socket, transport and asynchronous completion","depends_on":["io-backend"]},
+    {"id":"security-backend","title":"Cryptography, tokens, identity and access semantics","depends_on":["memory-objects","unicode-nls"]},
+    {"id":"nt-services","title":"NT object, process, service and kernel semantics","depends_on":["io-backend","security-backend","thread-lifecycle"]},
+    {"id":"winrt-runtime","title":"WinRT activation, metadata, async and contract services","depends_on":["com-runtime","nt-services"]}
+  ],
+  "rules": [
+    {"id":"api-set-routing","title":"API-set contract resolution","categories":["win32_api_set_alias"],"depends_on":["abi-loader"],"priority":0},
+    {"id":"sync-initonce","title":"Complete one-time initialization family","dll":"^(KERNEL32|KERNELBASE|NTDLL)\\.DLL$","name":"^(InitOnce|RtlRunOnce)","depends_on":["synchronization"],"priority":1},
+    {"id":"sync-slist","title":"Atomic singly linked list, depth, alignment and ABA behavior","dll":"^(KERNEL32|KERNELBASE|NTDLL)\\.DLL$","name":"SList","depends_on":["synchronization","memory-objects"],"priority":1},
+    {"id":"sync-srw-condition-address","title":"SRW, condition-variable and address-wait families","dll":"^(KERNEL32|KERNELBASE|NTDLL)\\.DLL$","name":"(SRWLock|ConditionVariable|WaitOnAddress|WakeByAddress)","depends_on":["synchronization"],"priority":1},
+    {"id":"threadpool","title":"Work, wait, timer, I/O and cleanup-group threadpool","dll":"^(KERNEL32|KERNELBASE|NTDLL)\\.DLL$","name":"(Threadpool|^Tp[A-Z]|^(CallbackMayRunLong|DisassociateCurrentThreadFromCallback|LeaveCriticalSectionWhenCallbackReturns|SetEventWhenCallbackReturns|ReleaseMutexWhenCallbackReturns|ReleaseSemaphoreWhenCallbackReturns|FreeLibraryWhenCallbackReturns|QueueUserWorkItem|BindIoCompletionCallback|RegisterWaitForSingleObject|UnregisterWait|CreateTimerQueue|DeleteTimerQueue|ChangeTimerQueueTimer|RtlQueueWorkItem|RtlRegisterWait|RtlDeregisterWait|RtlCreateTimer|RtlDeleteTimer|RtlUpdateTimer))","depends_on":["thread-lifecycle","io-backend"],"priority":2},
+    {"id":"fiber-tls-fls","title":"TLS, FLS and fiber lifecycle","dll":"^(KERNEL32|KERNELBASE|NTDLL)\\.DLL$","name":"(Fiber|^Fls|^Tls|^RtlFls|^RtlProcessFls|^ExitThread$|^RtlExitUserThread$)","depends_on":["thread-lifecycle"],"priority":2},
+    {"id":"unicode-nls","title":"Locale, comparison, mapping, formatting and conversion","dll":"^(KERNEL32|KERNELBASE|NTDLL|NORMALIZ)\\.DLL$","name":"(Locale|LCMap|Nls|NLS|CompareString|NormalizeString|IsNormalized|MultiByte|WideChar|DateFormat|TimeFormat|NumberFormat|CurrencyFormat|Calendar|TimeZone)","depends_on":["unicode-nls"],"priority":2},
+    {"id":"registry","title":"Registry types, enumeration, access and notifications","dll":"^(ADVAPI32|KERNELBASE|NTDLL)\\.DLL$","name":"(^Reg|^Rtl.*Registry)","depends_on":["unicode-nls","security-backend"],"priority":3},
+    {"id":"file-io","title":"Files, paths, streams, volumes and asynchronous I/O","dll":"^(KERNEL32|KERNELBASE)\\.DLL$","name":"(File|Directory|Volume|Path|IoCompletion|DeviceIo|Overlapped|CancelIo)","depends_on":["io-backend","unicode-nls"],"priority":3},
+    {"id":"ui-theme","title":"User interface and theme services","dll":"^(USER32|UXTHEME|COMCTL32|DWMAPI)\\.DLL$","depends_on":["graphics-backend","unicode-nls"],"priority":3},
+    {"id":"shell","title":"Shell, paths, items, dialogs and shell COM objects","dll":"^(SHELL32|SHLWAPI|SHCORE)\\.DLL$","depends_on":["com-runtime","io-backend","graphics-backend"],"priority":4},
+    {"id":"graphics-media","title":"Graphics and multimedia runtimes","dll":"^(GDI32|D3D.*|DDRAW|DXGI|OPENGL32|WINMM|DSOUND|MF.*|QUARTZ)\\.DLL$","depends_on":["graphics-backend","com-runtime"],"priority":4},
+    {"id":"network","title":"Sockets, HTTP, DNS and network services","dll":"^(WS2_32|WSOCK32|WINHTTP|WININET|DNSAPI|IPHLPAPI|NETAPI32)\\.DLL$","depends_on":["network-backend","security-backend"],"priority":4},
+    {"id":"security","title":"Cryptographic and identity API families","dll":"^(BCRYPT|NCRYPT|CRYPT32|SECUR32|SSPICLI|AUTHZ|WINTRUST)\\.DLL$","depends_on":["security-backend"],"priority":4},
+    {"id":"nt-native","title":"Native NT interfaces and system services","dll":"^(NTDLL|NTOSKRNL|HAL)\\.(DLL|EXE)$","depends_on":["nt-services"],"priority":5}
+  ]
+}

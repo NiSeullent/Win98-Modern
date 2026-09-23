@@ -24,6 +24,7 @@ paths, with a maximum of 259 bytes. Neither side assumes UTF-8 in the guest.
 | 3 GET | offset, requested count (1..65536), absolute path bytes | total file size, returned file bytes (at most requested count) |
 | 4 PUT | offset, flags, path byte count, absolute path bytes, file bytes (at most 65536) | number of bytes written |
 | 5 PROMOTE | source byte count, destination byte count, backup byte count, then the three path strings | empty |
+| 6 STOP | empty | empty; the agent then closes COM1 and exits with code 0 |
 
 EXEC permits 1..300000 milliseconds, at most 259 directory bytes (zero uses
 the agent directory), and 1..4095 command bytes. CreateProcess receives a
@@ -65,3 +66,5 @@ The guest waits indefinitely for the first byte of an idle request, then imposes
 a wrap-safe 30-second deadline on the remaining frame. Driver reads and writes
 have finite waits; an incomplete or invalid frame stops the agent visibly.
 Restart the agent after a broken frame; there is no in-band resynchronization.
+Before an intentional Windows restart, send STOP and verify its acknowledgement
+so the visible agent exits without blocking the guest shutdown dialog.

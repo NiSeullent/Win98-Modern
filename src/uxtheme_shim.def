@@ -1,0 +1,21 @@
+LIBRARY UXTHEME.DLL
+EXPORTS
+    BeginBufferedAnimation=m98_BeginBufferedAnimation
+    BufferedPaintRenderAnimation=m98_BufferedPaintRenderAnimation
+    BufferedPaintStopAllAnimations=m98_BufferedPaintStopAllAnimations
+    CloseThemeData=m98_CloseThemeData
+    DrawThemeBackground=m98_DrawThemeBackground
+    DrawThemeParentBackground=m98_DrawThemeParentBackground
+    DrawThemeTextEx=m98_DrawThemeTextEx
+    EnableThemeDialogTexture=m98_EnableThemeDialogTexture
+    EndBufferedAnimation=m98_EndBufferedAnimation
+    GetThemeBackgroundContentRect=m98_GetThemeBackgroundContentRect
+    GetThemeColor=m98_GetThemeColor
+    GetThemeFont=m98_GetThemeFont
+    GetThemePartSize=m98_GetThemePartSize
+    GetThemeTransitionDuration=m98_GetThemeTransitionDuration
+    GetWindowTheme=m98_GetWindowTheme
+    IsAppThemed=m98_IsAppThemed
+    IsThemeActive=m98_IsThemeActive
+    OpenThemeData=m98_OpenThemeData
+    SetWindowTheme=m98_SetWindowTheme

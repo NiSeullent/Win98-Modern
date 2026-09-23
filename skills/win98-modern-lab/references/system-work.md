@@ -1,5 +1,13 @@
 # DOS, CPU, memory, and drivers
 
+`shizukudos/cpu_detect.inc` provides a read-only CPUID and package-topology snapshot. This is a prerequisite for AP startup, interrupt routing, locks, and scheduling, not itself multicore execution. `shizukudos/smp/` may contain isolated AP-startup experiments; keep those results separate from the installed Win98 VMM path. Test real-mode and no-CPUID guards before broad CPU compatibility claims.
+
+`shizukufs/` defines an independent, checksummed 4-KiB block disk format with a host image tool. Until a guest block reader, DOS drive interface, Win9x IFS integration, and verified write ordering exist, do not treat it as a boot or mountable replacement for FAT32. Preserve on-disk versioning and the corruption tests when extending it.
+
+`drivers/nvme/` adds read-only controller discovery and capability parsing. CSM NVMe installation additionally requires a real boot path or BIOS INT 13h provision, controller queue/DMA setup, namespace block I/O, and a Win9x protected-mode storage driver. PCI class discovery alone does not satisfy this. UEFI boot remains an experimental later path after multicore and AVX-level goals are genuinely verified.
+
+`prebuilt/` is a local-only full VM clone builder from an already installed, licensed Windows 98 source. Its read-only preflight and `--build` output are distinct. Never publish the resulting Microsoft-containing disk, logs, ISO, or product key. A base install clone becomes a Shizuku SE prebuilt only after its patch set and guest tests are applied and recorded. Public GitHub distributions should contain source and independent patch binaries with corresponding license notices.
+
 `shizukudos/` is a newly written boot environment with FAT12, limited COM execution, PCI read-only probing, and chainload tests. It is the intended FreeDOS replacement, but does not yet replace Windows 98 `IO.SYS` or boot the GUI. Keep its test disks separate from installed guest disks. Preserve the Win98 boot and DOS interrupt contracts when extending it. DOS changes alone cannot give the Win98 GUI symmetric multiprocessing; the multicore goal also needs VMM and scheduler work. Count it as supported only after the installed Win98 guest boots, reports usable processors, and runs independent CPU-bound processes concurrently on distinct guest processors.
 
 `cpu/` currently chooses app profiles and launches processes. Per-app i386/i486/Pentium MMX/II/III/Modern ISA and speed enforcement needs an actual execution-interposition, binary translation, or virtualization mechanism; changing a label or CPUID report alone is insufficient. VT-x/AMD-V acceleration is mandatory for the project's supported test path. Verify it from a live VM log, not just a configuration flag.

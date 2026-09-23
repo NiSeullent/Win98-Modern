@@ -11,6 +11,10 @@ typedef ULONGLONG (WINAPI *tick64_fn)(void);
 typedef BOOL (WINAPI *init_cs_fn)(LPCRITICAL_SECTION, DWORD, DWORD);
 typedef BOOL (WINAPI *file_info_fn)(HANDLE, int, LPVOID, DWORD);
 typedef int (WINAPI *compare_ordinal_fn)(const WCHAR *, int, const WCHAR *, int, BOOL);
+typedef int (WINAPI *compare_ex_fn)(const WCHAR *, DWORD, const WCHAR *, int,
+                                    const WCHAR *, int, void *, void *, LPARAM);
+typedef int (WINAPI *map_ex_fn)(const WCHAR *, DWORD, const WCHAR *, int,
+                                WCHAR *, int, void *, void *, LPARAM);
 typedef LONG (WINAPI *package_fn)(UINT32 *, BYTE *);
 typedef LONG (WINAPI *package_name_fn)(UINT32 *, WCHAR *);
 typedef LONG (WINAPI *package_info_fn)(UINT32, UINT32 *, BYTE *, UINT32 *);
@@ -25,10 +29,19 @@ typedef BOOL (WINAPI *numa_available_ex_fn)(USHORT, PULONGLONG);
 typedef BOOL (WINAPI *numa_mask_ex_fn)(USHORT, void *);
 typedef BOOL (WINAPI *numa_node_ex_fn)(const void *, PUSHORT);
 typedef void (WINAPI *precise_time_fn)(LPFILETIME);
+typedef HRESULT (WINAPI *restart_settings_fn)(HANDLE, WCHAR *, DWORD *, DWORD *);
+typedef HRESULT (WINAPI *register_restart_fn)(const WCHAR *, DWORD);
+typedef HRESULT (WINAPI *unregister_restart_fn)(void);
+typedef BOOL (WINAPI *process_path_w_fn)(HANDLE, DWORD, WCHAR *, DWORD *);
 typedef struct test_srwlock { volatile LONG state; } test_srwlock;
+typedef struct test_condition { void *state; } test_condition;
 typedef struct test_init_once { volatile LONG state; } test_init_once;
 typedef void (WINAPI *srw_fn)(test_srwlock *);
 typedef BOOLEAN (WINAPI *try_srw_fn)(test_srwlock *);
+typedef void (WINAPI *condition_init_fn)(test_condition *);
+typedef void (WINAPI *condition_wake_fn)(test_condition *);
+typedef BOOL (WINAPI *condition_sleep_fn)(test_condition *, test_srwlock *,
+                                          DWORD, ULONG);
 typedef BOOL (WINAPI *init_once_callback_fn)(test_init_once *, void *, void **);
 typedef BOOL (WINAPI *init_once_fn)(test_init_once *, init_once_callback_fn,
                                     void *, void **);
@@ -182,6 +195,8 @@ void mainCRTStartup(void)
     init_cs_fn init_cs;
     file_info_fn file_info;
     compare_ordinal_fn compare_ordinal;
+    compare_ex_fn compare_ex;
+    map_ex_fn map_ex;
     package_fn get_package_id;
     package_name_fn get_current_package_family, get_current_package_full;
     package_name_fn get_current_package_path;
@@ -197,11 +212,19 @@ void mainCRTStartup(void)
     numa_mask_ex_fn numa_mask_ex;
     numa_node_ex_fn numa_node_ex;
     precise_time_fn precise_time;
+    restart_settings_fn get_restart_settings;
+    register_restart_fn register_restart;
+    unregister_restart_fn unregister_restart;
+    process_path_w_fn process_path_w;
     srw_fn init_srw, acquire_exclusive, acquire_shared;
     srw_fn release_exclusive, release_shared;
     try_srw_fn try_exclusive, try_shared;
+    condition_init_fn init_condition;
+    condition_wake_fn wake_condition, wake_all_conditions;
+    condition_sleep_fn sleep_condition;
     init_once_fn init_once_execute;
     test_srwlock srw;
+    test_condition condition = { 0 };
     test_init_once once = { 0 }, once_without_context = { 0 };
     test_init_once concurrent_once = { 0 };
     srw_worker_args worker_args;
@@ -224,6 +247,8 @@ void mainCRTStartup(void)
     WORD group_count, group_array[2];
     UINT32 package_length, package_count;
     DWORD exit_code, invalid_process_error;
+    DWORD restart_size = 2, restart_flags = 0x12345678;
+    WCHAR restart_line[2] = { L'X', 0 };
     UCHAR node;
     USHORT node_ex;
     test_processor_number processor;
@@ -231,6 +256,7 @@ void mainCRTStartup(void)
     FILETIME clock_time;
     const WCHAR embedded_left[3] = { 'a', 0, 'b' };
     const WCHAR embedded_right[3] = { 'a', 0, 'c' };
+    WCHAR mapped[4] = { 0, 0, 0, 0 };
 
     if (!dll) fail("LoadLibraryA(m98wrap.dll)");
     get_table = (get_api_table_fn)GetProcAddress(dll, "get_api_table");
@@ -238,11 +264,38 @@ void mainCRTStartup(void)
     table = get_table();
     if (!table || !table->target_library ||
         compare(table->target_library, "KERNEL32.DLL") != 0 ||
-        table[1].target_library != 0 || table->named_apis_count != 37)
+        table[1].target_library != 0 || table->named_apis_count != 62)
         fail("KernelEx table layout");
     for (i = 1; i < table->named_apis_count; ++i)
         if (compare(table->named_apis[i-1].name, table->named_apis[i].name) >= 0)
             fail("API table sort order");
+
+    get_restart_settings = (restart_settings_fn)find_api(
+        table, "GetApplicationRestartSettings");
+    register_restart = (register_restart_fn)find_api(
+        table, "RegisterApplicationRestart");
+    unregister_restart = (unregister_restart_fn)find_api(
+        table, "UnregisterApplicationRestart");
+    if (!get_restart_settings || !register_restart || !unregister_restart ||
+        get_restart_settings(GetCurrentProcess(), restart_line,
+                             &restart_size, &restart_flags) !=
+            HRESULT_FROM_WIN32(ERROR_NOT_FOUND) ||
+        register_restart(L"/restart", 0) != E_FAIL ||
+        unregister_restart() != S_OK)
+        fail("unregistered application restart fallback");
+
+    process_path_w = (process_path_w_fn)find_api(
+        table, "QueryFullProcessImageNameW");
+    if (!process_path_w || !find_api(table, "QueryFullProcessImageNameA"))
+        fail("process path table entries");
+    {
+        WCHAR process_path[MAX_PATH];
+        DWORD process_path_size = MAX_PATH;
+        if (!process_path_w(GetCurrentProcess(), 0, process_path,
+                            &process_path_size) || !process_path_size ||
+            process_path[process_path_size] != 0)
+            fail("current process path");
+    }
 
     active = (count_fn)find_api(table, "GetActiveProcessorCount");
     maximum = (count_fn)find_api(table, "GetMaximumProcessorCount");
@@ -290,6 +343,17 @@ void mainCRTStartup(void)
         compare_ordinal(L"a", -1, L"A", -1, 2) != 0 ||
         GetLastError() != ERROR_INVALID_PARAMETER)
         fail("CompareStringOrdinal");
+
+    compare_ex = (compare_ex_fn)find_api(table, "CompareStringEx");
+    map_ex = (map_ex_fn)find_api(table, "LCMapStringEx");
+    if (!compare_ex || !map_ex ||
+        compare_ex(0, NORM_IGNORECASE, L"abc", -1, L"ABC", -1,
+                   0, 0, 0) != CSTR_EQUAL ||
+        map_ex(0, LCMAP_UPPERCASE, L"abc", -1, mapped, 4,
+               0, 0, 0) != 4 ||
+        mapped[0] != L'A' || mapped[1] != L'B' ||
+        mapped[2] != L'C' || mapped[3] != 0)
+        fail("locale-name comparison and mapping");
 
     get_package_id = (package_fn)find_api(table, "GetCurrentPackageId");
     get_current_package_family = (package_name_fn)find_api(table, "GetCurrentPackageFamilyName");
@@ -437,6 +501,25 @@ void mainCRTStartup(void)
     CloseHandle(entered);
     CloseHandle(release_event);
 
+    init_condition = (condition_init_fn)find_api(
+        table, "InitializeConditionVariable");
+    sleep_condition = (condition_sleep_fn)find_api(
+        table, "SleepConditionVariableSRW");
+    wake_condition = (condition_wake_fn)find_api(
+        table, "WakeConditionVariable");
+    wake_all_conditions = (condition_wake_fn)find_api(
+        table, "WakeAllConditionVariable");
+    if (!init_condition || !sleep_condition || !wake_condition ||
+        !wake_all_conditions) fail("condition-variable API pointers");
+    init_condition(&condition);
+    wake_condition(&condition);
+    wake_all_conditions(&condition);
+    acquire_exclusive(&srw);
+    if (sleep_condition(&condition, &srw, 0, 0) ||
+        GetLastError() != ERROR_TIMEOUT || try_exclusive(&srw))
+        fail("empty condition-variable timeout and lock reacquisition");
+    release_exclusive(&srw);
+
     init_once_execute = (init_once_fn)find_api(table, "InitOnceExecuteOnce");
     if (!init_once_execute ||
         init_once_execute(&once, init_once_callback, &fail_first, &once_context) ||
@@ -544,7 +627,7 @@ void mainCRTStartup(void)
         fail("file info invalid handle");
     CloseHandle(file);
 
-    report("PASS: 37 Win98 KernelEx API wrappers\r\n");
+    report("PASS: 62-entry KernelEx table and sampled API behavior\r\n");
     FreeLibrary(dll);
     ExitProcess(0);
 }

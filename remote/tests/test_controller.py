@@ -32,6 +32,8 @@ class AgentDouble:
         status, reply = 0, b""
         if op == 1:
             reply = b"HOST TEST DOUBLE ONLY"
+        elif op == 6:
+            assert data == b""
         elif op == 2:
             timeout, cwd_len, cmd_len = struct.unpack_from("<III", data)
             assert len(data) == 12 + cwd_len + cmd_len
@@ -97,6 +99,9 @@ class ProtocolTests(unittest.TestCase):
         self.assertEqual(result["exit_code"], 7)
         self.assertEqual(result["output"], "stdout\r\nstderr\r\n")
         self.assertFalse(result["timed_out"])
+
+    def test_clean_stop_acknowledges_empty_response(self):
+        self.assertIsNone(self.client.stop())
 
     def test_transfer_empty_and_multichunk_binary_with_readback(self):
         with tempfile.TemporaryDirectory() as directory:

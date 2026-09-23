@@ -1,7 +1,9 @@
 """Paced console bootstrap keys for a disposable lab VM before COM1 is ready."""
 
 import argparse
+import json
 from pathlib import Path
+import re
 import subprocess
 import time
 
@@ -33,8 +35,16 @@ def main():
     operations.add_parser("type-file").add_argument("path", type=Path)
     operations.add_parser("shot").add_argument("path", type=Path)
     args = parser.parse_args()
-    if args.vm == "Win98Modern-Base" or not args.vm.startswith("Win98Modern-"):
-        parser.error("use a disposable Win98Modern VM")
+    local_preview = False
+    if re.fullmatch(r"Win98-Shizuku-SE-Preview-[A-Za-z0-9_.-]+", args.vm):
+        manifest = (Path(__file__).resolve().parents[1] / "prebuilt" / "local" /
+                    args.vm / "prebuilt-manifest.json")
+        try:
+            local_preview = json.loads(manifest.read_text(encoding="utf-8"))["clone"]["vm_name"] == args.vm
+        except (OSError, ValueError, KeyError, TypeError):
+            pass
+    if args.vm == "Win98Modern-Base" or not (args.vm.startswith("Win98Modern-") or local_preview):
+        parser.error("use a disposable Win98Modern VM or a manifested local preview")
 
     def control(*values):
         subprocess.run([str(VBOX), "controlvm", args.vm, *values], check=True, timeout=20)

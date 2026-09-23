@@ -27,9 +27,79 @@ function Check-PE([string]$checker, [string]$artifact) {
 # The PE gates inspect machine type, loader version, imports, and exports.
 # Never pick files by glob: build/ can also contain private test media.
 Check-PE 'tests/check_pe98.py' 'build/m98wrap.dll'
+# These static import gates use the exact isolated test artifacts compiled by
+# release/build-dlls.ps1; verify they match the packaged wrapper DLL.
+foreach ($candidate in @('build/finalpath/m98wrap.dll', 'build/stream/m98wrap.dll',
+                         'build/localeinfo/m98wrap.dll', 'build/restart/m98wrap.dll',
+                         'build/processpath/m98wrap.dll', 'build/condition/m98wrap.dll')) {
+  $actual = (Get-FileHash -LiteralPath (Require-File $candidate) -Algorithm SHA256).Hash
+  $shipped = (Get-FileHash -LiteralPath (Require-File 'build/m98wrap.dll') -Algorithm SHA256).Hash
+  if ($actual -ne $shipped) { throw "KERNEL32 test DLL differs from packaged m98wrap.dll: $candidate" }
+}
+foreach ($artifact in @(
+  'build/finalpath/finalpath_smoke.exe', 'build/finalpath/finalpath_import_probe.exe',
+  'build/finalpath/smoke.exe',
+  'build/stream/stream_smoke.exe', 'build/stream/stream_import_probe.exe',
+  'build/stream/smoke.exe',
+  'build/localeinfo/localeinfo_smoke.exe',
+  'build/localeinfo/localeinfo_import_probe.exe', 'build/localeinfo/smoke.exe',
+  'build/restart/restart_smoke.exe', 'build/restart/restart_import_probe.exe',
+  'build/restart/smoke.exe',
+  'build/processpath/processpath_smoke.exe',
+  'build/processpath/processpath_import_probe.exe',
+  'build/processpath/smoke.exe',
+  'build/condition/condition_smoke.exe',
+  'build/condition/condition_import_probe.exe',
+  'build/condition/smoke.exe',
+  'build/nls-ex/nls_ex_fixture.dll',
+  'build/nls-ex/nls_ex_smoke.exe',
+  'build/nls-ex/nls_ex_integrated_probe.exe',
+  'build/nls-ex/nls_ex_native_probe.exe',
+  'build/nls-ex/nls_ex_import_probe.exe',
+  'build/threadpool/threadpool_fixture.dll',
+  'build/threadpool/TPMARK.DLL',
+  'build/threadpool/threadpool_smoke.exe',
+  'build/threadpool/threadpool_integrated_probe.exe',
+  'build/threadpool/threadpool_import_probe.exe',
+  'build/threadpool/threadpool_guest_import_smoke.exe',
+  'build/threadpool/threadpool_relocation_probe.exe',
+  'build/initonce/ONCEFIX.DLL',
+  'build/initonce/initonce_smoke.exe',
+  'build/initonce/initonce_import_probe.exe',
+  'build/initonce/initonce_integrated_probe.exe'
+)) { [void](Require-File $artifact) }
+Push-Location $projectRoot
+try {
+  & python 'tests/check_finalpath_pe98.py'
+  if ($LASTEXITCODE -ne 0) { throw 'GetFinalPathNameByHandleW PE/import validation failed' }
+  & python 'tests/check_stream_pe98.py'
+  if ($LASTEXITCODE -ne 0) { throw 'FindFirstStreamW PE/import validation failed' }
+  & python 'tests/check_localeinfo_pe98.py'
+  if ($LASTEXITCODE -ne 0) { throw 'GetLocaleInfoEx PE/import validation failed' }
+  & python 'tests/check_restart_pe98.py'
+  if ($LASTEXITCODE -ne 0) { throw 'Application restart PE/import validation failed' }
+  & python 'tests/check_processpath_pe98.py'
+  if ($LASTEXITCODE -ne 0) { throw 'QueryFullProcessImageNameA/W PE/import validation failed' }
+  & python 'tests/check_condition_pe98.py'
+  if ($LASTEXITCODE -ne 0) { throw 'SRW condition-variable PE/import validation failed' }
+  & python 'tests/check_nls_ex_pe98.py'
+  if ($LASTEXITCODE -ne 0) { throw 'Locale-name NLS PE/import validation failed' }
+  & python 'tests/check_threadpool_pe98.py'
+  if ($LASTEXITCODE -ne 0) { throw 'Threadpool work PE/import validation failed' }
+  & python 'tests/check_initonce_pe98.py'
+  if ($LASTEXITCODE -ne 0) { throw 'InitOnce family PE/import validation failed' }
+} finally { Pop-Location }
+& python (Require-File 'tests/check_m98advapi_pe98.py') `
+  (Require-File 'build/advapi/m98advapi.dll') `
+  (Require-File 'build/advapi/advapi_import_probe.exe') `
+  (Require-File 'build/advapi/advapi_smoke.exe')
+if ($LASTEXITCODE -ne 0) { throw 'Windows 98 ADVAPI PE validation failed' }
+Check-PE 'release/check-uxtheme-release-pe98.py' 'build/uxtheme-known/UXTHEME.DLL'
+Check-PE 'tests/check_known_dll_switch_pe98.py' 'build/known_dll_switch.exe'
 $includeDbgHelp = Test-Path -LiteralPath (Join-Path $buildDir 'dbghelp.dll') -PathType Leaf
 $includeDwmApi = Test-Path -LiteralPath (Join-Path $buildDir 'dwmapi.dll') -PathType Leaf
 $includeBCrypt = Test-Path -LiteralPath (Join-Path $buildDir 'bcrypt.dll') -PathType Leaf
+$includeShell = Test-Path -LiteralPath (Join-Path $buildDir 'm98shell.dll') -PathType Leaf
 if ($includeDbgHelp) {
   Check-PE 'tests/check_dbghelp_pe98.py' 'build/dbghelp.dll'
 }
@@ -39,18 +109,47 @@ if ($includeDwmApi) {
 if ($includeBCrypt) {
   Check-PE 'tests/check_bcrypt_pe98.py' 'build/bcrypt.dll'
 }
+if ($includeShell) {
+  Check-PE 'tests/check_m98shell_pe98.py' 'build/m98shell.dll'
+}
 
 $inputs = [ordered]@{
   'm98wrap.dll'                   = 'build/m98wrap.dll'
+  'm98adv.dll'                    = 'build/m98adv.dll'
+  'UXTHEME.DLL'                   = 'build/uxtheme-known/UXTHEME.DLL'
+  'KSWITCH.EXE'                   = 'build/known_dll_switch.exe'
   'INSTALL-ko.md'                 = 'release/INSTALL-ko.md'
   'BUILD-SOURCE.md'               = 'release/BUILD-SOURCE.md'
+  'KERNELEX-UXTHEME-NOTICES.md'   = 'release/KERNELEX-UXTHEME-NOTICES.md'
   'build-dlls.ps1'                = 'release/build-dlls.ps1'
+  'tools/build-finalpath.ps1'     = 'tools/build-finalpath.ps1'
+  'tools/build-stream.ps1'        = 'tools/build-stream.ps1'
+  'tools/build-localeinfo.ps1'    = 'tools/build-localeinfo.ps1'
+  'tools/build-restart.ps1'       = 'tools/build-restart.ps1'
+  'tools/build-processpath.ps1'   = 'tools/build-processpath.ps1'
+  'tools/build-condition.ps1'     = 'tools/build-condition.ps1'
+  'tools/build-nls-ex.ps1'        = 'tools/build-nls-ex.ps1'
+  'tools/build-threadpool.ps1'    = 'tools/build-threadpool.ps1'
+  'tools/build-initonce.ps1'      = 'tools/build-initonce.ps1'
   'LICENSE'                       = 'LICENSE'
   'THIRD_PARTY.md'                = 'THIRD_PARTY.md'
   'licenses/Wine-LGPL-2.1.txt'   = 'licenses/Wine-LGPL-2.1.txt'
   'src/kex_abi.h'                 = 'src/kex_abi.h'
   'src/m98wrap.c'                 = 'src/m98wrap.c'
+  'src/m98nls_ex.c'               = 'src/m98nls_ex.c'
+  'src/m98nls_ex.h'               = 'src/m98nls_ex.h'
+  'src/m98_threadpool.c'           = 'src/m98_threadpool.c'
+  'src/m98_threadpool.h'           = 'src/m98_threadpool.h'
+  'src/m98_initonce.c'            = 'src/m98_initonce.c'
+  'src/m98_initonce.h'            = 'src/m98_initonce.h'
+  'src/m98advapi.c'               = 'src/m98advapi.c'
   'src/wine_uppercase.c'          = 'src/wine_uppercase.c'
+  'src/uxtheme_shim.c'            = 'src/uxtheme_shim.c'
+  'src/uxtheme_shim.def'          = 'src/uxtheme_shim.def'
+  'src/uxtheme_sysfont.c'         = 'src/uxtheme_sysfont.c'
+  'third_party/KernelEx/auxiliary/uxtheme/uxtheme.c' = 'third_party/KernelEx/auxiliary/uxtheme/uxtheme.c'
+  'third_party/KernelEx/auxiliary/uxtheme/metric.c' = 'third_party/KernelEx/auxiliary/uxtheme/metric.c'
+  'third_party/KernelEx/auxiliary/uxtheme/uxtheme.def' = 'third_party/KernelEx/auxiliary/uxtheme/uxtheme.def'
   'src/dbghelp_shim.c'            = 'src/dbghelp_shim.c'
   'src/dbghelp_shim.def'          = 'src/dbghelp_shim.def'
   'src/dwmapi_shim.c'             = 'src/dwmapi_shim.c'
@@ -58,10 +157,66 @@ $inputs = [ordered]@{
   'src/bcrypt_shim.c'             = 'src/bcrypt_shim.c'
   'src/bcrypt_shim.def'           = 'src/bcrypt_shim.def'
   'tests/check_pe98.py'           = 'tests/check_pe98.py'
+  'tests/smoke.c'                 = 'tests/smoke.c'
+  'tests/finalpath_smoke.c'       = 'tests/finalpath_smoke.c'
+  'tests/finalpath_import_probe.c' = 'tests/finalpath_import_probe.c'
+  'tests/check_finalpath_pe98.py' = 'tests/check_finalpath_pe98.py'
+  'tests/stream_smoke.c'          = 'tests/stream_smoke.c'
+  'tests/stream_import_probe.c'   = 'tests/stream_import_probe.c'
+  'tests/check_stream_pe98.py'    = 'tests/check_stream_pe98.py'
+  'tests/localeinfo_smoke.c'      = 'tests/localeinfo_smoke.c'
+  'tests/localeinfo_import_probe.c' = 'tests/localeinfo_import_probe.c'
+  'tests/check_localeinfo_pe98.py' = 'tests/check_localeinfo_pe98.py'
+  'tests/restart_smoke.c'         = 'tests/restart_smoke.c'
+  'tests/restart_import_probe.c'  = 'tests/restart_import_probe.c'
+  'tests/check_restart_pe98.py'  = 'tests/check_restart_pe98.py'
+  'tests/processpath_smoke.c'     = 'tests/processpath_smoke.c'
+  'tests/processpath_import_probe.c' = 'tests/processpath_import_probe.c'
+  'tests/check_processpath_pe98.py' = 'tests/check_processpath_pe98.py'
+  'tests/condition_smoke.c'       = 'tests/condition_smoke.c'
+  'tests/condition_import_probe.c' = 'tests/condition_import_probe.c'
+  'tests/check_condition_pe98.py' = 'tests/check_condition_pe98.py'
+  'tests/nls_ex_fixture.c'        = 'tests/nls_ex_fixture.c'
+  'tests/nls_ex_smoke.c'          = 'tests/nls_ex_smoke.c'
+  'tests/nls_ex_native_probe.c'   = 'tests/nls_ex_native_probe.c'
+  'tests/nls_ex_import_probe.c'   = 'tests/nls_ex_import_probe.c'
+  'tests/check_nls_ex_pe98.py'    = 'tests/check_nls_ex_pe98.py'
+  'tests/threadpool_fixture.c'    = 'tests/threadpool_fixture.c'
+  'tests/threadpool_marker.c'     = 'tests/threadpool_marker.c'
+  'tests/threadpool_smoke.c'      = 'tests/threadpool_smoke.c'
+  'tests/threadpool_import_probe.c' = 'tests/threadpool_import_probe.c'
+  'tests/threadpool_relocation_probe.c' = 'tests/threadpool_relocation_probe.c'
+  'tests/check_threadpool_pe98.py' = 'tests/check_threadpool_pe98.py'
+  'tests/initonce_fixture.c'       = 'tests/initonce_fixture.c'
+  'tests/initonce_smoke.c'         = 'tests/initonce_smoke.c'
+  'tests/initonce_import_probe.c'  = 'tests/initonce_import_probe.c'
+  'tests/check_initonce_pe98.py'   = 'tests/check_initonce_pe98.py'
+  'guest-tests/threadpool_guest_import_smoke.exe' = 'build/threadpool/threadpool_guest_import_smoke.exe'
+  'guest-tests/TPMARK.DLL'         = 'build/threadpool/TPMARK.DLL'
+  'guest-tests/initonce_import_probe.exe' = 'build/initonce/initonce_import_probe.exe'
+  'tests/check_m98advapi_pe98.py' = 'tests/check_m98advapi_pe98.py'
+  'tests/advapi_smoke.c'          = 'tests/advapi_smoke.c'
+  'tests/advapi_import_probe.c'   = 'tests/advapi_import_probe.c'
+  'tests/check_uxtheme_release_pe98.py' = 'release/check-uxtheme-release-pe98.py'
+  'tests/check_known_dll_switch_pe98.py' = 'tests/check_known_dll_switch_pe98.py'
+  'remote/guest/known_dll_switch.c' = 'remote/guest/known_dll_switch.c'
   'tests/check_dbghelp_pe98.py'   = 'tests/check_dbghelp_pe98.py'
   'tests/check_dwmapi_pe98.py'    = 'tests/check_dwmapi_pe98.py'
   'tests/check_bcrypt_pe98.py'    = 'tests/check_bcrypt_pe98.py'
   'tests/requirements.txt'        = 'tests/requirements.txt'
+  'benchmarks/win98se-ko-oem-native-exports-v1.json' = 'benchmarks/win98se-ko-oem-native-exports-v1.json'
+  'docs/ADVAPI_REGGETVALUE_PORT.md' = 'docs/ADVAPI_REGGETVALUE_PORT.md'
+  'docs/FINALPATH_PORT.md'        = 'docs/FINALPATH_PORT.md'
+  'docs/FIRSTSTREAM_PORT.md'      = 'docs/FIRSTSTREAM_PORT.md'
+  'docs/LOCALEINFO_PORT.md'       = 'docs/LOCALEINFO_PORT.md'
+  'docs/NPP_RESTART_PORT.md'      = 'docs/NPP_RESTART_PORT.md'
+  'docs/NPP_PROCESSPATH_PORT.md'  = 'docs/NPP_PROCESSPATH_PORT.md'
+  'docs/NPP_CONDITION_PORT.md'    = 'docs/NPP_CONDITION_PORT.md'
+  'docs/NLS_EX_PORT.md'           = 'docs/NLS_EX_PORT.md'
+  'docs/THREADPOOL_WORK_PORT.md'  = 'docs/THREADPOOL_WORK_PORT.md'
+  'docs/INITONCE_PORT.md'         = 'docs/INITONCE_PORT.md'
+  'docs/PUBLIC_KERNELEX_VARIANTS.md' = 'docs/PUBLIC_KERNELEX_VARIANTS.md'
+  'docs/UXTHEME_NPP_PORT.md'      = 'docs/UXTHEME_NPP_PORT.md'
   'skills/win98-modern-lab/SKILL.md' = 'skills/win98-modern-lab/SKILL.md'
   'skills/win98-modern-lab/agents/openai.yaml' = 'skills/win98-modern-lab/agents/openai.yaml'
   'skills/win98-modern-lab/references/api-porting.md' = 'skills/win98-modern-lab/references/api-porting.md'
@@ -77,6 +232,12 @@ if ($includeDwmApi) {
 }
 if ($includeBCrypt) {
   $inputs['bcrypt.dll'] = 'build/bcrypt.dll'
+}
+if ($includeShell) {
+  $inputs['m98shell.dll'] = 'build/m98shell.dll'
+  $inputs['src/m98shell.c'] = 'src/m98shell.c'
+  $inputs['src/m98shell_openfolder.c'] = 'src/m98shell_openfolder.c'
+  $inputs['tests/check_m98shell_pe98.py'] = 'tests/check_m98shell_pe98.py'
 }
 
 $resolved = [ordered]@{}
@@ -137,3 +298,9 @@ Write-Host "Checksum file: $hashPath"
 Write-Host "DBGHELP.DLL included: $includeDbgHelp"
 Write-Host "DWMAPI.DLL included: $includeDwmApi"
 Write-Host "BCRYPT.DLL included: $includeBCrypt"
+Write-Host "M98SHELL.DLL included: $includeShell"
+Write-Host 'M98ADV.DLL included: True'
+Write-Host '62-entry KERNEL32 wrapper and focused NLS/threadpool/InitOnce test sources included: True'
+Write-Host 'Guest static-import probes and TPMARK.DLL included: True'
+Write-Host 'UXTHEME.DLL KnownDLL candidate included: True'
+Write-Host 'KSWITCH.EXE guarded mapping helper included: True'

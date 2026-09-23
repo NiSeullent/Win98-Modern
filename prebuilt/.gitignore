@@ -1,0 +1,14 @@
+# Local full clones contain a licensed Microsoft installation. Keep every
+# generated VM, disk, manifest and log outside Git, including force-add mistakes
+# caught by the README's publication check.
+local/
+*.vbox
+*.vbox-prev
+*.vdi
+*.vmdk
+*.vhd
+*.sav
+*.iso
+*.img
+*.log
+*key*
