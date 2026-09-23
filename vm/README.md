@@ -51,7 +51,7 @@ VirtualBox 7.2.18은 이 호스트에서 Windows Hypervisor Platform의 NEM 백�
 
 `IMPROBE.EXE`는 최신 API를 KERNEL32에서 정적으로 가져오므로 KernelEx 해석 경로까지 확인합니다. CPUAPP 결과는 프로필 선택과 자식 실행의 확인이며 CPUID·ISA·속도 변경을 입증하지 않습니다. 128 MiB 메모리 시험은 **4 GiB 동작 검증이 아닙니다**. 4 GiB 부팅이나 물리 페이지 검증은 아직 수행하지 않았습니다.
 
-Notepad++ 8.9.8 x86 포터블 앱의 단계별 실행 시험에서는 `DBGHELP.DLL`, `DWMAPI.DLL` 누락에 이어 DWM 재배치 정보가 없는 빌드의 로더 오류를 확인했습니다. 재배치 정보를 추가한 DWMAPI와 새 BCRYPT는 Windows 98 게스트에서 각각 직접 호출 시험을 통과했습니다 (`dwm-reloc-guest-smoke.png`, `bcrypt-guest-smoke.png`). 세 앱 로컬 DLL을 제공한 최신 재시험은 `SHELL32.DLL`의 `SHCreateItemFromParsingName` 누락에서 멈췄습니다 (`npp-after-dwm-reloc.png`). 앱이 실행됐다는 증거는 없으며, 시험용 앱 파일과 ISO는 Git에서 제외합니다. 상세 내용은 `docs/TARGET_APPS.md`에 있습니다.
+Notepad++ 8.9.8 x86 포터블 앱의 단계별 실행 시험에서는 `DBGHELP.DLL`, `DWMAPI.DLL` 누락에 이어 DWM 재배치 정보가 없는 빌드의 로더 오류를 확인했습니다. 재배치 정보를 추가한 DWMAPI와 새 BCRYPT는 Windows 98 게스트에서 각각 직접 호출 시험을 통과했습니다 (`dwm-reloc-guest-smoke.png`, `bcrypt-guest-smoke.png`). BCRYPT의 MD5/SHA256 및 HMAC pseudo-handle 시험도 게스트에서 통과했습니다 (`pseudo-guest-smoke.png`). 세 앱 로컬 DLL을 제공한 최신 재시험은 `SHELL32.DLL`의 `SHCreateItemFromParsingName` 누락에서 멈췄습니다 (`npp-after-dwm-reloc.png`). 앱이 실행됐다는 증거는 없으며, 시험용 앱 파일과 ISO는 Git에서 제외합니다. 상세 내용은 `docs/TARGET_APPS.md`에 있습니다.
 
 Windows 종료 대화상자의 `시스템 다시 시작(R)`으로 재부팅해 자동 GUI 바탕화면 복귀를 확인했습니다. 시작 과정에서 잠시 `C:\>` 프롬프트가 보였으나 그 뒤 자동으로 GUI가 열렸습니다. `C:\MSDOS.SYS`의 `BootGUI=1`을 확인했고 `C:\WINBOOT.INI`는 없습니다 (`auto-gui-after-restart.png`, `winboot-check.png`). 호스트 절전 때 VirtualBox 로그에 `HostSuspend`와 `HostResume`이 기록됐으며 VM은 이후 다시 실행 상태였습니다.
 

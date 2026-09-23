@@ -226,6 +226,20 @@ static m98_object *find_locked(void *handle, DWORD type)
     return NULL;
 }
 
+/* Microsoft's predefined CNG algorithm handles are integer constants, not
+ * pointers. Recognize only the algorithms this DLL implements; never attempt
+ * to dereference an unrecognized caller-supplied handle. */
+static int pseudo_algorithm(void *handle, DWORD *algorithm, DWORD *flags)
+{
+    switch ((DWORD)(UINT_PTR)handle) {
+    case 0x21UL: *algorithm=ALG_MD5; *flags=0; return 1;
+    case 0x41UL: *algorithm=ALG_SHA256; *flags=0; return 1;
+    case 0x91UL: *algorithm=ALG_MD5; *flags=HMAC_FLAG; return 1;
+    case 0xb1UL: *algorithm=ALG_SHA256; *flags=HMAC_FLAG; return 1;
+    default: return 0;
+    }
+}
+
 static DWORD register_locked(m98_object *object)
 {
     if (next_token<0x10000UL || next_token>0xfffffffbUL) return 0;
@@ -292,19 +306,21 @@ M98_NTSTATUS WINAPI m98_BCryptGetProperty(void *handle, LPCWSTR property, BYTE *
                                             ULONG output_size, ULONG *result_size, ULONG flags)
 {
     m98_object *object;
-    DWORD value=0, count=4, i;
+    DWORD value=0, count=4, i, algorithm, pseudo_flags;
     const WCHAR *name=NULL;
     M98_NTSTATUS status;
     EnterCriticalSection(&object_lock);
     object=find_locked(handle,0);
-    if (!object) {status=ST_INVALID_HANDLE;goto done;}
+    if (object) algorithm=object->algorithm;
+    else if (!pseudo_algorithm(handle,&algorithm,&pseudo_flags))
+        {status=ST_INVALID_HANDLE;goto done;}
     if (!property || !result_size || flags) {status=ST_INVALID_PARAMETER;goto done;}
     if (wide_equal(property,L"ObjectLength")) value=sizeof(m98_hash_object);
-    else if (wide_equal(property,L"HashDigestLength")) value=digest_length(object->algorithm);
+    else if (wide_equal(property,L"HashDigestLength")) value=digest_length(algorithm);
     else if (wide_equal(property,L"HashBlockLength")) value=64;
     else if (wide_equal(property,L"AlgorithmName")) {
-        name=object->algorithm==ALG_MD5?L"MD5":L"SHA256";
-        count=(object->algorithm==ALG_MD5?4:7)*sizeof(WCHAR);
+        name=algorithm==ALG_MD5?L"MD5":L"SHA256";
+        count=(algorithm==ALG_MD5?4:7)*sizeof(WCHAR);
     } else {status=ST_NOT_SUPPORTED;goto done;}
     *result_size=count;
     if (!output) {status=ST_OK;goto done;}
@@ -329,8 +345,9 @@ M98_NTSTATUS WINAPI m98_BCryptCreateHash(void *provider, void **result, BYTE *ob
     if (flags&~REUSABLE_FLAG) return ST_NOT_SUPPORTED;
     EnterCriticalSection(&object_lock);
     algorithm=find_locked(provider,OBJ_ALG);
-    if (!algorithm) {LeaveCriticalSection(&object_lock);return ST_INVALID_HANDLE;}
-    alg_id=algorithm->algorithm;alg_flags=algorithm->flags;
+    if (algorithm) {alg_id=algorithm->algorithm;alg_flags=algorithm->flags;}
+    else if (!pseudo_algorithm(provider,&alg_id,&alg_flags))
+        {LeaveCriticalSection(&object_lock);return ST_INVALID_HANDLE;}
     /* Keep the provider lock until insertion so Close cannot race creation. */
     if (!result || (!object_buffer && object_size) || (object_buffer && object_size<sizeof(*hash)) ||
         (secret_size && !secret) || (!(alg_flags&HMAC_FLAG) && secret)) {

@@ -162,6 +162,46 @@ static void hmac_and_reuse_tests(void)
     if (close_algorithm(algorithm,0)!=SUCCESS) fail("plain provider cleanup");
 }
 
+static void pseudo_handle_tests(void)
+{
+    static const DWORD handles[4]={0x21UL,0x41UL,0x91UL,0xb1UL};
+    static const DWORD lengths[4]={16,32,16,32};
+    static const char *digests[4]={
+        "900150983cd24fb0d6963f7d28e17f72",
+        "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+        "9294727a3638bb1c13f48ef8158bfc9d",
+        "b0344c61d8db38535ca8afceaf0bf12b881dc200c9833da726e9376c2e32cff7"
+    };
+    DWORD i;
+    for (i=0;i<4;i++) {
+        void *provider=(void *)(UINT_PTR)handles[i],*hash=NULL;
+        BYTE output[32],key[20];
+        ULONG size=0,value=0;
+        DWORD j;
+        for (j=0;j<sizeof(key);j++) key[j]=0x0b;
+        if (get_property(provider,L"HashDigestLength",(BYTE *)&value,sizeof(value),&size,0)!=SUCCESS ||
+            value!=lengths[i] || size!=sizeof(value)) fail("pseudo-handle property");
+        if (close_algorithm(provider,0)!=INVALID_HANDLE)
+            fail("pseudo-handle must not be closed");
+        if (i<2) {
+            if (create_hash(provider,&hash,NULL,0,NULL,0,0)!=SUCCESS ||
+                hash_data(hash,(BYTE *)"abc",3,0)!=SUCCESS ||
+                finish_hash(hash,output,lengths[i],0)!=SUCCESS)
+                fail("plain pseudo-handle hash");
+        } else {
+            if (create_hash(provider,&hash,NULL,0,key,i==2?16:20,0)!=SUCCESS ||
+                hash_data(hash,(BYTE *)"Hi There",8,0)!=SUCCESS ||
+                finish_hash(hash,output,lengths[i],0)!=SUCCESS)
+                fail("HMAC pseudo-handle hash");
+        }
+        verify_hex(output,lengths[i],digests[i]);
+        if (destroy_hash(hash)!=SUCCESS) fail("pseudo-handle hash cleanup");
+    }
+    if (get_property((void *)(UINT_PTR)0x31UL,L"HashDigestLength",NULL,0,NULL,0)!=INVALID_HANDLE ||
+        create_hash((void *)(UINT_PTR)0x31UL,NULL,NULL,0,NULL,0,0)!=INVALID_HANDLE)
+        fail("unsupported pseudo-handle");
+}
+
 void mainCRTStartup(void)
 {
     HMODULE shim=LoadLibraryA("bcrypt.dll");
@@ -203,7 +243,7 @@ void mainCRTStartup(void)
            "3b0c8ac703f828b04c6c197006d17218",16);
     vector(L"MD5",block,65,
            "c743a45e0d2e6a95cb859adae0248435",16);
-    property_tests();hmac_and_reuse_tests();
+    property_tests();hmac_and_reuse_tests();pseudo_handle_tests();
     if (open_algorithm(&algorithm,L"SHA256",NULL,0)!=SUCCESS ||
         create_hash(algorithm,&hash,NULL,0,NULL,0,0)!=SUCCESS)
         fail("million byte provider");
@@ -213,7 +253,7 @@ void mainCRTStartup(void)
     verify_hex(output,32,"cdc76e5c9914fb9281a1c7e284d73e67f1809a48a497200e046d39ccc7112cd0");
     if (destroy_hash(hash)!=SUCCESS || close_algorithm(algorithm,0)!=SUCCESS)
         fail("million byte cleanup");
-    report("PASS: BCrypt SHA256/MD5, HMAC, reusable hash, buffers, handles\r\n");
+    report("PASS: BCrypt SHA256/MD5, HMAC, reusable hash, buffers, handles, pseudo-handles\r\n");
     FreeLibrary(shim);
     ExitProcess(0);
 }
