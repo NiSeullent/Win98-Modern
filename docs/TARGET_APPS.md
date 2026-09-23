@@ -27,21 +27,32 @@ For each binary, record direct and delay-load imports, dependent DLLs, loader fa
 ## Notepad++ 8.9.8 guest probe
 
 Latest 2026-09-24 result: the installed Win98 SE guest cold-booted with
-`M98WRP16.DLL` (62 KERNEL32 table names), SHA-256
-`e519192a39ca04f5bc2563a9fd42ac3d4d406209b4bd024ded481a3c3d9714b9`.
-The complete focused InitOnce four-API suite with 192 worker races,
-five-API threadpool work lifecycle suite, and two-name NLS static probe
-all passed through ordinary KERNEL32 imports. The 62-entry sampled
-table smoke also passed. These follow earlier process-path, condition-variable,
-date/time/locale, restart, Shell, ADVAPI and UXTHEME focused guest checks.
-Exact new receipts are in `benchmarks/api-guest-evidence-v1.json`.
-Notepad++ itself still does not start: APP_PROBE returned exit 2 and
-`LAUNCH_FAIL win32_error=31`; the displayed next missing name was
-`KERNEL32.InitializeSListHead` (`build/guest/npp-after-initonce16.png`).
-It is assigned to the full SList family in the catalogue-first campaign.
-A preceding warm restart of a combined change produced one VxD exception,
-preserved in a separate snapshot. Later normal shutdown/cold boots passed,
-but repeated warm-restart reliability remains unverified.
+`M98WRP18.DLL` (76 KERNEL32 table names), SHA-256
+`0da854a1a6ff42296e2e5c7fda92e07a660351a5b14b568f18c2846c609c2f3e`.
+Five static-import suites passed: InitOnce (4 APIs), threadpool work (5),
+threadpool callback extensions (7), SList (7), and NLS (2). These are **25
+focused API contract subsets**, not 25 fully compatible API implementations.
+The SList suite includes a 65,537-node chain and 40,000 concurrent transfers;
+the callback suite checks actual DLL detach notification. The 76-entry table
+smoke also passed. Exact provider, source, test and supporting artifact hashes
+are recorded in `benchmarks/api-guest-evidence-v1.json`.
+
+Notepad++ itself still does not start. APP_PROBE returned exit 2 and
+`LAUNCH_FAIL win32_error=31`; the next displayed missing name was
+`KERNEL32.FlsAlloc` (`build/guest/npp-after-families18.png`). The FLS family
+already has a separately tested implementation, with three review-found
+lifetime/reentry fixes and four new Win98 regressions passing. It remains an
+isolated fixture until core lifecycle routing and outstanding reentrant
+thread-termination semantics are implemented. Its function names are not
+added to production solely to move the loader error. Other required apps
+have no new guest-functionality result in this checkpoint.
+
+Earlier provider16 stopped at `InitializeSListHead`. A preceding warm restart
+of a combined change produced one VxD exception preserved in a separate
+snapshot. Later normal shutdown/cold boots passed; repeated warm-restart
+reliability remains unverified. During provider17 testing an early host pipe
+request before the guest remote agent was ready required transport recovery
+and another normal guest shutdown. This is not an API test pass or failure.
 
 The first x86 portable build attempt in the Windows 98 SE + KernelEx guest stopped at a missing `DBGHELP.DLL` loader dialog (`vm/npp-first-run.png`). Its direct `DBGHELP.DLL` import is `ImageNtHeader`. The OEM Windows 98 `IMAGEHLP.DLL` already exports that function (see `benchmarks/win98se-ko-oem-native-exports-v1.json`), so `build/dbghelp.dll` provides the same export and calls the installed native implementation. This bridge passes a PE32 Windows 98 import gate and a 32-bit Windows host smoke test, including a malformed PE image returning `NULL`.
 

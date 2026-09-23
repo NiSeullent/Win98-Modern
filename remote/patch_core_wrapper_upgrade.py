@@ -1,7 +1,8 @@
 """Atomically prepare a versioned KernelEx wrapper upgrade in CORE.INI.
 
-Verify exactly one DCFG1 contents entry and seven explicit API routes in each
-of the three active profiles before writing a new byte-preserved config.
+Discover all routes owned by the old provider and require the same route map
+in all three active profiles. Preserve library table indices and unrelated
+bytes. A fixed list silently stranded newly added families on the old DLL.
 """
 
 from __future__ import annotations
@@ -14,12 +15,6 @@ import re
 
 
 SECTIONS = {b"DCFG1.names.98", b"DCFG1.names.Me", b"WINXP.names"}
-API_NAMES = {
-    b"CompareStringEx", b"LCMapStringEx",
-    b"CloseThreadpoolWork", b"CreateThreadpoolWork",
-    b"FreeLibraryWhenCallbackReturns", b"SubmitThreadpoolWork",
-    b"WaitForThreadpoolWorkCallbacks",
-}
 
 
 def patch(data: bytes, old: str, new: str) -> bytes:
@@ -31,7 +26,10 @@ def patch(data: bytes, old: str, new: str) -> bytes:
     old_bytes, new_bytes = old.encode("ascii"), new.encode("ascii")
     section = b""
     contents_count = 0
-    routed: set[tuple[bytes, bytes]] = set()
+    seen_sections: set[bytes] = set()
+    routes: dict[bytes, dict[bytes, bytes]] = {key: {} for key in SECTIONS}
+    keys: dict[bytes, set[bytes]] = {key: set() for key in SECTIONS}
+    provider_reference = re.compile(re.escape(old_bytes) + rb"\.(\d+)")
     output: list[bytes] = []
     for line in data.splitlines(keepends=True):
         body = line.rstrip(b"\r\n")
@@ -39,6 +37,10 @@ def patch(data: bytes, old: str, new: str) -> bytes:
         heading = re.fullmatch(rb"\[([^\]]+)\]", body)
         if heading:
             section = heading.group(1)
+            if section in SECTIONS or section == b"DCFG1":
+                if section in seen_sections:
+                    raise ValueError("duplicate provider/profile section")
+                seen_sections.add(section)
         if section == b"DCFG1" and body.startswith(b"contents="):
             libraries = body[len(b"contents="):].split(b",")
             if contents_count or libraries.count(old_bytes) != 1 or new_bytes in libraries:
@@ -47,23 +49,32 @@ def patch(data: bytes, old: str, new: str) -> bytes:
             output.append(b"contents=" + b",".join(libraries) + ending)
             contents_count += 1
             continue
-        if section in SECTIONS:
-            for name in API_NAMES:
-                route = b"KERNEL32." + name + b"="
-                if body.startswith(route):
-                    marker = (section, name)
-                    if marker in routed or body != route + old_bytes + b".0":
-                        raise ValueError("unexpected or duplicate wrapper route")
-                    output.append(route + new_bytes + b".0" + ending)
-                    routed.add(marker)
-                    break
-            else:
-                output.append(line)
+        if body.startswith((b";", b"#")):
+            output.append(line)
             continue
+        match = provider_reference.fullmatch(body.partition(b"=")[2])
+        if section in SECTIONS and b"=" in body and not body.startswith((b";", b"#")):
+            key = body.split(b"=", 1)[0]
+            if key in keys[section]:
+                raise ValueError("duplicate API route")
+            keys[section].add(key)
+            if match:
+                if not re.fullmatch(rb"[A-Za-z0-9_]+\.[A-Za-z0-9_@$?]+", key):
+                    raise ValueError("unrecognized provider route")
+                routes[section][key] = match.group(1)
+                output.append(key + b"=" + new_bytes + b"." + match.group(1) + ending)
+                continue
+        if match:
+            raise ValueError("provider reference outside supported profiles")
+        # Reject malformed/whitespace-suffixed ownership instead of leaving a
+        # dangling reference when removing the old provider from contents.
+        if not body.startswith((b";", b"#")) and b"=" + old_bytes + b"." in body:
+            raise ValueError("malformed provider reference")
         output.append(line)
-    expected = {(section_name, name) for section_name in SECTIONS for name in API_NAMES}
-    if contents_count != 1 or routed != expected:
-        raise ValueError("missing provider or wrapper route")
+    first = routes[b"DCFG1.names.98"]
+    if (contents_count != 1 or seen_sections != SECTIONS | {b"DCFG1"} or
+            not first or any(value != first for value in routes.values())):
+        raise ValueError("missing provider/profile or inconsistent family routes")
     return b"".join(output)
 
 
@@ -87,7 +98,8 @@ def main() -> None:
         "output_sha256": hashlib.sha256(updated).hexdigest(),
         "old_library": args.old,
         "new_library": args.new,
-        "route_count": len(SECTIONS) * len(API_NAMES),
+        "route_count": sum(before != after and not before.startswith(b"contents=")
+                           for before, after in zip(original.splitlines(), updated.splitlines())),
     }, indent=2))
 
 

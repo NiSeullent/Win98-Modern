@@ -79,6 +79,18 @@ subsystems.
    Feed failures back into their owning families without abandoning the full
    catalogue plan.
 
+7. Have a different agent review lifetime and failure paths before publication.
+   Keep its changes disjoint from the integrator. Exercise a concrete discovered
+   race with a controlled fault/ordering test. Compare native behavior with
+   repeated runs when scheduling can change the result: the reference test can
+   contain a race too. Freeze source and test hashes before final guest runs.
+8. Upgrade every route owned by the previous provider as one transaction.
+   Require identical family maps in all active profiles, preserve table indices
+   and unrelated configuration bytes, and reject dangling provider references.
+   `remote/patch_core_wrapper_upgrade.py` discovers those routes rather than
+   maintaining a stale list of individual functions. Reboot only after copying
+   the versioned DLL and verified configuration, then test ordinary imports.
+
 Initial foundations cover ABI/loader, object lifetime, synchronization, thread
 teardown, Unicode, file/I/O, COM, graphics, networking, security, NT services
 and WinRT. Full threadpool work/timer/wait/I/O/cleanup behavior depends on these
@@ -90,7 +102,7 @@ not only four storage functions.
 
 The catalogue records `listed` or `declared_in_project` separately from
 behavioral coverage. `benchmarks/api-guest-evidence-v1.json` links focused
-guest receipts for InitOnce, work-object threadpool and locale-name NLS to
+guest receipts for InitOnce, work/callback threadpool, SList and locale-name NLS to
 the exact provider, test and source hashes. Matching snapshots are labeled
 `guest_static_subset_verified`; changed or unavailable artefacts leave the
 receipt historical. Other focused tests remain in family documents until

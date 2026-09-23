@@ -308,7 +308,7 @@ void mainCRTStartup(void)
 #ifdef M98_INTEGRATED
         table->named_apis_count < 5)
 #else
-        table->named_apis_count != 5)
+        table->named_apis_count != 12)
 #endif
         fail("KERNEL32 API table");
     ops.close = (close_fn)find_api(table, "CloseThreadpoolWork");

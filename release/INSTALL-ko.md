@@ -3,7 +3,7 @@
 이 ZIP에는 실험용 KernelEx API 라이브러리 `m98wrap.dll`, `m98shell.dll`, `m98adv.dll`, KernelEx용 결합 테마 후보 `UXTHEME.DLL`, 안전 범위를 제한한 전환 도구 `KSWITCH.EXE`, 앱 로컬용 `dbghelp.dll`, `dwmapi.dll`, `bcrypt.dll`이 들어 있습니다.
 Windows 98 SE용 KernelEx API 확장 시험을 위한 파일이며 최신 프로그램의 실행을
 보장하지 않습니다. 설치는 Windows 98 SE **32비트 게스트**에서 수동으로 합니다.
-이 미리보기의 `m98wrap.dll`에는 KERNEL32 이름 62개가 등록돼 있습니다. 이는
+이 미리보기의 `m98wrap.dll`에는 KERNEL32 이름 76개가 등록돼 있습니다. 이는
 등록된 함수 이름의 수이며 전체 Windows API 호환률이나 앱 구동률이 아닙니다.
 그중 `GetFinalPathNameByHandleW`, `FindFirstStreamW`, `GetLocaleInfoEx`,
 `GetApplicationRestartSettings`, `QueryFullProcessImageNameA/W`의
@@ -57,7 +57,7 @@ Windows 98 SE용 KernelEx API 확장 시험을 위한 파일이며 최신 프로
    ```
 
 5. 저장한 뒤 게스트를 **정상 종료하고 완전히 껐다가 다시 켭니다**.
-   새 DLL의 함수 이름 62개 등록만으로 각 함수의 동작이 검증되는 것은
+   새 DLL의 함수 이름 76개 등록만으로 각 함수의 동작이 검증되는 것은
    아닙니다. 설치한 KernelEx를 통한 정적 import와 실제 앱 동작을 각각
    확인하세요.
 
@@ -121,3 +121,7 @@ Windows 98 SE용 KernelEx API 확장 시험을 위한 파일이며 최신 프로
 ## 소스와 라이선스
 
 프로젝트 코드는 GPL-2.0-only이며 Wine에서 유래한 Unicode 표와 관련 알고리즘의 고지는 LGPL-2.1-or-later로 유지됩니다. 결합 UXTHEME에는 GPL-2.0-only KernelEx 코드와 LGPL-2.1-or-later `metric.c`가 포함됩니다. 정확한 출처와 원본 파일 해시는 `THIRD_PARTY.md` 및 `KERNELEX-UXTHEME-NOTICES.md`, 라이선스 본문은 `LICENSE` 및 `licenses/Wine-LGPL-2.1.txt`를 참조하세요. 수정과 재빌드에 필요한 소스, `build-dlls.ps1`, `BUILD-SOURCE.md`가 ZIP에 들어 있습니다.
+
+## 이번 API 묶음 검증
+
+M98WRP18 기준으로 SList 7개, 스레드풀 work/callback 12개, InitOnce 4개, NLS 2개의 제한된 계약 시험이 실제 설치된 Win98에서 정적 import로 통과했습니다. KERNEL32 표의 76개 등록 이름 전체가 완전 호환이라는 뜻은 아닙니다. Notepad++ 8.9.8은 현재 FlsAlloc 누락에서 멈춥니다. FLS는 독립 시험 구현으로만 제공하며 이 패치에는 설치하지 않습니다.

@@ -1,8 +1,8 @@
 {
   "artifacts": {
-    "catalog.csv": "0c7a076f01cb3e668559adb87b3955b55fce282d0c205458b2befd1465fa08fa",
-    "catalog.jsonl.gz": "aa0568ef78bc5f65c578de963ed9e575569dca76cbf9c5a780151d476d2edf47",
-    "work-queue.json": "f799683f1ee37fb26f3527c86df18da006eda63051d116db38aafdd4a08eb482"
+    "catalog.csv": "d482afce37efcf71f64aed9e9c4486103411ee6258af137dcb0efe61a77b3f3d",
+    "catalog.jsonl.gz": "c95b2a6135f1a68b98ed869e4f9e1f6db2eb25f572729daf7963f9d1e05f8623",
+    "work-queue.json": "12cc43087ef50d9e12d8b752a068617b7261affb8bdf262209692ef9189b1e21"
   },
   "batch_summary_policy": "Named functional batches plus the 20 largest default batches; complete membership is in work-queue.json",
   "batches": [
@@ -14,6 +14,8 @@
       "depends_on": [
         "abi-loader"
       ],
+      "guest_subset_verified_candidates": 0,
+      "historical_evidence_candidates": 0,
       "id": "api-set-routing",
       "native_export_present": 0,
       "priority": 0,
@@ -43,6 +45,8 @@
       "depends_on": [
         "synchronization"
       ],
+      "guest_subset_verified_candidates": 4,
+      "historical_evidence_candidates": 0,
       "id": "sync-initonce",
       "native_export_present": 0,
       "priority": 1,
@@ -57,7 +61,7 @@
         "guest_static_import",
         "application_regression"
       ],
-      "state": "awaiting_contract_review",
+      "state": "partial_guest_subset_evidence",
       "title": "Complete one-time initialization family",
       "upstream_sources": {
         "onecore": 4,
@@ -75,10 +79,12 @@
         "synchronization",
         "memory-objects"
       ],
+      "guest_subset_verified_candidates": 7,
+      "historical_evidence_candidates": 0,
       "id": "sync-slist",
       "native_export_present": 0,
       "priority": 1,
-      "project_declared": 0,
+      "project_declared": 7,
       "required_gates": [
         "ABI_and_contract_review",
         "both_Wine_and_ReactOS_review",
@@ -89,7 +95,7 @@
         "guest_static_import",
         "application_regression"
       ],
-      "state": "awaiting_contract_review",
+      "state": "partial_guest_subset_evidence",
       "title": "Atomic singly linked list, depth, alignment and ABA behavior",
       "upstream_sources": {
         "kernelex": 5,
@@ -107,6 +113,8 @@
       "depends_on": [
         "synchronization"
       ],
+      "guest_subset_verified_candidates": 0,
+      "historical_evidence_candidates": 0,
       "id": "sync-srw-condition-address",
       "native_export_present": 0,
       "priority": 1,
@@ -121,7 +129,7 @@
         "guest_static_import",
         "application_regression"
       ],
-      "state": "awaiting_contract_review",
+      "state": "declarations_present_contract_review_required",
       "title": "SRW, condition-variable and address-wait families",
       "upstream_sources": {
         "onecore": 15,
@@ -138,6 +146,8 @@
       "depends_on": [
         "thread-lifecycle"
       ],
+      "guest_subset_verified_candidates": 0,
+      "historical_evidence_candidates": 0,
       "id": "fiber-tls-fls",
       "native_export_present": 11,
       "priority": 2,
@@ -171,10 +181,12 @@
         "thread-lifecycle",
         "io-backend"
       ],
+      "guest_subset_verified_candidates": 12,
+      "historical_evidence_candidates": 0,
       "id": "threadpool",
       "native_export_present": 0,
       "priority": 2,
-      "project_declared": 5,
+      "project_declared": 12,
       "required_gates": [
         "ABI_and_contract_review",
         "both_Wine_and_ReactOS_review",
@@ -185,7 +197,7 @@
         "guest_static_import",
         "application_regression"
       ],
-      "state": "awaiting_contract_review",
+      "state": "partial_guest_subset_evidence",
       "title": "Work, wait, timer, I/O and cleanup-group threadpool",
       "upstream_sources": {
         "kernelex": 11,
@@ -203,6 +215,8 @@
       "depends_on": [
         "unicode-nls"
       ],
+      "guest_subset_verified_candidates": 2,
+      "historical_evidence_candidates": 0,
       "id": "unicode-nls",
       "native_export_present": 45,
       "priority": 2,
@@ -217,7 +231,7 @@
         "guest_static_import",
         "application_regression"
       ],
-      "state": "awaiting_contract_review",
+      "state": "partial_guest_subset_evidence",
       "title": "Locale, comparison, mapping, formatting and conversion",
       "upstream_sources": {
         "kernelex": 18,
@@ -236,6 +250,8 @@
         "io-backend",
         "unicode-nls"
       ],
+      "guest_subset_verified_candidates": 0,
+      "historical_evidence_candidates": 0,
       "id": "file-io",
       "native_export_present": 102,
       "priority": 3,
@@ -250,7 +266,7 @@
         "guest_static_import",
         "application_regression"
       ],
-      "state": "awaiting_contract_review",
+      "state": "declarations_present_contract_review_required",
       "title": "Files, paths, streams, volumes and asynchronous I/O",
       "upstream_sources": {
         "kernelex": 65,
@@ -269,6 +285,8 @@
         "unicode-nls",
         "security-backend"
       ],
+      "guest_subset_verified_candidates": 0,
+      "historical_evidence_candidates": 0,
       "id": "registry",
       "native_export_present": 52,
       "priority": 3,
@@ -283,7 +301,7 @@
         "guest_static_import",
         "application_regression"
       ],
-      "state": "awaiting_contract_review",
+      "state": "declarations_present_contract_review_required",
       "title": "Registry types, enumeration, access and notifications",
       "upstream_sources": {
         "kernelex": 28,
@@ -302,6 +320,8 @@
         "graphics-backend",
         "unicode-nls"
       ],
+      "guest_subset_verified_candidates": 0,
+      "historical_evidence_candidates": 0,
       "id": "ui-theme",
       "native_export_present": 1609,
       "priority": 3,
@@ -316,7 +336,7 @@
         "guest_static_import",
         "application_regression"
       ],
-      "state": "awaiting_contract_review",
+      "state": "declarations_present_contract_review_required",
       "title": "User interface and theme services",
       "upstream_sources": {
         "kernelex": 228,
@@ -335,6 +355,8 @@
         "graphics-backend",
         "com-runtime"
       ],
+      "guest_subset_verified_candidates": 0,
+      "historical_evidence_candidates": 0,
       "id": "graphics-media",
       "native_export_present": 17260,
       "priority": 4,
@@ -368,6 +390,8 @@
         "network-backend",
         "security-backend"
       ],
+      "guest_subset_verified_candidates": 0,
+      "historical_evidence_candidates": 0,
       "id": "network",
       "native_export_present": 976,
       "priority": 4,
@@ -400,6 +424,8 @@
       "depends_on": [
         "security-backend"
       ],
+      "guest_subset_verified_candidates": 0,
+      "historical_evidence_candidates": 0,
       "id": "security",
       "native_export_present": 654,
       "priority": 4,
@@ -414,7 +440,7 @@
         "guest_static_import",
         "application_regression"
       ],
-      "state": "awaiting_contract_review",
+      "state": "declarations_present_contract_review_required",
       "title": "Cryptographic and identity API families",
       "upstream_sources": {
         "onecore": 793,
@@ -433,6 +459,8 @@
         "io-backend",
         "graphics-backend"
       ],
+      "guest_subset_verified_candidates": 0,
+      "historical_evidence_candidates": 0,
       "id": "shell",
       "native_export_present": 1474,
       "priority": 4,
@@ -447,7 +475,7 @@
         "guest_static_import",
         "application_regression"
       ],
-      "state": "awaiting_contract_review",
+      "state": "declarations_present_contract_review_required",
       "title": "Shell, paths, items, dialogs and shell COM objects",
       "upstream_sources": {
         "kernelex": 34,
@@ -465,6 +493,8 @@
       "depends_on": [
         "nt-services"
       ],
+      "guest_subset_verified_candidates": 0,
+      "historical_evidence_candidates": 0,
       "id": "nt-native",
       "native_export_present": 94,
       "priority": 5,
@@ -687,6 +717,392 @@
           "path": "build/nls-ex/nls_ex_import_probe.exe",
           "sha256": "b756589b4705efa15ba47004f61804452dd5bb3bc1a6a006cb07a61d825d6a46"
         }
+      },
+      {
+        "apis": [
+          {
+            "dll": "KERNEL32.DLL",
+            "name": "InitOnceBeginInitialize"
+          },
+          {
+            "dll": "KERNEL32.DLL",
+            "name": "InitOnceComplete"
+          },
+          {
+            "dll": "KERNEL32.DLL",
+            "name": "InitOnceExecuteOnce"
+          },
+          {
+            "dll": "KERNEL32.DLL",
+            "name": "InitOnceInitialize"
+          }
+        ],
+        "core_ini_sha256": "acbe6e697f370e48361fa86529d53865c9f3adfedd9ca366ed120c545b182290",
+        "documentation": "docs/INITONCE_PORT.md",
+        "environment": {
+          "acceleration": "VirtualBox NEM hardware virtualization; current boot checked by vm/run.ps1",
+          "os": "Directly installed Korean Windows 98 SE",
+          "vm": "Win98Modern-Accel-128"
+        },
+        "evidence_kind": "guest_static_import_contract_subset",
+        "family": "initonce",
+        "full_compatibility_verified": false,
+        "id": "guest-m98wrp18-initonce-2026-09-24",
+        "limitations": "Invalid-use exceptions differ in the two previously documented cases; polling wait is not an NT keyed event.",
+        "provider": {
+          "guest_path": "C:\\WINDOWS\\KernelEx\\M98WRP18.DLL",
+          "path": "build/m98wrap.dll",
+          "sha256": "0da854a1a6ff42296e2e5c7fda92e07a660351a5b14b568f18c2846c609c2f3e"
+        },
+        "receipt": {
+          "command": "C:\\M98LAB\\ONCEIMP.EXE",
+          "cwd": "C:\\M98LAB",
+          "exit_code": 0,
+          "guest": "m98agent/v1 protocol=1 os=4.10 build=67766446",
+          "output": "PASS: static KERNEL32 InitOnce four-API contracts and 192 worker races\r\n",
+          "output_bytes": 72,
+          "output_sha256": "c0356210364223dac3ebe0cb8068f166d6694eadae3950326c6f67e08a9787ac",
+          "output_truncated": false,
+          "pipe": "\\\\.\\pipe\\Win98Modern-Lab",
+          "timed_out": false,
+          "timeout_ms": 60000,
+          "transport": "VirtualBox COM1 local named pipe"
+        },
+        "scope": "Four-API initialization, aligned context, mixed manual/ExecuteOnce state, retry and 192 worker races",
+        "source_hashes": {
+          "src/kex_abi.h": "87899e80ba1076fa0a2ccde507304f1553cdd6bf4468cb708f361d749a2673fd",
+          "src/m98_initonce.c": "74d7d663f4969f9b4a62788695a345e96f90b2059d40cb376a9649abc2383e5d",
+          "src/m98_initonce.h": "4dedec974f4e34280e8b88bb00eed1bc7e7f5530f2456aa89643d3847b57e55c",
+          "src/m98_slist.c": "7e45a2664706e9d1e3df2b21bfc5969fea57f27f454584fbe69791599b39b44d",
+          "src/m98_slist.h": "8e6c343a712c6ef431c75213e4cbd0ea4b873126b636e88830e7b3c5d90fae5f",
+          "src/m98_threadpool.c": "70f7df8c39f4ee28489c51e04500ad0c21bdeece5b17043eccc04ed2f19e74f0",
+          "src/m98_threadpool.h": "6bfc4552d75e346db1cb477a4c4c758fd99f6c977886bf54618a7fae7638bb8c",
+          "src/m98nls_ex.c": "8f9fcd1b5ed2a9a446ed64f4568386c7013d1cbe459106a15dd95fda8366344c",
+          "src/m98nls_ex.h": "1dcefe53ee05290fe6d2f77df454534aeb7a08327b9ad17d90788d3e6d0e4505",
+          "src/m98wrap.c": "d44007775e3dad44150d396737cba40902d6a31d6ec3064ea698e1ceaa30a32c",
+          "src/wine_uppercase.c": "59a48d395e850d39eee0c6919fdc7ed73d28e7982da544a6d300c454d83bb888",
+          "tests/initonce_import_probe.c": "4502d97f3a30e1acde4f295ca5cab48916df5cb5887a6d3ee577167a797202bd",
+          "tests/initonce_smoke.c": "75154964cfb0b42310531b9745b060a46e4b9effa5bff435f59fec6423e4d83b"
+        },
+        "test": {
+          "path": "build/initonce/initonce_import_probe.exe",
+          "sha256": "eda1117c4b288eb8d9961496ae52b575dfd95888350a483e65951564f6750ea6"
+        }
+      },
+      {
+        "apis": [
+          {
+            "dll": "KERNEL32.DLL",
+            "name": "CloseThreadpoolWork"
+          },
+          {
+            "dll": "KERNEL32.DLL",
+            "name": "CreateThreadpoolWork"
+          },
+          {
+            "dll": "KERNEL32.DLL",
+            "name": "FreeLibraryWhenCallbackReturns"
+          },
+          {
+            "dll": "KERNEL32.DLL",
+            "name": "SubmitThreadpoolWork"
+          },
+          {
+            "dll": "KERNEL32.DLL",
+            "name": "WaitForThreadpoolWorkCallbacks"
+          }
+        ],
+        "core_ini_sha256": "acbe6e697f370e48361fa86529d53865c9f3adfedd9ca366ed120c545b182290",
+        "documentation": "docs/THREADPOOL_WORK_PORT.md",
+        "environment": {
+          "acceleration": "VirtualBox NEM hardware virtualization; current boot checked by vm/run.ps1",
+          "os": "Directly installed Korean Windows 98 SE",
+          "vm": "Win98Modern-Accel-128"
+        },
+        "evidence_kind": "guest_static_import_contract_subset",
+        "family": "threadpool-work",
+        "full_compatibility_verified": false,
+        "id": "guest-m98wrp18-threadpool-work-2026-09-24",
+        "limitations": "Custom pools and timer/wait/I/O/cleanup groups remain outstanding.",
+        "provider": {
+          "guest_path": "C:\\WINDOWS\\KernelEx\\M98WRP18.DLL",
+          "path": "build/m98wrap.dll",
+          "sha256": "0da854a1a6ff42296e2e5c7fda92e07a660351a5b14b568f18c2846c609c2f3e"
+        },
+        "receipt": {
+          "command": "C:\\M98LAB\\TPFULL17.EXE",
+          "cwd": "C:\\M98LAB",
+          "exit_code": 0,
+          "guest": "m98agent/v1 protocol=1 os=4.10 build=67766446",
+          "output": "PASS: static Win98 threadpool lifecycle, parallelism, cancel, deferred unload\r\n",
+          "output_bytes": 79,
+          "output_sha256": "8d211601f8525aac30b95958fd294b4825db7ad97e868fd67a3b07127db6b37a",
+          "output_truncated": false,
+          "pipe": "\\\\.\\pipe\\Win98Modern-Lab",
+          "timed_out": false,
+          "timeout_ms": 60000,
+          "transport": "VirtualBox COM1 local named pipe"
+        },
+        "scope": "Default work pool, parallelism, queue cancellation, queued/active Close and deferred DLL unload",
+        "source_hashes": {
+          "src/kex_abi.h": "87899e80ba1076fa0a2ccde507304f1553cdd6bf4468cb708f361d749a2673fd",
+          "src/m98_initonce.c": "74d7d663f4969f9b4a62788695a345e96f90b2059d40cb376a9649abc2383e5d",
+          "src/m98_initonce.h": "4dedec974f4e34280e8b88bb00eed1bc7e7f5530f2456aa89643d3847b57e55c",
+          "src/m98_slist.c": "7e45a2664706e9d1e3df2b21bfc5969fea57f27f454584fbe69791599b39b44d",
+          "src/m98_slist.h": "8e6c343a712c6ef431c75213e4cbd0ea4b873126b636e88830e7b3c5d90fae5f",
+          "src/m98_threadpool.c": "70f7df8c39f4ee28489c51e04500ad0c21bdeece5b17043eccc04ed2f19e74f0",
+          "src/m98_threadpool.h": "6bfc4552d75e346db1cb477a4c4c758fd99f6c977886bf54618a7fae7638bb8c",
+          "src/m98nls_ex.c": "8f9fcd1b5ed2a9a446ed64f4568386c7013d1cbe459106a15dd95fda8366344c",
+          "src/m98nls_ex.h": "1dcefe53ee05290fe6d2f77df454534aeb7a08327b9ad17d90788d3e6d0e4505",
+          "src/m98wrap.c": "d44007775e3dad44150d396737cba40902d6a31d6ec3064ea698e1ceaa30a32c",
+          "src/wine_uppercase.c": "59a48d395e850d39eee0c6919fdc7ed73d28e7982da544a6d300c454d83bb888",
+          "tests/threadpool_marker.c": "09e213392ca350057e1d7cc227da643245ac716cf46fe9494f2449585b51e310",
+          "tests/threadpool_smoke.c": "9b57a4a0de238fc117d00bf0d795f305c9d70da5bdf7d6d0072f6e2f793569e5"
+        },
+        "supporting_artifacts": [
+          {
+            "path": "build/threadpool/TPMARK.DLL",
+            "sha256": "ab90d2b68fb2658dd23573b172e6f6ad02b394569dc9edf9af20c7de12c9338d"
+          }
+        ],
+        "test": {
+          "path": "build/threadpool/threadpool_guest_import_smoke.exe",
+          "sha256": "6c03fda354102ffbff0f732589461ebcb32e532d8d15d0718d6cbdffe2662810"
+        }
+      },
+      {
+        "apis": [
+          {
+            "dll": "KERNEL32.DLL",
+            "name": "CompareStringEx"
+          },
+          {
+            "dll": "KERNEL32.DLL",
+            "name": "LCMapStringEx"
+          }
+        ],
+        "core_ini_sha256": "acbe6e697f370e48361fa86529d53865c9f3adfedd9ca366ed120c545b182290",
+        "documentation": "docs/NLS_EX_PORT.md",
+        "environment": {
+          "acceleration": "VirtualBox NEM hardware virtualization; current boot checked by vm/run.ps1",
+          "os": "Directly installed Korean Windows 98 SE",
+          "vm": "Win98Modern-Accel-128"
+        },
+        "evidence_kind": "guest_static_import_contract_subset",
+        "family": "nls-ex",
+        "full_compatibility_verified": false,
+        "id": "guest-m98wrp18-nls-ex-2026-09-24",
+        "limitations": "Limited static probe does not establish all flags/locales or modern linguistic-data parity.",
+        "provider": {
+          "guest_path": "C:\\WINDOWS\\KernelEx\\M98WRP18.DLL",
+          "path": "build/m98wrap.dll",
+          "sha256": "0da854a1a6ff42296e2e5c7fda92e07a660351a5b14b568f18c2846c609c2f3e"
+        },
+        "receipt": {
+          "command": "C:\\M98LAB\\NLSI14.EXE",
+          "cwd": "C:\\M98LAB",
+          "exit_code": 0,
+          "guest": "m98agent/v1 protocol=1 os=4.10 build=67766446",
+          "output": "",
+          "output_bytes": 0,
+          "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "output_truncated": false,
+          "pipe": "\\\\.\\pipe\\Win98Modern-Lab",
+          "timed_out": false,
+          "timeout_ms": 30000,
+          "transport": "VirtualBox COM1 local named pipe"
+        },
+        "scope": "Static en-US comparison and lowercase mapping through the sibling KernelEx Unicode provider",
+        "source_hashes": {
+          "src/kex_abi.h": "87899e80ba1076fa0a2ccde507304f1553cdd6bf4468cb708f361d749a2673fd",
+          "src/m98_initonce.c": "74d7d663f4969f9b4a62788695a345e96f90b2059d40cb376a9649abc2383e5d",
+          "src/m98_initonce.h": "4dedec974f4e34280e8b88bb00eed1bc7e7f5530f2456aa89643d3847b57e55c",
+          "src/m98_slist.c": "7e45a2664706e9d1e3df2b21bfc5969fea57f27f454584fbe69791599b39b44d",
+          "src/m98_slist.h": "8e6c343a712c6ef431c75213e4cbd0ea4b873126b636e88830e7b3c5d90fae5f",
+          "src/m98_threadpool.c": "70f7df8c39f4ee28489c51e04500ad0c21bdeece5b17043eccc04ed2f19e74f0",
+          "src/m98_threadpool.h": "6bfc4552d75e346db1cb477a4c4c758fd99f6c977886bf54618a7fae7638bb8c",
+          "src/m98nls_ex.c": "8f9fcd1b5ed2a9a446ed64f4568386c7013d1cbe459106a15dd95fda8366344c",
+          "src/m98nls_ex.h": "1dcefe53ee05290fe6d2f77df454534aeb7a08327b9ad17d90788d3e6d0e4505",
+          "src/m98wrap.c": "d44007775e3dad44150d396737cba40902d6a31d6ec3064ea698e1ceaa30a32c",
+          "src/wine_uppercase.c": "59a48d395e850d39eee0c6919fdc7ed73d28e7982da544a6d300c454d83bb888",
+          "tests/nls_ex_import_probe.c": "7212924fa9fa84275517aec4526003034d2670bbc3ab6ea5ecbf47bada1ca23a"
+        },
+        "test": {
+          "path": "build/nls-ex/nls_ex_import_probe.exe",
+          "sha256": "b756589b4705efa15ba47004f61804452dd5bb3bc1a6a006cb07a61d825d6a46"
+        }
+      },
+      {
+        "apis": [
+          {
+            "dll": "KERNEL32.DLL",
+            "name": "CallbackMayRunLong"
+          },
+          {
+            "dll": "KERNEL32.DLL",
+            "name": "DisassociateCurrentThreadFromCallback"
+          },
+          {
+            "dll": "KERNEL32.DLL",
+            "name": "LeaveCriticalSectionWhenCallbackReturns"
+          },
+          {
+            "dll": "KERNEL32.DLL",
+            "name": "ReleaseMutexWhenCallbackReturns"
+          },
+          {
+            "dll": "KERNEL32.DLL",
+            "name": "ReleaseSemaphoreWhenCallbackReturns"
+          },
+          {
+            "dll": "KERNEL32.DLL",
+            "name": "SetEventWhenCallbackReturns"
+          },
+          {
+            "dll": "KERNEL32.DLL",
+            "name": "TrySubmitThreadpoolCallback"
+          }
+        ],
+        "core_ini_sha256": "acbe6e697f370e48361fa86529d53865c9f3adfedd9ca366ed120c545b182290",
+        "documentation": "docs/THREADPOOL_CALLBACK_PORT.md",
+        "environment": {
+          "acceleration": "VirtualBox NEM hardware virtualization; current boot checked by vm/run.ps1",
+          "os": "Directly installed Korean Windows 98 SE",
+          "vm": "Win98Modern-Accel-128"
+        },
+        "evidence_kind": "guest_static_import_contract_subset",
+        "family": "threadpool-callback",
+        "full_compatibility_verified": false,
+        "id": "guest-m98wrp18-threadpool-callback-2026-09-24",
+        "limitations": "Default pool only; no exhaustion injection, custom pools, cleanup groups, timers/waits/I/O or full invalid-handle equivalence.",
+        "provider": {
+          "guest_path": "C:\\WINDOWS\\KernelEx\\M98WRP18.DLL",
+          "path": "build/m98wrap.dll",
+          "sha256": "0da854a1a6ff42296e2e5c7fda92e07a660351a5b14b568f18c2846c609c2f3e"
+        },
+        "receipt": {
+          "command": "C:\\M98LAB\\TPCBS18.EXE",
+          "cwd": "C:\\M98LAB",
+          "exit_code": 0,
+          "guest": "m98agent/v1 protocol=1 os=4.10 build=67766446",
+          "output": "PASS: static callback deferred resources, disassociation, simple work and long-work capacity\r\n",
+          "output_bytes": 94,
+          "output_sha256": "b5dc528c1ebb56f3f27514fef6c923fff2e2546b2b400896af0720e88d8178ae",
+          "output_truncated": false,
+          "pipe": "\\\\.\\pipe\\Win98Modern-Lab",
+          "timed_out": false,
+          "timeout_ms": 60000,
+          "transport": "VirtualBox COM1 local named pipe"
+        },
+        "scope": "Deferred CS/mutex/semaphore/event/DLL cleanup, disassociation lifetime, simple callback/finalization and long-work capacity",
+        "source_hashes": {
+          "src/kex_abi.h": "87899e80ba1076fa0a2ccde507304f1553cdd6bf4468cb708f361d749a2673fd",
+          "src/m98_initonce.c": "74d7d663f4969f9b4a62788695a345e96f90b2059d40cb376a9649abc2383e5d",
+          "src/m98_initonce.h": "4dedec974f4e34280e8b88bb00eed1bc7e7f5530f2456aa89643d3847b57e55c",
+          "src/m98_slist.c": "7e45a2664706e9d1e3df2b21bfc5969fea57f27f454584fbe69791599b39b44d",
+          "src/m98_slist.h": "8e6c343a712c6ef431c75213e4cbd0ea4b873126b636e88830e7b3c5d90fae5f",
+          "src/m98_threadpool.c": "70f7df8c39f4ee28489c51e04500ad0c21bdeece5b17043eccc04ed2f19e74f0",
+          "src/m98_threadpool.h": "6bfc4552d75e346db1cb477a4c4c758fd99f6c977886bf54618a7fae7638bb8c",
+          "src/m98nls_ex.c": "8f9fcd1b5ed2a9a446ed64f4568386c7013d1cbe459106a15dd95fda8366344c",
+          "src/m98nls_ex.h": "1dcefe53ee05290fe6d2f77df454534aeb7a08327b9ad17d90788d3e6d0e4505",
+          "src/m98wrap.c": "d44007775e3dad44150d396737cba40902d6a31d6ec3064ea698e1ceaa30a32c",
+          "src/wine_uppercase.c": "59a48d395e850d39eee0c6919fdc7ed73d28e7982da544a6d300c454d83bb888",
+          "tests/threadpool_callback_smoke.c": "2691d36f01bca99cbe82cbf6a29f7f6c0a1dc2ce2dcdeb5c68871cee83da0992",
+          "tests/threadpool_marker.c": "09e213392ca350057e1d7cc227da643245ac716cf46fe9494f2449585b51e310"
+        },
+        "supporting_artifacts": [
+          {
+            "path": "build/threadpool/TPMARK.DLL",
+            "sha256": "ab90d2b68fb2658dd23573b172e6f6ad02b394569dc9edf9af20c7de12c9338d"
+          }
+        ],
+        "test": {
+          "path": "build/threadpool/threadpool_callback_static.exe",
+          "sha256": "7b0c463a18e8e389245ce0715bc21024bfdc70631a85671275fb1c21710e93c2"
+        }
+      },
+      {
+        "apis": [
+          {
+            "dll": "KERNEL32.DLL",
+            "name": "InitializeSListHead"
+          },
+          {
+            "dll": "KERNEL32.DLL",
+            "name": "InterlockedFlushSList"
+          },
+          {
+            "dll": "KERNEL32.DLL",
+            "name": "InterlockedPopEntrySList"
+          },
+          {
+            "dll": "KERNEL32.DLL",
+            "name": "InterlockedPushEntrySList"
+          },
+          {
+            "dll": "KERNEL32.DLL",
+            "name": "InterlockedPushListSList"
+          },
+          {
+            "dll": "KERNEL32.DLL",
+            "name": "InterlockedPushListSListEx"
+          },
+          {
+            "dll": "KERNEL32.DLL",
+            "name": "QueryDepthSList"
+          }
+        ],
+        "core_ini_sha256": "acbe6e697f370e48361fa86529d53865c9f3adfedd9ca366ed120c545b182290",
+        "documentation": "docs/SLIST_PORT.md",
+        "environment": {
+          "acceleration": "VirtualBox NEM hardware virtualization; current boot checked by vm/run.ps1",
+          "os": "Directly installed Korean Windows 98 SE",
+          "vm": "Win98Modern-Accel-128"
+        },
+        "evidence_kind": "guest_static_import_contract_subset",
+        "family": "slist",
+        "full_compatibility_verified": false,
+        "id": "guest-m98wrp18-slist-2026-09-24",
+        "limitations": "No NTDLL routing or infinite-delay ABA guarantee; reclaimed-page SEH recovery has a separate direct fixture receipt.",
+        "provider": {
+          "guest_path": "C:\\WINDOWS\\KernelEx\\M98WRP18.DLL",
+          "path": "build/m98wrap.dll",
+          "sha256": "0da854a1a6ff42296e2e5c7fda92e07a660351a5b14b568f18c2846c609c2f3e"
+        },
+        "receipt": {
+          "command": "C:\\M98LAB\\SLISTIMP.EXE",
+          "cwd": "C:\\M98LAB",
+          "exit_code": 0,
+          "guest": "m98agent/v1 protocol=1 os=4.10 build=67766446",
+          "output": "PASS: SList alignment/LIFO/fastcall+stdcall batch/flush\r\nINFO: large HeapAlloc alignment offset=0x00000004\r\nPASS: SList depth wrap/65537-node chain\r\nPASS: SList concurrent 4 producers/4 consumers/40000 reuse transfers\r\nPASS: SList seven-API public-contract suite\r\n",
+          "output_bytes": 264,
+          "output_sha256": "97e24e9814387fd0b3a4aff10de1a705cebf85d5e7ac12f26871eb766caf7e02",
+          "output_truncated": false,
+          "pipe": "\\\\.\\pipe\\Win98Modern-Lab",
+          "timed_out": false,
+          "timeout_ms": 60000,
+          "transport": "VirtualBox COM1 local named pipe"
+        },
+        "scope": "Seven static KERNEL32 SList imports: LIFO/return values, fastcall+stdcall batch, flush, 65537-node depth wrap and 40000 concurrent node transfers",
+        "source_hashes": {
+          "src/kex_abi.h": "87899e80ba1076fa0a2ccde507304f1553cdd6bf4468cb708f361d749a2673fd",
+          "src/m98_initonce.c": "74d7d663f4969f9b4a62788695a345e96f90b2059d40cb376a9649abc2383e5d",
+          "src/m98_initonce.h": "4dedec974f4e34280e8b88bb00eed1bc7e7f5530f2456aa89643d3847b57e55c",
+          "src/m98_slist.c": "7e45a2664706e9d1e3df2b21bfc5969fea57f27f454584fbe69791599b39b44d",
+          "src/m98_slist.h": "8e6c343a712c6ef431c75213e4cbd0ea4b873126b636e88830e7b3c5d90fae5f",
+          "src/m98_threadpool.c": "70f7df8c39f4ee28489c51e04500ad0c21bdeece5b17043eccc04ed2f19e74f0",
+          "src/m98_threadpool.h": "6bfc4552d75e346db1cb477a4c4c758fd99f6c977886bf54618a7fae7638bb8c",
+          "src/m98nls_ex.c": "8f9fcd1b5ed2a9a446ed64f4568386c7013d1cbe459106a15dd95fda8366344c",
+          "src/m98nls_ex.h": "1dcefe53ee05290fe6d2f77df454534aeb7a08327b9ad17d90788d3e6d0e4505",
+          "src/m98wrap.c": "d44007775e3dad44150d396737cba40902d6a31d6ec3064ea698e1ceaa30a32c",
+          "src/wine_uppercase.c": "59a48d395e850d39eee0c6919fdc7ed73d28e7982da544a6d300c454d83bb888",
+          "tests/slist_import_probe.c": "e1792ccf6ff95a53f23b5c1960b3b12de0edc59e2f09eae8ea91f7f92dc1be3b",
+          "tests/slist_smoke.c": "86d99b5f0026922bcbf4b9cbde5c4338c6eab0554f1f90f60a497fac3911cdca"
+        },
+        "test": {
+          "path": "build/slist/slist_import_probe.exe",
+          "sha256": "ecc3a109057e7391f1d4697e296c622be0f71f601d06f527cfcdea7aac343073"
+        }
       }
     ],
     "schema": "w98mod.api-guest-evidence.v1"
@@ -706,15 +1122,15 @@
     "sdk_candidates": 151330,
     "supplemental_records": 234613,
     "unassigned_records": 0,
-    "with_current_guest_subset_evidence": 11,
+    "with_current_guest_subset_evidence": 25,
     "with_historical_guest_subset_evidence": 0,
     "with_native_export": 79445,
-    "with_project_declaration": 96,
+    "with_project_declaration": 110,
     "with_upstream_declarations": 189808
   },
   "evidence_policy": "Export declarations, native presence, stubs and forwarders do not demonstrate behavior. Linked guest receipts verify only stated contract subsets for pinned provider/test hashes; unassessed does not mean known-broken. Earlier tests not yet entered in the registry remain documented separately.",
   "inputs": {
-    "behavioral_evidence_sha256": "cbabe63f0bb430e378708b2ca8ed53175a38a786ffc41745a582aa292cfad764",
+    "behavioral_evidence_sha256": "6034206d8a33e9ae5df00721d2f76d08919d5ad70d8bb9a9cca9a47d72552ee8",
     "groups_sha256": "e9daf6fd1987a592ad548a911a2c95ba87658a27a695b0b4c35aeda04b215d29",
     "native_manifest_sha256": "d0e4f23d8df4f6e3536495621cc50a55df0d257f9b604bbc59028e038ee5b023",
     "project_sources": {
@@ -724,13 +1140,15 @@
       "src/dbghelp_shim.def": "7356272c853e122422cb4e61df9444517ec6a8a8673a4c6294464e1abba0d8c4",
       "src/dwmapi_shim.c": "f7cee410f772f22c6823898501c8a1139a9ad2cac647aac4e938b5b73c2547b6",
       "src/dwmapi_shim.def": "f1c805a02536a9e50ddd86d4a466d9c862d9fbffd0e6c161d3eed04980034d4e",
+      "src/m98_fls.c": "85b270039bf6ea21d65e0cd6b0cfb30f9231260f03eee8602fe4caa6a7456256",
       "src/m98_initonce.c": "74d7d663f4969f9b4a62788695a345e96f90b2059d40cb376a9649abc2383e5d",
-      "src/m98_threadpool.c": "0b66bb50e1a7a785053ce5bc6ee8cc3ebafa880d04b0b0f713c9a7a1a4b8851a",
+      "src/m98_slist.c": "7e45a2664706e9d1e3df2b21bfc5969fea57f27f454584fbe69791599b39b44d",
+      "src/m98_threadpool.c": "70f7df8c39f4ee28489c51e04500ad0c21bdeece5b17043eccc04ed2f19e74f0",
       "src/m98advapi.c": "47f4dfb08af0e590c1c4478f790c5f72dfa4fbaa6737b1edfeb1e6436eeed788",
       "src/m98nls_ex.c": "8f9fcd1b5ed2a9a446ed64f4568386c7013d1cbe459106a15dd95fda8366344c",
       "src/m98shell.c": "4f000360388f5d191d7be2b2adec320ff0d2ba58673faea87e7811b5098f3ee7",
       "src/m98shell_openfolder.c": "c24329bca0a1108c27109fc1d14a8006fa36809cedbf17672d71ff3081dd3e17",
-      "src/m98wrap.c": "ce61c8b5ccf023df4ce0b60e88ab375f0b45c0eb160718b6493a04bd0c55c1dd",
+      "src/m98wrap.c": "d44007775e3dad44150d396737cba40902d6a31d6ec3064ea698e1ceaa30a32c",
       "src/uxtheme_shim.c": "7cce15921549603e8e1bd06df858efa6b014030ed0608d997057e5fc74997a2c",
       "src/uxtheme_shim.def": "e620b3251793b9c7aaaf846d711c7dd85eb9cd416da11a2ffd486ef9ba6e5f88",
       "src/uxtheme_sysfont.c": "074ab49bcc030baf53238cc0d05f42fcc218654172e82f510ea975af0ee87057",
@@ -739,8 +1157,8 @@
     "sdk_inventory_sha256": "e95ee97b426941d3deb1d6f3f34a4f460c012f8a5623b1dc0a7e53f445b033c0",
     "source_receipt_sha256": "3436be1f29b84e4495258c8455222fdc988cb562b5eb11717d2b1f2d0674bc49",
     "sources_manifest_sha256": "39e12d6ab017179b0b837388b19111b25d2b14c70d1ca5594a71ec53053429a9",
-    "upstream_exports_sha256": "b0edae7573809191465bf59231c4a2503a5ad994a71d60736b00541d21a6554d",
-    "upstream_summary_sha256": "6bc1bf45466be4d3cd9b711bd703bcd8d071dd5b04f2bdb472273177fe9e743d"
+    "upstream_exports_sha256": "4ab5ebdc092013b0126e15a345a4d0b7a0f96f038c69cc6fab160c08404c13ce",
+    "upstream_summary_sha256": "2605d57e22d349c82bf138c95d2b7ccb815259793187cfd919b883d84904fefc"
   },
   "largest_default_batches": [
     {
@@ -751,6 +1169,8 @@
       "depends_on": [
         "abi-loader"
       ],
+      "guest_subset_verified_candidates": 0,
+      "historical_evidence_candidates": 0,
       "id": "dll:MSVCP90.DLL",
       "native_export_present": 0,
       "priority": 5,
@@ -779,6 +1199,8 @@
       "depends_on": [
         "abi-loader"
       ],
+      "guest_subset_verified_candidates": 0,
+      "historical_evidence_candidates": 0,
       "id": "dll:MSVCP80.DLL",
       "native_export_present": 0,
       "priority": 5,
@@ -807,6 +1229,8 @@
       "depends_on": [
         "abi-loader"
       ],
+      "guest_subset_verified_candidates": 0,
+      "historical_evidence_candidates": 0,
       "id": "dll:MSVCP71.DLL",
       "native_export_present": 0,
       "priority": 5,
@@ -835,6 +1259,8 @@
       "depends_on": [
         "abi-loader"
       ],
+      "guest_subset_verified_candidates": 0,
+      "historical_evidence_candidates": 0,
       "id": "dll:MSVCP70.DLL",
       "native_export_present": 0,
       "priority": 5,
@@ -863,6 +1289,8 @@
       "depends_on": [
         "abi-loader"
       ],
+      "guest_subset_verified_candidates": 0,
+      "historical_evidence_candidates": 0,
       "id": "dll:MSVCP60.DLL",
       "native_export_present": 0,
       "priority": 5,
@@ -891,6 +1319,8 @@
       "depends_on": [
         "winrt-runtime"
       ],
+      "guest_subset_verified_candidates": 0,
+      "historical_evidence_candidates": 0,
       "id": "winrt:Windows.UI.Xaml.Controls",
       "native_export_present": 0,
       "priority": 6,
@@ -917,6 +1347,8 @@
       "depends_on": [
         "abi-loader"
       ],
+      "guest_subset_verified_candidates": 0,
+      "historical_evidence_candidates": 0,
       "id": "dll:WBEMCOMN.DLL",
       "native_export_present": 3964,
       "priority": 5,
@@ -943,6 +1375,8 @@
       "depends_on": [
         "abi-loader"
       ],
+      "guest_subset_verified_candidates": 0,
+      "historical_evidence_candidates": 0,
       "id": "dll:MSVCP100.DLL",
       "native_export_present": 0,
       "priority": 5,
@@ -971,6 +1405,8 @@
       "depends_on": [
         "abi-loader"
       ],
+      "guest_subset_verified_candidates": 0,
+      "historical_evidence_candidates": 0,
       "id": "dll:MSVCP110.DLL",
       "native_export_present": 0,
       "priority": 5,
@@ -999,6 +1435,8 @@
       "depends_on": [
         "abi-loader"
       ],
+      "guest_subset_verified_candidates": 0,
+      "historical_evidence_candidates": 0,
       "id": "dll:MSVCP120.DLL",
       "native_export_present": 0,
       "priority": 5,
@@ -1027,6 +1465,8 @@
       "depends_on": [
         "abi-loader"
       ],
+      "guest_subset_verified_candidates": 0,
+      "historical_evidence_candidates": 0,
       "id": "dll:MSVCP120_APP.DLL",
       "native_export_present": 0,
       "priority": 5,
@@ -1055,6 +1495,8 @@
       "depends_on": [
         "abi-loader"
       ],
+      "guest_subset_verified_candidates": 0,
+      "historical_evidence_candidates": 0,
       "id": "dll:MSVCP_WIN.DLL",
       "native_export_present": 0,
       "priority": 5,
@@ -1083,6 +1525,8 @@
       "depends_on": [
         "abi-loader"
       ],
+      "guest_subset_verified_candidates": 0,
+      "historical_evidence_candidates": 0,
       "id": "dll:MSVCP140.DLL",
       "native_export_present": 0,
       "priority": 5,
@@ -1111,6 +1555,8 @@
       "depends_on": [
         "abi-loader"
       ],
+      "guest_subset_verified_candidates": 0,
+      "historical_evidence_candidates": 0,
       "id": "dll:WSMSVC.DLL",
       "native_export_present": 0,
       "priority": 5,
@@ -1137,6 +1583,8 @@
       "depends_on": [
         "abi-loader"
       ],
+      "guest_subset_verified_candidates": 0,
+      "historical_evidence_candidates": 0,
       "id": "dll:MSVCRT40.DLL",
       "native_export_present": 2330,
       "priority": 5,
@@ -1167,6 +1615,8 @@
       "depends_on": [
         "abi-loader"
       ],
+      "guest_subset_verified_candidates": 0,
+      "historical_evidence_candidates": 0,
       "id": "dll:MSVCRT20.DLL",
       "native_export_present": 2252,
       "priority": 5,
@@ -1197,6 +1647,8 @@
       "depends_on": [
         "abi-loader"
       ],
+      "guest_subset_verified_candidates": 0,
+      "historical_evidence_candidates": 0,
       "id": "dll:UCRTBASE.DLL",
       "native_export_present": 0,
       "priority": 5,
@@ -1227,6 +1679,8 @@
       "depends_on": [
         "abi-loader"
       ],
+      "guest_subset_verified_candidates": 0,
+      "historical_evidence_candidates": 0,
       "id": "dll:MSVCR120.DLL",
       "native_export_present": 0,
       "priority": 5,
@@ -1255,6 +1709,8 @@
       "depends_on": [
         "abi-loader"
       ],
+      "guest_subset_verified_candidates": 0,
+      "historical_evidence_candidates": 0,
       "id": "dll:KXCRT.DLL",
       "native_export_present": 0,
       "priority": 5,
@@ -1283,6 +1739,8 @@
       "depends_on": [
         "abi-loader"
       ],
+      "guest_subset_verified_candidates": 0,
+      "historical_evidence_candidates": 0,
       "id": "dll:KXUSER.DLL",
       "native_export_present": 0,
       "priority": 5,
@@ -1831,20 +2289,20 @@
       }
     ],
     "interpretation": "A declaration, including an export_declaration, is not proof of implemented behavior; stub/forward/data are explicitly separate.",
-    "jsonl_sha256": "b0edae7573809191465bf59231c4a2503a5ad994a71d60736b00541d21a6554d",
+    "jsonl_sha256": "4ab5ebdc092013b0126e15a345a4d0b7a0f96f038c69cc6fab160c08404c13ce",
     "manifest_sha256": "39e12d6ab017179b0b837388b19111b25d2b14c70d1ca5594a71ec53053429a9",
     "receipt_sha256": "3436be1f29b84e4495258c8455222fdc988cb562b5eb11717d2b1f2d0674bc49",
-    "row_count": 288776,
+    "row_count": 288790,
     "rows_by_kind": {
       "data": 3688,
-      "export_declaration": 178995,
+      "export_declaration": 179009,
       "forward": 50328,
       "stub": 55765
     },
     "rows_by_source": {
       "kernelex": 1094,
       "onecore": 92237,
-      "project": 62,
+      "project": 76,
       "reactos": 44132,
       "vxkex": 16742,
       "wine": 134509
@@ -6617,7 +7075,7 @@
       },
       {
         "policy": "working_tree_declarations_only",
-        "revision": "working-tree@559dfede4d0e454dd5f9d7fca59c01652120ae7e",
+        "revision": "working-tree@9d315234671f4218ea19bf8c5abcb6450b19c2f3",
         "source": "project"
       }
     ]

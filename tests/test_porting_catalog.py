@@ -56,6 +56,19 @@ class CatalogueTests(unittest.TestCase):
         self.assertEqual(contract["batch"], "api-set-routing")
         self.assertFalse(contract["upstream_declarations"])
 
+    def test_family_queue_never_promotes_subset_to_complete(self):
+        rows = catalog.merge_records([], [self.upstream()], {}, {}, self.groups)
+        for coverage, expected, count in (
+            ("unassessed", "awaiting_contract_review", 0),
+            ("guest_static_subset_verified", "partial_guest_subset_evidence", 1),
+            ("historical_guest_subset_evidence", "historical_evidence_requires_revalidation", 0),
+        ):
+            rows[0]["behavioral_coverage"] = coverage
+            batch = catalog.build_queue(rows, self.groups)["batches"][0]
+            self.assertEqual(batch["state"], expected)
+            self.assertEqual(batch["guest_subset_verified_candidates"], count)
+            self.assertIn("application_regression", batch["required_gates"])
+
     def test_unrelated_callbacks_not_assigned_to_threadpool(self):
         for name in ("NtCallbackReturn", "ZwCallbackReturn", "KiUserCallbackDispatcher", "RtlInstallFunctionTableCallback", "RegisterApplicationRecoveryCallback"):
             row = {"category":"supplemental_export_declaration", "dll":"NTDLL.DLL", "name":name}
@@ -129,7 +142,7 @@ class CatalogueTests(unittest.TestCase):
         import hashlib
         with tempfile.TemporaryDirectory() as directory:
             root=Path(directory)
-            for name in ("source.c","provider.dll","test.exe"):
+            for name in ("source.c","provider.dll","test.exe","marker.dll"):
                 (root/name).write_bytes(b"original")
             sha=catalog.digest(root/"source.c")
             record={"id":"test-receipt","full_compatibility_verified":False,
@@ -138,6 +151,7 @@ class CatalogueTests(unittest.TestCase):
                 "scope":"focused contract", "limitations":"other modes untested",
                 "source_hashes":{"source.c":sha},
                 "provider":{"path":"provider.dll","sha256":sha}, "test":{"path":"test.exe","sha256":sha},
+                "supporting_artifacts":[{"path":"marker.dll","sha256":sha}],
                 "apis":[{"dll":"KERNEL32.DLL","name":"InitOnceComplete"}],
                 "evidence_kind":"guest_static_import_contract_subset", "documentation":"doc.md"}
             evidence={"schema":"w98mod.api-guest-evidence.v1","records":[record]}
@@ -145,6 +159,10 @@ class CatalogueTests(unittest.TestCase):
             catalog.attach_evidence(rows,evidence,root)
             self.assertEqual(rows[0]["behavioral_coverage"],"guest_static_subset_verified")
             self.assertFalse(rows[0]["full_compatibility_verified"])
+            (root/"marker.dll").write_bytes(b"changed supporting fixture")
+            catalog.attach_evidence(rows,evidence,root)
+            self.assertEqual(rows[0]["behavioral_coverage"],"historical_guest_subset_evidence")
+            (root/"marker.dll").write_bytes(b"original")
             (root/"provider.dll").write_bytes(b"changed")
             catalog.attach_evidence(rows,evidence,root)
             self.assertEqual(rows[0]["behavioral_coverage"],"historical_guest_subset_evidence")

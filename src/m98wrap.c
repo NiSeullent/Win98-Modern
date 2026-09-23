@@ -14,6 +14,7 @@
 #include "m98nls_ex.h"
 #include "m98_threadpool.h"
 #include "m98_initonce.h"
+#include "m98_slist.h"
 
 #ifndef ALL_PROCESSOR_GROUPS
 #define ALL_PROCESSOR_GROUPS 0xffff
@@ -1692,10 +1693,12 @@ static BOOL WINAPI m98_QueryFullProcessImageNameW(HANDLE process, DWORD flags,
 static const m98_named_api kernel32_apis[] = {
     M98_API("AcquireSRWLockExclusive", m98_AcquireSRWLockExclusive),
     M98_API("AcquireSRWLockShared", m98_AcquireSRWLockShared),
+    M98_API("CallbackMayRunLong", m98_CallbackMayRunLong),
     M98_API("CloseThreadpoolWork", m98_CloseThreadpoolWork),
     M98_API("CompareStringEx", m98_CompareStringEx),
     M98_API("CompareStringOrdinal", m98_CompareStringOrdinal),
     M98_API("CreateThreadpoolWork", m98_CreateThreadpoolWork),
+    M98_API("DisassociateCurrentThreadFromCallback", m98_DisassociateCurrentThreadFromCallback),
     M98_API("FindFirstStreamW", m98_FindFirstStreamW),
     M98_API("FreeLibraryWhenCallbackReturns", m98_FreeLibraryWhenCallbackReturns),
     M98_API("GetActiveProcessorCount", m98_GetActiveProcessorCount),
@@ -1737,17 +1740,29 @@ static const m98_named_api kernel32_apis[] = {
     M98_API("InitOnceInitialize", m98_InitOnceInitialize),
     M98_API("InitializeConditionVariable", m98_InitializeConditionVariable),
     M98_API("InitializeCriticalSectionEx", m98_InitializeCriticalSectionEx),
+    M98_API("InitializeSListHead", m98_InitializeSListHead),
     M98_API("InitializeSRWLock", m98_InitializeSRWLock),
+    M98_API("InterlockedFlushSList", m98_InterlockedFlushSList),
+    M98_API("InterlockedPopEntrySList", m98_InterlockedPopEntrySList),
+    M98_API("InterlockedPushEntrySList", m98_InterlockedPushEntrySList),
+    M98_API("InterlockedPushListSList", m98_InterlockedPushListSList),
+    M98_API("InterlockedPushListSListEx", m98_InterlockedPushListSListEx),
     M98_API("LCMapStringEx", m98_LCMapStringEx),
+    M98_API("LeaveCriticalSectionWhenCallbackReturns", m98_LeaveCriticalSectionWhenCallbackReturns),
+    M98_API("QueryDepthSList", m98_QueryDepthSList),
     M98_API("QueryFullProcessImageNameA", m98_QueryFullProcessImageNameA),
     M98_API("QueryFullProcessImageNameW", m98_QueryFullProcessImageNameW),
     M98_API("RegisterApplicationRestart", m98_RegisterApplicationRestart),
+    M98_API("ReleaseMutexWhenCallbackReturns", m98_ReleaseMutexWhenCallbackReturns),
     M98_API("ReleaseSRWLockExclusive", m98_ReleaseSRWLockExclusive),
     M98_API("ReleaseSRWLockShared", m98_ReleaseSRWLockShared),
+    M98_API("ReleaseSemaphoreWhenCallbackReturns", m98_ReleaseSemaphoreWhenCallbackReturns),
+    M98_API("SetEventWhenCallbackReturns", m98_SetEventWhenCallbackReturns),
     M98_API("SleepConditionVariableSRW", m98_SleepConditionVariableSRW),
     M98_API("SubmitThreadpoolWork", m98_SubmitThreadpoolWork),
     M98_API("TryAcquireSRWLockExclusive", m98_TryAcquireSRWLockExclusive),
     M98_API("TryAcquireSRWLockShared", m98_TryAcquireSRWLockShared),
+    M98_API("TrySubmitThreadpoolCallback", m98_TrySubmitThreadpoolCallback),
     M98_API("UnregisterApplicationRestart", m98_UnregisterApplicationRestart),
     M98_API("WaitForThreadpoolWorkCallbacks", m98_WaitForThreadpoolWorkCallbacks),
     M98_API("WakeAllConditionVariable", m98_WakeAllConditionVariable),
@@ -1767,7 +1782,6 @@ __declspec(dllexport) const m98_api_table *get_api_table(void)
 
 BOOL WINAPI DllMain(HINSTANCE instance, DWORD reason, LPVOID reserved)
 {
-    (void)reserved;
     if (reason == DLL_PROCESS_ATTACH) {
         InitializeCriticalSection(&tick_lock);
         InitializeCriticalSection(&m98_locale_lock);
@@ -1787,7 +1801,10 @@ BOOL WINAPI DllMain(HINSTANCE instance, DWORD reason, LPVOID reserved)
         last_tick = GetTickCount();
         tick_high = 0;
     } else if (reason == DLL_PROCESS_DETACH) {
-        m98_tp_process_detach();
+        /* ExitProcess already killed other threads, possibly while they held
+         * any of our locks. Leave all process resources to the OS here. */
+        if (reserved) return TRUE;
+        m98_tp_process_detach(reserved != NULL);
         DeleteCriticalSection(&m98_condition_lock);
         m98_nls_ex_set_resolver(0);
         m98_nls_ex_set_module(0);

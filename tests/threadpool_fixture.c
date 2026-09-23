@@ -8,14 +8,21 @@
 
 #define API(name, impl) { name, (unsigned long)(impl) }
 static const m98_named_api work_apis[] = {
+    API("CallbackMayRunLong", m98_CallbackMayRunLong),
     API("CloseThreadpoolWork", m98_CloseThreadpoolWork),
     API("CreateThreadpoolWork", m98_CreateThreadpoolWork),
+    API("DisassociateCurrentThreadFromCallback", m98_DisassociateCurrentThreadFromCallback),
     API("FreeLibraryWhenCallbackReturns", m98_FreeLibraryWhenCallbackReturns),
+    API("LeaveCriticalSectionWhenCallbackReturns", m98_LeaveCriticalSectionWhenCallbackReturns),
+    API("ReleaseMutexWhenCallbackReturns", m98_ReleaseMutexWhenCallbackReturns),
+    API("ReleaseSemaphoreWhenCallbackReturns", m98_ReleaseSemaphoreWhenCallbackReturns),
+    API("SetEventWhenCallbackReturns", m98_SetEventWhenCallbackReturns),
     API("SubmitThreadpoolWork", m98_SubmitThreadpoolWork),
+    API("TrySubmitThreadpoolCallback", m98_TrySubmitThreadpoolCallback),
     API("WaitForThreadpoolWorkCallbacks", m98_WaitForThreadpoolWorkCallbacks)
 };
 static const m98_api_table tables[] = {
-    { "KERNEL32.DLL", work_apis, 5, 0, 0 },
+    { "KERNEL32.DLL", work_apis, 12, 0, 0 },
     { 0, 0, 0, 0, 0 }
 };
 
@@ -27,8 +34,7 @@ __declspec(dllexport) const m98_api_table *get_api_table(void)
 BOOL WINAPI DllMain(HINSTANCE instance, DWORD reason, LPVOID reserved)
 {
     (void)instance;
-    (void)reserved;
     if (reason == DLL_PROCESS_ATTACH) return m98_tp_initialize();
-    if (reason == DLL_PROCESS_DETACH) m98_tp_process_detach();
+    if (reason == DLL_PROCESS_DETACH) m98_tp_process_detach(reserved != NULL);
     return TRUE;
 }

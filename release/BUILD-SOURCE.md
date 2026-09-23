@@ -44,23 +44,26 @@ of the ADVAPI API library. The script checks PE32/Win98 loader headers,
 base relocations, original-media native imports, UXTHEME's original 48 plus
 six added exports, and the guarded mapping helper. Its UXTHEME checker uses
 the pinned target app's **import names only**; that app is not inside the ZIP.
-At this preview snapshot `m98wrap.dll` has a 62-name KernelEx KERNEL32 table.
+At this preview snapshot `m98wrap.dll` has a 76-name KernelEx KERNEL32 table.
 This is the number of registered names, not a whole-Windows-API compatibility
-percentage or a claim that all 62 behaviors are complete.
+percentage or a claim that all 76 behaviors are complete.
 
 `build-dlls.ps1` also runs the included focused builds for final-path, stream,
 locale information, application restart, process path, SRW condition
-variables, named-locale NLS, threadpool work, and one-time initialization. The first six focused
+variables, named-locale NLS, threadpool work and callback lifetime, one-time
+initialization, and sequenced singly linked lists. The first six focused
 builds compile the production wrapper and must be byte-identical to the
-`m98wrap.dll` shipped in this ZIP. The NLS, threadpool, and InitOnce builds use separate
+`m98wrap.dll` shipped in this ZIP. The NLS, threadpool, InitOnce and SList builds use separate
 fixture DLLs for direct API-table tests, plus static-import probes; those
-fixtures are not interchangeable with the production wrapper. All three also
+fixtures are not interchangeable with the production wrapper. All four also
 compile integrated probes for a direct production-wrapper test in the guest.
 The integrated probes pass PE/import checks but their guest execution must be
-recorded separately. All nine builds run their Win98 PE/import checks and
+recorded separately. All ten builds run their Win98 PE/import checks and
 focused host tests. The matching source,
 test files, and bounded evidence documents are in the ZIP, including
-`docs/NLS_EX_PORT.md`, `docs/THREADPOOL_WORK_PORT.md`, and `docs/INITONCE_PORT.md`. Host execution,
+`docs/NLS_EX_PORT.md`, `docs/THREADPOOL_WORK_PORT.md`,
+`docs/THREADPOOL_CALLBACK_PORT.md`, `docs/INITONCE_PORT.md` and
+`docs/SLIST_PORT.md`. Host execution,
 isolated guest fixture execution, production KernelEx static-import tests,
 and application launch are separate verification stages. These checks are
 not a claim that every table entry or modern application works.
@@ -77,15 +80,53 @@ produces FALSE / `ERROR_INVALID_PARAMETER` in this preview, whereas the native
 host terminates the isolated invalid-use probes with `0xC00000F0` or `0xC00000F1`.
 This preview does not claim identical invalid-use exception behavior.
 
-`guest-tests/` includes the compiled `initonce_import_probe.exe`,
-`threadpool_guest_import_smoke.exe`, and the latter's companion `TPMARK.DLL`.
-Keep that DLL beside the threadpool executable and use the guest-tests directory
-as its working directory. The threadpool suite tests this provider's unsupported
-custom-environment rejections, so it is intended for the installed Win98 provider,
-not the host's full modern threadpool. These files are test tools; including them
-in the ZIP does not assert a guest pass for the packaged snapshot. Both executable
-probes and the marker are covered by the package checksums and can be rebuilt
-from the included source.
+The SList batch supplies seven KERNEL32 functions, including distinct x86
+fastcall `InterlockedPushListSList` and stdcall `InterlockedPushListSListEx`
+entries. Its production module uses locked CMPXCHG8B and scoped x86 SEH, with
+zero OS imports. Tests cover a 65,537-node chain, depth wrap, 40,000 concurrent
+node transfers, sequence wrap and reclaimed-page exception handling. The fixed
+16-bit sequence has a documented full-wrap ABA limitation; user SEH also cannot
+reproduce NT's pre-page-fault kernel dispatch. NTDLL/KERNELBASE bindings remain
+separate integration work. See `docs/SLIST_PORT.md` for exact evidence boundaries.
+
+The callback batch adds seven functions to the existing five work APIs. Tests
+cover deferred critical-section/mutex/semaphore/event/library cleanup,
+disassociation while the callback remains alive, simple-callback finalization
+and blocked long callbacks while other work progresses. Custom pools, cleanup
+groups, timers, waits and I/O remain outside this implemented subset.
+
+The release build runs InitOnce, SList and callback integrated probes against
+copies of the exact shipping wrapper placed beside the test executables. Their
+hashes are checked against `build/m98wrap.dll` so an older DLL in a probe folder
+cannot silently satisfy the integration test.
+
+`guest-tests/` contains the following explicitly allowlisted test tools:
+
+| Files | Use |
+| --- | --- |
+| `initonce_import_probe.exe` | Four real KERNEL32 InitOnce imports |
+| `threadpool_guest_import_smoke.exe` | Existing five work APIs, including this provider's explicit unsupported-environment rejection checks |
+| `threadpool_callback_static.exe` | Twelve real work/callback imports |
+| `threadpool_callback_direct.exe` and `threadpool_fixture.dll` | Isolated callback provider test |
+| `threadpool_callback_integrated.exe` | Direct production-wrapper callback table test |
+| `TPMARK.DLL` | Companion used to verify deferred library unloading; keep beside the threadpool tests |
+| `slist_smoke.exe` and `SLISTFIX.DLL` | Isolated fifteen-name KERNEL32/Rtl table test |
+| `slist_import_probe.exe` | Seven real KERNEL32 SList imports |
+| `slist_integrated_probe.exe` | Direct production-wrapper SList table test |
+| `slist_fault_smoke.exe` | Self-contained SList module with test-only deterministic race injection and concurrent free stress |
+
+Use the guest-tests directory as the test working directory. Integrated probes
+also require the production `m98wrap.dll` to be installed or copied beside them.
+Fixture DLLs are test providers and must not replace installed production DLLs.
+The full work smoke is intended for the installed Win98 provider because its
+unsupported-environment checks differ from the host's full modern threadpool.
+The native SList header diagnostic is included as source and rebuilt by the
+focused build; its executable is not shipped as a guest test.
+
+All shipped probes, fixtures and the marker are covered by package checksums and
+can be rebuilt from the included source. Including a test executable in the ZIP
+does not assert a guest pass for a newly packaged snapshot. The isolated FLS
+experiment is not included in this patch ZIP or its production wrapper.
 
 Generated file hashes can differ across compiler versions. The ZIP's
 `SHA256SUMS.txt` records files actually shipped, not locally rebuilt output.

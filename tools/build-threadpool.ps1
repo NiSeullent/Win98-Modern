@@ -39,6 +39,15 @@ if ($LASTEXITCODE -ne 0) { throw 'threadpool integrated probe build failed' }
     (Join-Path $outDir 'threadpool_guest_import_smoke.exe') `
     (Join-Path $projectRoot 'tests/threadpool_smoke.c') '-lkernel32'
 if ($LASTEXITCODE -ne 0) { throw 'threadpool guest static smoke build failed' }
+foreach ($mode in @('direct','static','integrated')) {
+    $modeFlags = @()
+    if ($mode -eq 'static') { $modeFlags = @('-DM98_STATIC') }
+    if ($mode -eq 'integrated') { $modeFlags = @('-DM98_INTEGRATED') }
+    & $compiler @common @exeFlags @modeFlags '-o' `
+        (Join-Path $outDir "threadpool_callback_$mode.exe") `
+        (Join-Path $projectRoot 'tests/threadpool_callback_smoke.c') '-lkernel32'
+    if ($LASTEXITCODE -ne 0) { throw "threadpool callback $mode build failed" }
+}
 
 Push-Location $projectRoot
 try {
@@ -56,6 +65,10 @@ if (-not $SkipHostExecution) {
         if ($LASTEXITCODE -ne 0) { throw 'threadpool static host probe failed' }
         & (Join-Path $outDir 'threadpool_relocation_probe.exe')
         if ($LASTEXITCODE -ne 0) { throw 'threadpool marker relocation probe failed' }
+        & (Join-Path $outDir 'threadpool_callback_direct.exe')
+        if ($LASTEXITCODE -ne 0) { throw 'threadpool callback family direct smoke failed' }
+        & (Join-Path $outDir 'threadpool_callback_static.exe')
+        if ($LASTEXITCODE -ne 0) { throw 'threadpool callback native comparison failed' }
     } finally {
         Pop-Location
     }

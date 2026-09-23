@@ -243,14 +243,23 @@ def build_queue(rows, groups):
         batch = assign_batch(row, groups)
         item = batches.setdefault(batch["id"], {**batch, "state": "awaiting_contract_review",
             "members": [], "categories": Counter(), "upstream_sources": Counter(),
-            "project_declared": 0, "native_export_present": 0})
+            "project_declared": 0, "native_export_present": 0,
+            "guest_subset_verified_candidates": 0, "historical_evidence_candidates": 0})
         item["members"].append(row["id"])
         item["categories"][row["category"]] += 1
         item["upstream_sources"].update(row["upstream_sources"])
         item["project_declared"] += bool(row["project_declarations"])
         item["native_export_present"] += row["native_export_present"]
+        item["guest_subset_verified_candidates"] += row["behavioral_coverage"] == "guest_static_subset_verified"
+        item["historical_evidence_candidates"] += row["behavioral_coverage"] == "historical_guest_subset_evidence"
     for item in batches.values():
         item["candidate_count"] = len(item["members"])
+        if item["guest_subset_verified_candidates"]:
+            item["state"] = "partial_guest_subset_evidence"
+        elif item["historical_evidence_candidates"]:
+            item["state"] = "historical_evidence_requires_revalidation"
+        elif item["project_declared"]:
+            item["state"] = "declarations_present_contract_review_required"
         item["required_gates"] = ["ABI_and_contract_review", "both_Wine_and_ReactOS_review",
             "license_and_dependencies", "family_implementation", "host_behavior_and_PE98",
             "direct_installed_guest", "guest_static_import", "application_regression"]
@@ -286,6 +295,8 @@ def attach_evidence(rows, evidence, root):
         current = all(same_hash(path, sha) for path, sha in item["source_hashes"].items())
         current = same_hash(item["provider"]["path"], item["provider"]["sha256"]) and current
         current = same_hash(item["test"]["path"], item["test"]["sha256"]) and current
+        current = all(same_hash(artifact["path"], artifact["sha256"])
+                      for artifact in item.get("supporting_artifacts", [])) and current
         for api in item["apis"]:
             by_api[api_key(api["dll"], api["name"])].append({
                 "id":item["id"], "matches_current_artifacts":current,

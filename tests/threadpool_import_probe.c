@@ -17,6 +17,7 @@ typedef struct probe_state {
     volatile LONG count;
     HMODULE marker;
 } probe_state;
+typedef void (*marker_set_unload_event_fn)(HANDLE);
 
 static void say(const char *message)
 {
@@ -48,6 +49,9 @@ void mainCRTStartup(void)
 {
     probe_state state = { 0, NULL };
     PTP_WORK work;
+    HANDLE unloaded;
+    marker_set_unload_event_fn set_unload_event;
+    DWORD start;
     state.marker = LoadLibraryA("TPMARK.DLL");
     if (!state.marker) {
         DWORD error = GetLastError();
@@ -56,6 +60,14 @@ void mainCRTStartup(void)
         say("\r\n");
         ExitProcess(1);
     }
+    unloaded = CreateEventA(NULL, TRUE, FALSE, NULL);
+    set_unload_event = (marker_set_unload_event_fn)(ULONG_PTR)
+        GetProcAddress(state.marker, "marker_set_unload_event");
+    if (!unloaded || !set_unload_event) {
+        say("FAIL: static marker unload notification setup\r\n");
+        ExitProcess(1);
+    }
+    set_unload_event(unloaded);
     work = CreateThreadpoolWork(probe_callback, &state, NULL);
     if (!work) {
         DWORD error = GetLastError();
@@ -69,10 +81,28 @@ void mainCRTStartup(void)
     SubmitThreadpoolWork(work);
     WaitForThreadpoolWorkCallbacks(work, FALSE);
     CloseThreadpoolWork(work);
-    if (state.count != 1 || GetModuleHandleA("TPMARK.DLL")) {
-        say("FAIL: static threadpool callback or deferred unload\r\n");
+    if (state.count != 1) {
+        say("FAIL: static threadpool callback count=");
+        say_hex((DWORD)state.count);
+        say("\r\n");
         ExitProcess(1);
     }
+    /* Native WaitForThreadpoolWorkCallbacks can return before its deferred
+     * FreeLibrary reaches the loader. Observe that separate completion via
+     * TPMARK's DLL_PROCESS_DETACH notification, then check module absence. */
+    if (WaitForSingleObject(unloaded, 10000) != WAIT_OBJECT_0) {
+        say("FAIL: static deferred DLL detach was not observed\r\n");
+        ExitProcess(1);
+    }
+    start = GetTickCount();
+    while (GetModuleHandleA("TPMARK.DLL")) {
+        if (GetTickCount() - start >= 5000) {
+            say("FAIL: static marker still loaded after DLL detach\r\n");
+            ExitProcess(1);
+        }
+        Sleep(1);
+    }
+    CloseHandle(unloaded);
     say("PASS: static KERNEL32 threadpool work imports and deferred unload\r\n");
     ExitProcess(0);
 }

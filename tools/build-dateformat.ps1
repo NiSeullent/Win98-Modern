@@ -22,6 +22,7 @@ $dllSources = @((Join-Path $projectRoot 'src/m98wrap.c'),
     (Join-Path $projectRoot 'src/m98nls_ex.c'),
     (Join-Path $projectRoot 'src/m98_threadpool.c'),
     (Join-Path $projectRoot 'src/m98_initonce.c'),
+    (Join-Path $projectRoot 'src/m98_slist.c'),
     (Join-Path $projectRoot 'src/wine_uppercase.c'))
 & $compiler @dllFlags '-o' (Join-Path $outDir 'm98wrap.dll') @dllSources '-lkernel32'
 if ($LASTEXITCODE -ne 0) { throw 'm98wrap.dll build failed' }

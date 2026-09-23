@@ -18,10 +18,17 @@ WORK_NAMES = {
     "SubmitThreadpoolWork",
     "WaitForThreadpoolWorkCallbacks",
 }
+CALLBACK_NAMES = WORK_NAMES | {
+    "CallbackMayRunLong", "DisassociateCurrentThreadFromCallback",
+    "LeaveCriticalSectionWhenCallbackReturns", "ReleaseMutexWhenCallbackReturns",
+    "ReleaseSemaphoreWhenCallbackReturns", "SetEventWhenCallbackReturns",
+    "TrySubmitThreadpoolCallback",
+}
 
 
 def check(path: Path, *, dll: bool, native: set[str],
-          static: bool = False, fixture: bool = False) -> list[str]:
+          static: bool = False, fixture: bool = False,
+          callbacks: bool = False) -> list[str]:
     errors: list[str] = []
     pe = pefile.PE(str(path))
     opt = pe.OPTIONAL_HEADER
@@ -50,11 +57,12 @@ def check(path: Path, *, dll: bool, native: set[str],
     if set(imports) - {"KERNEL32.DLL"}:
         errors.append(f"{path.name}: unexpected import DLLs {sorted(imports)}")
     names = imports.get("KERNEL32.DLL", set())
-    if static and names & WORK_NAMES != WORK_NAMES:
-        errors.append(f"{path.name}: missing static work imports {sorted(WORK_NAMES - names)}")
-    if not static and names & WORK_NAMES:
+    required = CALLBACK_NAMES if callbacks else WORK_NAMES
+    if static and names & required != required:
+        errors.append(f"{path.name}: missing static work imports {sorted(required - names)}")
+    if not static and names & CALLBACK_NAMES:
         errors.append(f"{path.name}: fixture has unresolved work imports")
-    for name in sorted(names - native - (WORK_NAMES if static else set())):
+    for name in sorted(names - native - (required if static else set())):
         errors.append(f"{path.name}: unverified Win98 OEM import {name}")
     if fixture:
         exports = {
@@ -92,6 +100,10 @@ def main() -> int:
                         native=native, static=True)
         errors += check(OUT / "threadpool_relocation_probe.exe", dll=False,
                         native=native)
+        errors += check(OUT / "threadpool_callback_direct.exe", dll=False, native=native)
+        errors += check(OUT / "threadpool_callback_integrated.exe", dll=False, native=native)
+        errors += check(OUT / "threadpool_callback_static.exe", dll=False, native=native,
+                        static=True, callbacks=True)
         fixture = pefile.PE(str(OUT / "threadpool_fixture.dll"))
         marker = pefile.PE(str(OUT / "TPMARK.DLL"))
         if fixture.OPTIONAL_HEADER.ImageBase == marker.OPTIONAL_HEADER.ImageBase:
@@ -115,7 +127,7 @@ def main() -> int:
         for error in errors:
             print(f"FAIL: {error}", file=sys.stderr)
         return 1
-    print("PASS: threadpool PE32/i386, Win98 native imports, five static routes")
+    print("PASS: threadpool PE32/i386, Win98 native imports, work/callback static routes")
     return 0
 
 

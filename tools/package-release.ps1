@@ -31,7 +31,9 @@ Check-PE 'tests/check_pe98.py' 'build/m98wrap.dll'
 # release/build-dlls.ps1; verify they match the packaged wrapper DLL.
 foreach ($candidate in @('build/finalpath/m98wrap.dll', 'build/stream/m98wrap.dll',
                          'build/localeinfo/m98wrap.dll', 'build/restart/m98wrap.dll',
-                         'build/processpath/m98wrap.dll', 'build/condition/m98wrap.dll')) {
+                         'build/processpath/m98wrap.dll', 'build/condition/m98wrap.dll',
+                         'build/initonce/m98wrap.dll', 'build/threadpool/m98wrap.dll',
+                         'build/slist/m98wrap.dll')) {
   $actual = (Get-FileHash -LiteralPath (Require-File $candidate) -Algorithm SHA256).Hash
   $shipped = (Get-FileHash -LiteralPath (Require-File 'build/m98wrap.dll') -Algorithm SHA256).Hash
   if ($actual -ne $shipped) { throw "KERNEL32 test DLL differs from packaged m98wrap.dll: $candidate" }
@@ -63,10 +65,19 @@ foreach ($artifact in @(
   'build/threadpool/threadpool_import_probe.exe',
   'build/threadpool/threadpool_guest_import_smoke.exe',
   'build/threadpool/threadpool_relocation_probe.exe',
+  'build/threadpool/threadpool_callback_direct.exe',
+  'build/threadpool/threadpool_callback_static.exe',
+  'build/threadpool/threadpool_callback_integrated.exe',
   'build/initonce/ONCEFIX.DLL',
   'build/initonce/initonce_smoke.exe',
   'build/initonce/initonce_import_probe.exe',
-  'build/initonce/initonce_integrated_probe.exe'
+  'build/initonce/initonce_integrated_probe.exe',
+  'build/slist/SLISTFIX.DLL',
+  'build/slist/slist_smoke.exe',
+  'build/slist/slist_import_probe.exe',
+  'build/slist/slist_integrated_probe.exe',
+  'build/slist/slist_fault_smoke.exe',
+  'build/slist/slist_native_probe.exe'
 )) { [void](Require-File $artifact) }
 Push-Location $projectRoot
 try {
@@ -85,9 +96,11 @@ try {
   & python 'tests/check_nls_ex_pe98.py'
   if ($LASTEXITCODE -ne 0) { throw 'Locale-name NLS PE/import validation failed' }
   & python 'tests/check_threadpool_pe98.py'
-  if ($LASTEXITCODE -ne 0) { throw 'Threadpool work PE/import validation failed' }
+  if ($LASTEXITCODE -ne 0) { throw 'Threadpool work/callback PE/import validation failed' }
   & python 'tests/check_initonce_pe98.py'
   if ($LASTEXITCODE -ne 0) { throw 'InitOnce family PE/import validation failed' }
+  & python 'tests/check_slist_pe98.py'
+  if ($LASTEXITCODE -ne 0) { throw 'SList family PE/import validation failed' }
 } finally { Pop-Location }
 & python (Require-File 'tests/check_m98advapi_pe98.py') `
   (Require-File 'build/advapi/m98advapi.dll') `
@@ -96,6 +109,7 @@ try {
 if ($LASTEXITCODE -ne 0) { throw 'Windows 98 ADVAPI PE validation failed' }
 Check-PE 'release/check-uxtheme-release-pe98.py' 'build/uxtheme-known/UXTHEME.DLL'
 Check-PE 'tests/check_known_dll_switch_pe98.py' 'build/known_dll_switch.exe'
+Check-PE 'tests/check_threadpool_exit_pe98.py' 'build/threadpool-exit/TPEXIT.EXE'
 $includeDbgHelp = Test-Path -LiteralPath (Join-Path $buildDir 'dbghelp.dll') -PathType Leaf
 $includeDwmApi = Test-Path -LiteralPath (Join-Path $buildDir 'dwmapi.dll') -PathType Leaf
 $includeBCrypt = Test-Path -LiteralPath (Join-Path $buildDir 'bcrypt.dll') -PathType Leaf
@@ -130,7 +144,9 @@ $inputs = [ordered]@{
   'tools/build-condition.ps1'     = 'tools/build-condition.ps1'
   'tools/build-nls-ex.ps1'        = 'tools/build-nls-ex.ps1'
   'tools/build-threadpool.ps1'    = 'tools/build-threadpool.ps1'
+  'tools/build-threadpool-exit.ps1' = 'tools/build-threadpool-exit.ps1'
   'tools/build-initonce.ps1'      = 'tools/build-initonce.ps1'
+  'tools/build-slist.ps1'         = 'tools/build-slist.ps1'
   'LICENSE'                       = 'LICENSE'
   'THIRD_PARTY.md'                = 'THIRD_PARTY.md'
   'licenses/Wine-LGPL-2.1.txt'   = 'licenses/Wine-LGPL-2.1.txt'
@@ -142,6 +158,8 @@ $inputs = [ordered]@{
   'src/m98_threadpool.h'           = 'src/m98_threadpool.h'
   'src/m98_initonce.c'            = 'src/m98_initonce.c'
   'src/m98_initonce.h'            = 'src/m98_initonce.h'
+  'src/m98_slist.c'               = 'src/m98_slist.c'
+  'src/m98_slist.h'               = 'src/m98_slist.h'
   'src/m98advapi.c'               = 'src/m98advapi.c'
   'src/wine_uppercase.c'          = 'src/wine_uppercase.c'
   'src/uxtheme_shim.c'            = 'src/uxtheme_shim.c'
@@ -182,18 +200,37 @@ $inputs = [ordered]@{
   'tests/nls_ex_import_probe.c'   = 'tests/nls_ex_import_probe.c'
   'tests/check_nls_ex_pe98.py'    = 'tests/check_nls_ex_pe98.py'
   'tests/threadpool_fixture.c'    = 'tests/threadpool_fixture.c'
+  'tests/threadpool_exit_smoke.c' = 'tests/threadpool_exit_smoke.c'
   'tests/threadpool_marker.c'     = 'tests/threadpool_marker.c'
   'tests/threadpool_smoke.c'      = 'tests/threadpool_smoke.c'
   'tests/threadpool_import_probe.c' = 'tests/threadpool_import_probe.c'
   'tests/threadpool_relocation_probe.c' = 'tests/threadpool_relocation_probe.c'
+  'tests/threadpool_callback_smoke.c' = 'tests/threadpool_callback_smoke.c'
   'tests/check_threadpool_pe98.py' = 'tests/check_threadpool_pe98.py'
+  'tests/check_threadpool_exit_pe98.py' = 'tests/check_threadpool_exit_pe98.py'
   'tests/initonce_fixture.c'       = 'tests/initonce_fixture.c'
   'tests/initonce_smoke.c'         = 'tests/initonce_smoke.c'
   'tests/initonce_import_probe.c'  = 'tests/initonce_import_probe.c'
   'tests/check_initonce_pe98.py'   = 'tests/check_initonce_pe98.py'
+  'tests/slist_fixture.c'          = 'tests/slist_fixture.c'
+  'tests/slist_smoke.c'            = 'tests/slist_smoke.c'
+  'tests/slist_import_probe.c'     = 'tests/slist_import_probe.c'
+  'tests/slist_fault_smoke.c'      = 'tests/slist_fault_smoke.c'
+  'tests/slist_native_probe.c'     = 'tests/slist_native_probe.c'
+  'tests/check_slist_pe98.py'      = 'tests/check_slist_pe98.py'
   'guest-tests/threadpool_guest_import_smoke.exe' = 'build/threadpool/threadpool_guest_import_smoke.exe'
+  'guest-tests/threadpool_callback_direct.exe' = 'build/threadpool/threadpool_callback_direct.exe'
+  'guest-tests/threadpool_callback_static.exe' = 'build/threadpool/threadpool_callback_static.exe'
+  'guest-tests/threadpool_callback_integrated.exe' = 'build/threadpool/threadpool_callback_integrated.exe'
+  'guest-tests/threadpool_fixture.dll' = 'build/threadpool/threadpool_fixture.dll'
   'guest-tests/TPMARK.DLL'         = 'build/threadpool/TPMARK.DLL'
+  'guest-tests/TPEXIT.EXE'         = 'build/threadpool-exit/TPEXIT.EXE'
   'guest-tests/initonce_import_probe.exe' = 'build/initonce/initonce_import_probe.exe'
+  'guest-tests/SLISTFIX.DLL'       = 'build/slist/SLISTFIX.DLL'
+  'guest-tests/slist_smoke.exe'    = 'build/slist/slist_smoke.exe'
+  'guest-tests/slist_import_probe.exe' = 'build/slist/slist_import_probe.exe'
+  'guest-tests/slist_integrated_probe.exe' = 'build/slist/slist_integrated_probe.exe'
+  'guest-tests/slist_fault_smoke.exe' = 'build/slist/slist_fault_smoke.exe'
   'tests/check_m98advapi_pe98.py' = 'tests/check_m98advapi_pe98.py'
   'tests/advapi_smoke.c'          = 'tests/advapi_smoke.c'
   'tests/advapi_import_probe.c'   = 'tests/advapi_import_probe.c'
@@ -214,7 +251,9 @@ $inputs = [ordered]@{
   'docs/NPP_CONDITION_PORT.md'    = 'docs/NPP_CONDITION_PORT.md'
   'docs/NLS_EX_PORT.md'           = 'docs/NLS_EX_PORT.md'
   'docs/THREADPOOL_WORK_PORT.md'  = 'docs/THREADPOOL_WORK_PORT.md'
+  'docs/THREADPOOL_CALLBACK_PORT.md' = 'docs/THREADPOOL_CALLBACK_PORT.md'
   'docs/INITONCE_PORT.md'         = 'docs/INITONCE_PORT.md'
+  'docs/SLIST_PORT.md'            = 'docs/SLIST_PORT.md'
   'docs/PUBLIC_KERNELEX_VARIANTS.md' = 'docs/PUBLIC_KERNELEX_VARIANTS.md'
   'docs/UXTHEME_NPP_PORT.md'      = 'docs/UXTHEME_NPP_PORT.md'
   'skills/win98-modern-lab/SKILL.md' = 'skills/win98-modern-lab/SKILL.md'
@@ -300,7 +339,7 @@ Write-Host "DWMAPI.DLL included: $includeDwmApi"
 Write-Host "BCRYPT.DLL included: $includeBCrypt"
 Write-Host "M98SHELL.DLL included: $includeShell"
 Write-Host 'M98ADV.DLL included: True'
-Write-Host '62-entry KERNEL32 wrapper and focused NLS/threadpool/InitOnce test sources included: True'
-Write-Host 'Guest static-import probes and TPMARK.DLL included: True'
+Write-Host '76-entry KERNEL32 wrapper and focused NLS/threadpool/callback/InitOnce/SList test sources included: True'
+Write-Host 'Guest static/integrated/fixture probes, SList fault probe and TPMARK.DLL included: True'
 Write-Host 'UXTHEME.DLL KnownDLL candidate included: True'
 Write-Host 'KSWITCH.EXE guarded mapping helper included: True'

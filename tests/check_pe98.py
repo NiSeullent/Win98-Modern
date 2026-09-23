@@ -62,6 +62,7 @@ NATIVE_KERNEL32 = frozenset(
         "LeaveCriticalSection",
         "LoadLibraryA",
         "MultiByteToWideChar",
+        "ReleaseMutex",
         "ReleaseSemaphore",
         "ResetEvent",
         "SetEvent",
